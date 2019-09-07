@@ -1,6 +1,5 @@
 <template>
     <Page>
-        <ActionBar title="Welcome to NativeScript-Vue!"/>
         <FlexboxLayout backgroundColor="#3c495e">
             <Label text="third" class="test"/>
         </FlexboxLayout>
@@ -25,7 +24,7 @@
 
     Page {
         .test {
-            color: blue;
+            color: red;
         }
     }
 </style>
