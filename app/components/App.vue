@@ -1,9 +1,12 @@
 <template>
-    <Page>
-        <FlexboxLayout backgroundColor="#3c495e">
-            <Label text="third" class="test"/>
-        </FlexboxLayout>
-    </Page>
+  <Page>
+    <FlexboxLayout>
+      <Label
+        text="third"
+        class="test"
+      />
+    </FlexboxLayout>
+  </Page>
 </template>
 
 <script >
@@ -14,6 +17,8 @@
       }
     }
   }
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -21,7 +26,6 @@
         background-color: #53ba82;
         color: #ffffff;
     }
-
     Page {
         .test {
             color: red;
