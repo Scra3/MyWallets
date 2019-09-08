@@ -14,6 +14,8 @@ const nativescriptTarget = require("nativescript-dev-webpack/nativescript-target
 const { NativeScriptWorkerPlugin } = require("nativescript-worker-loader/NativeScriptWorkerPlugin");
 const hashSalt = Date.now().toString();
 
+const StyleLintPlugin = require('stylelint-webpack-plugin');
+
 module.exports = env => {
     // Add your custom Activities, Services and other android app components here.
     const appComponents = [
@@ -232,6 +234,9 @@ module.exports = env => {
             ],
         },
         plugins: [
+            new StyleLintPlugin({
+                files: ['**/*.{vue,htm,html,css,sss,less,scss,sass}'],
+            }),
             // ... Vue Loader plugin omitted
             // make sure to include the plugin!
             new VueLoaderPlugin(),
