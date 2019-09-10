@@ -7,10 +7,6 @@
         <ActivityIndicator :busy="isLoading" />
       </FlexboxLayout>
 
-      <FlexboxLayout class="actions">
-        <Button :visibility="displayIfIsLoaded" class="refresh-button" text="Refresh" @tap="fetchWallets" />
-      </FlexboxLayout>
-
       <FlexboxLayout class="wallets">
         <ListView for="portfolio in wallets">
           <v-template>
@@ -37,6 +33,7 @@ export default {
       addresses: [
         { currency: "XRP", address: "rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR" }
       ],
+      intervalID: null,
       isLoading: true,
       error: false
     };
@@ -58,12 +55,17 @@ export default {
     }
   },
   mounted() {
+    // Animation must be display only for the first request
+    this.isLoading = true;
     this.fetchWallets();
+    this.intervalID = setInterval(this.fetchWallets, 60000);
+  },
+  beforeDestroy() {
+    clearInterval(this.intervalID);
   },
   methods: {
     async fetchWallets() {
-      this.wallets = []
-      this.isLoading = true;
+      this.wallets = [];
       try {
         const pwallets = this.addresses.map(async address => {
           if (address.currency === "XRP") {
@@ -105,13 +107,6 @@ export default {
     justify-content: flex-end;
     width: 100%;
     margin-bottom: 10;
-
-    .refresh-button {
-      color: #00adb5;
-      background-color: #393e46;
-      border-radius: 10;
-      font-size: 16;
-    }
   }
 
   .wallets-amount {
