@@ -1,9 +1,16 @@
 <template>
   <Page>
-    <FlexboxLayout class="container">
-      <FlexboxLayout class="wallets-amount">
-        <Label :visibility="displayIfIsLoaded" :text="walletsAmount" />
+    <ActionBar class="action-bar" :flat="true">
+      <StackLayout orientation="horizontal">
+        <Label text="My Wallets" class="title" />
+      </StackLayout>
+    </ActionBar>
+
+    <FlexboxLayout class="HomePage">
+      <FlexboxLayout class="wallets-value">
+        <Label :visibility="displayIfIsLoaded" :text="walletsValue" />
         <Label :visibility="displayIfError" text="Cannot synchronize wallets" />
+
         <ActivityIndicator :busy="isLoading" />
       </FlexboxLayout>
 
@@ -11,9 +18,9 @@
         <ListView for="portfolio in wallets">
           <v-template>
             <FlexboxLayout class="wallet">
-              <Label :text="portfolio.currency" />
+              <Label class="currency" :text="portfolio.currency" />
               <Label :text="portfolio.balance" />
-              <Label :text="portfolio.amount" />
+              <Label class="value" :text="portfolio.value" />
             </FlexboxLayout>
           </v-template>
         </ListView>
@@ -31,7 +38,7 @@ export default {
     return {
       wallets: [],
       addresses: [
-        { currency: "XRP", address: "rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR" }
+        { currency: "XRP", address: "rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR" },
       ],
       intervalID: null,
       isLoading: true,
@@ -45,17 +52,17 @@ export default {
     displayIfError() {
       return this.error ? "visible" : "collapse";
     },
-    walletsAmount() {
+    walletsValue() {
       if (this.wallets.length > 0) {
-        const reducer = (total, portfolioB) => total + portfolioB.amount;
-        return this.wallets.reduce(reducer, 0);
+        const reducer = (total, portfolioB) => total + portfolioB.value;
+        return parseFloat(this.wallets.reduce(reducer, 0.0));
       }
 
       return null;
     }
   },
   mounted() {
-    // Animation must be display only for the first request
+    // Loader must be display only for the first request
     this.isLoading = true;
     this.fetchWallets();
     this.intervalID = setInterval(this.fetchWallets, 60000);
@@ -82,7 +89,7 @@ export default {
             this.wallets.push({
               currency: "XRP",
               balance: balance,
-              amount: price.ripple.eur * balance
+              value: (price.ripple.eur * balance).toFixed(2)
             });
           }
         }
@@ -96,8 +103,18 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.container {
+<style lang="scss">
+.action-bar {
+  background-color: #222831;
+
+  .title {
+    color: #00adb5;
+    font-size: 24;
+    vertical-align: center;
+  }
+}
+
+.HomePage {
   background-color: #222831;
   flex-direction: column;
   color: #eee;
@@ -109,14 +126,15 @@ export default {
     margin-bottom: 10;
   }
 
-  .wallets-amount {
-    color: #00adb5;
+  .wallets-value {
+    color: #eee;
     font-size: 30;
     width: 100%;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     flex-grow: 1;
+    font-weight: bold;
   }
 
   .wallets {
@@ -125,9 +143,19 @@ export default {
     background-color: #222831;
 
     .wallet {
+      border-radius: 5;
       padding: 10;
       background-color: #393e46;
       justify-content: space-between;
+      align-items: center;
+
+      .currency {
+        font-size: 20;
+      }
+
+      .value {
+        font-weight: bold;
+      }
     }
   }
 }
