@@ -1,6 +1,6 @@
 <template>
   <Page>
-    <ActionBar class="action-bar" :flat="true">
+    <ActionBar :flat="true" class="action-bar">
       <StackLayout orientation="horizontal">
         <Label text="My Wallets" class="title" />
       </StackLayout>
@@ -8,8 +8,8 @@
 
     <FlexboxLayout class="HomePage">
       <FlexboxLayout class="wallets-value">
-        <Label :visibility="displayIfIsLoaded" :text="walletsValue" />
-        <Label :visibility="displayIfError" text="Cannot synchronize wallets" />
+        <Label :visibility="canDisplayWalletsValue" :text="walletsValue" />
+        <Label :visibility="isThereError" :text="message" class="message"/>
 
         <ActivityIndicator :busy="isLoading" />
       </FlexboxLayout>
@@ -18,9 +18,9 @@
         <ListView for="portfolio in wallets">
           <v-template>
             <FlexboxLayout class="wallet">
-              <Label class="currency" :text="portfolio.currency" />
+              <Label :text="portfolio.currency" class="currency" />
               <Label :text="portfolio.balance" />
-              <Label class="value" :text="portfolio.value" />
+              <Label :text="portfolio.value" class="value" />
             </FlexboxLayout>
           </v-template>
         </ListView>
@@ -30,7 +30,8 @@
 </template>
 
 <script>
-import { fetchXRPWallet, fetchXRPPrice } from "../http.js";
+import { fetchXRPWallet, fetchETHWallet } from "@/http.js";
+import { ETH, XRP, EOS } from "@/constants.js";
 
 export default {
   name: "HomePage",
@@ -38,27 +39,32 @@ export default {
     return {
       wallets: [],
       addresses: [
-        { currency: "XRP", address: "rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR" },
+        {
+          currency: ETH,
+          public_key: "0x70Fe19189628d1050cb0e14aa7A1BBc246A48183"
+        },
+        { currency: XRP, public_key: "rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR" }
       ],
       intervalID: null,
       isLoading: true,
-      error: false
+      errored: false,
+      message: "Cannot synchronize wallets"
     };
   },
   computed: {
-    displayIfIsLoaded() {
-      return this.isLoading ? "collapse" : "visible";
+    canDisplayWalletsValue() {
+      return this.isLoading || this.errored ? "collapse" : "visible";
     },
-    displayIfError() {
-      return this.error ? "visible" : "collapse";
+    isThereError() {
+      return this.errored ? "visible" : "collapse";
     },
     walletsValue() {
       if (this.wallets.length > 0) {
-        const reducer = (total, portfolioB) => total + portfolioB.value;
-        return parseFloat(this.wallets.reduce(reducer, 0.0));
+        const sum = (currentValue, wallet) => currentValue + parseFloat(wallet.value);
+        return parseFloat(this.wallets.reduce(sum, 0.0));
       }
 
-      return null;
+      return 0;
     }
   },
   mounted() {
@@ -74,27 +80,19 @@ export default {
     async fetchWallets() {
       this.wallets = [];
       try {
-        const pwallets = this.addresses.map(async address => {
-          if (address.currency === "XRP") {
-            return await fetchXRPWallet(this.addresses[0].address);
+        const pWallets = this.addresses.map(async address => {
+          if (address.currency === XRP) {
+            return fetchXRPWallet(address.public_key);
+          } else if (address.currency === ETH) {
+            return fetchETHWallet(address.public_key);
           }
+          throw "Address is undefined";
         });
 
-        const wallets = await Promise.all(pwallets);
-        for (const wallet of wallets) {
-          if (wallet.balance_changes[0].currency === "XRP") {
-            const balance = parseFloat(wallet.balance_changes[0].final_balance);
-            const price = await fetchXRPPrice();
-
-            this.wallets.push({
-              currency: "XRP",
-              balance: balance,
-              value: (price.ripple.eur * balance).toFixed(2)
-            });
-          }
-        }
-      } catch (e) {
-        this.error = true;
+        this.wallets = await Promise.all(pWallets);
+      } catch (error) {
+        this.message = error;
+        this.errored = true;
       } finally {
         this.isLoading = false;
       }
@@ -135,6 +133,10 @@ export default {
     align-items: center;
     flex-grow: 1;
     font-weight: bold;
+
+    .message {
+      font-size: 20;
+    }
   }
 
   .wallets {
