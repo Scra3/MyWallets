@@ -14,6 +14,10 @@
         <ActivityIndicator :busy="isLoading" />
       </FlexboxLayout>
 
+      <FlexboxLayout class="button-container">
+        <Button text="+" class="add-button" />
+      </FlexboxLayout>
+
       <FlexboxLayout class="wallets">
         <ListView for="portfolio in wallets">
           <v-template>
@@ -24,6 +28,8 @@
             </FlexboxLayout>
           </v-template>
         </ListView>
+
+        <Label :visibility="isThereAvailableWallets" text="No wallet added" class="message" />
       </FlexboxLayout>
     </FlexboxLayout>
   </Page>
@@ -53,6 +59,9 @@ export default {
     };
   },
   computed: {
+    isThereAvailableWallets() {
+      return this.wallets.length > 0 ? "collapse" : "visible";
+    },
     canDisplayWalletsValue() {
       return this.isLoading || this.errored ? "collapse" : "visible";
     },
@@ -66,7 +75,7 @@ export default {
         return parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2);
       }
 
-      return;
+      return 0;
     }
   },
   mounted() {
@@ -123,10 +132,24 @@ export default {
   color: #eee;
   align-items: flex-start;
 
-  .actions {
-    justify-content: flex-end;
+  .button-container {
     width: 100%;
-    margin-bottom: 10;
+    justify-content: flex-end;
+
+    .add-button {
+      border-radius: 100;
+      width: 70;
+      height: 72;
+      font-size: 40;
+      background-color: #393e46;
+      color: #222831;
+      margin-bottom: 20;
+      margin-right: 20;
+    }
+
+    .add-button:active {
+      color: #00adb5;
+    }
   }
 
   .wallets-value {
@@ -145,9 +168,8 @@ export default {
   }
 
   .wallets {
-    height: 200;
+    height: 250;
     flex-direction: column;
-    background-color: #222831;
 
     .wallet {
       border-radius: 5;
@@ -164,6 +186,12 @@ export default {
       .value {
         font-weight: bold;
       }
+    }
+
+    .message {
+      text-align: center;
+      width: 100%;
+      font-weight: bold;
     }
   }
 }
