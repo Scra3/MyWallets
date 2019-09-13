@@ -31,25 +31,38 @@ const fetchXRPWallet = async address => {
       value: (price.ripple.eur * balance).toFixed(2)
     };
   } catch (error) {
+    console.log(error);
     throw "Xrp address is probably incorrect";
   }
 };
 
-const fetchEOSWallet = async address => {
+const fetchEOSWallet = async accountName => {
   try {
-    const pWallet = httpModule.getJSON(
-      `https://data.ripple.com/v2/accounts/${address}/balance_changes?descending=true&limit=1)`
-    );
-    const pPrice = fetchXEOSPrice();
-    const [price, wallet] = await Promise.all([pPrice, pWallet]);
+    const pWallet = httpModule.request({
+      url: "https://eos.greymass.com/v1/chain/get_account",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      content: JSON.stringify({ account_name: accountName })
+    });
 
-    const balance = parseFloat(wallet.balance_changes[0].final_balance);
+    const pPrice = fetchXEOSPrice();
+    let [price, wallet] = await Promise.all([pPrice, pWallet]);
+
+    wallet = wallet.content.toJSON();
+
+    const removeEOSUnit = value => value.slice(0, -4);
+
+    const available = parseFloat(removeEOSUnit(wallet.core_liquid_balance));
+    const cpuStaked = parseFloat(removeEOSUnit(wallet.core_liquid_balance));
+    const balance = parseFloat(available + cpuStaked * 2);
+
     return {
       currency: EOS,
       balance: balance,
       value: (price.eos.eur * balance).toFixed(2)
     };
   } catch (error) {
+    console.log(error);
     throw "EOS address is probably incorrect";
   }
 };
@@ -69,8 +82,9 @@ const fetchETHWallet = async address => {
       value: (price.ethereum.eur * balance).toFixed(2)
     };
   } catch (error) {
+    console.log(error);
     throw "ETH address is probably incorrect";
   }
 };
 
-export { fetchXRPWallet, fetchXRPPrice, fetchETHWallet };
+export { fetchXRPWallet, fetchXRPPrice, fetchETHWallet, fetchEOSWallet };

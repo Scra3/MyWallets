@@ -9,7 +9,7 @@
     <FlexboxLayout class="HomePage">
       <FlexboxLayout class="wallets-value">
         <Label :visibility="canDisplayWalletsValue" :text="walletsValue" />
-        <Label :visibility="isThereError" :text="message" class="message"/>
+        <Label :visibility="isThereError" :text="message" class="message" />
 
         <ActivityIndicator :busy="isLoading" />
       </FlexboxLayout>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { fetchXRPWallet, fetchETHWallet } from "@/http.js";
+import { fetchXRPWallet, fetchETHWallet, fetchEOSWallet } from "@/http.js";
 import { ETH, XRP, EOS } from "@/constants.js";
 
 export default {
@@ -43,7 +43,8 @@ export default {
           currency: ETH,
           public_key: "0x70Fe19189628d1050cb0e14aa7A1BBc246A48183"
         },
-        { currency: XRP, public_key: "rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR" }
+        { currency: XRP, public_key: "rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR" },
+        { currency: EOS, account_name: "gi3tmnzsgqge" }
       ],
       intervalID: null,
       isLoading: true,
@@ -60,11 +61,12 @@ export default {
     },
     walletsValue() {
       if (this.wallets.length > 0) {
-        const sum = (currentValue, wallet) => currentValue + parseFloat(wallet.value);
-        return parseFloat(this.wallets.reduce(sum, 0.0));
+        const sum = (currentValue, wallet) =>
+          currentValue + parseFloat(wallet.value);
+        return parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2);
       }
 
-      return 0;
+      return;
     }
   },
   mounted() {
@@ -85,7 +87,10 @@ export default {
             return fetchXRPWallet(address.public_key);
           } else if (address.currency === ETH) {
             return fetchETHWallet(address.public_key);
+          } else if (address.currency === EOS) {
+            return fetchEOSWallet(address.account_name);
           }
+
           throw "Address is undefined";
         });
 
@@ -153,6 +158,7 @@ export default {
 
       .currency {
         font-size: 20;
+        color: #00adb5;
       }
 
       .value {
