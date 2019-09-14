@@ -1,8 +1,8 @@
 <template>
   <FlexboxLayout class="HomePage">
     <FlexboxLayout class="wallets-value">
-      <Label :visibility="canDisplayWalletsValue" :text="walletsValue" />
-      <Label :visibility="isThereError" :text="message" class="message" />
+      <Label v-if="!isLoading && !errored" :text="walletsValue" />
+      <Label v-if="errored" :text="message" class="message" />
 
       <ActivityIndicator :busy="isLoading" />
     </FlexboxLayout>
@@ -23,7 +23,11 @@
         </v-template>
       </ListView>
 
-      <Label :visibility="isThereAvailableWallets" text="No wallet added" class="message" />
+      <Label
+        v-if="wallets.length && isLoading > 0"
+        text="No wallet added"
+        class="message"
+      />
     </FlexboxLayout>
   </FlexboxLayout>
 </template>
@@ -58,15 +62,6 @@ export default {
     };
   },
   computed: {
-    isThereAvailableWallets() {
-      return this.wallets.length || this.isLoading > 0 ? "collapse" : "visible";
-    },
-    canDisplayWalletsValue() {
-      return this.isLoading || this.errored ? "collapse" : "visible";
-    },
-    isThereError() {
-      return this.errored ? "visible" : "collapse";
-    },
     sortedWallets() {
       const wallets = this.wallets;
       const sortWallets = (walletA, walletB) => walletB.value - walletA.value;
