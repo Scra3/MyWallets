@@ -136,9 +136,9 @@ export default {
 
     .add-button {
       border-radius: 100;
-      width: 70;
-      height: 72;
-      font-size: 40;
+      width: 60;
+      height: 60;
+      font-size: 30;
       background-color: $grey;
       color: $dark-grey;
       margin-bottom: 20;
@@ -166,11 +166,10 @@ export default {
   }
 
   .wallets {
-    height: 250;
+    height: 200;
     flex-direction: column;
 
     .wallet {
-      border-radius: 5;
       padding: 10;
       background-color: $grey;
       justify-content: space-between;
@@ -181,14 +180,14 @@ export default {
         align-items: center;
 
         .currency {
-          font-size: 20;
+          font-size: 15;
           color: $blue;
           margin-left: 20;
         }
 
         .logo {
-          height: 30;
-          width: 30;
+          height: 20;
+          width: 20;
         }
       }
 
