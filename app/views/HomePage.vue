@@ -15,7 +15,10 @@
       <ListView for="wallet in sortedWallets">
         <v-template>
           <FlexboxLayout class="wallet">
-            <Label :text="wallet.currency" class="currency" />
+            <FlexboxLayout class="title">
+              <Image :src="logoPath(wallet)" class="logo" />
+              <Label :text="wallet.currency" class="currency" />
+            </FlexboxLayout>
             <Label :text="`${wallet.balance} ${wallet.currency}`" />
             <Label :text="`$${wallet.price}`" />
             <Label :text="`$${wallet.value}`" class="value" />
@@ -87,6 +90,9 @@ export default {
     clearInterval(this.intervalID);
   },
   methods: {
+    logoPath(wallet) {
+      return `~/assets/images/${wallet.currency}.png`;
+    },
     async fetchWallets() {
       try {
         const pWallets = this.addresses.map(async address => {
@@ -170,9 +176,20 @@ export default {
       justify-content: space-between;
       align-items: center;
 
-      .currency {
-        font-size: 20;
-        color: $blue;
+      .title {
+        justify-content: center;
+        align-items: center;
+
+        .currency {
+          font-size: 20;
+          color: $blue;
+          margin-left: 20;
+        }
+
+        .logo {
+          height: 30;
+          width: 30;
+        }
       }
 
       .value {
