@@ -1,43 +1,40 @@
 <template>
-  <Page>
-    <ActionBar :flat="true" class="action-bar">
-      <StackLayout orientation="horizontal">
-        <Label text="My Wallets" class="title" />
-      </StackLayout>
-    </ActionBar>
+  <FlexboxLayout class="HomePage">
+    <FlexboxLayout class="wallets-value">
+      <Label :visibility="canDisplayWalletsValue" :text="walletsValue" />
+      <Label :visibility="isThereError" :text="message" class="message" />
 
-    <FlexboxLayout class="HomePage">
-      <FlexboxLayout class="wallets-value">
-        <Label :visibility="canDisplayWalletsValue" :text="walletsValue" />
-        <Label :visibility="isThereError" :text="message" class="message" />
-
-        <ActivityIndicator :busy="isLoading" />
-      </FlexboxLayout>
-
-      <FlexboxLayout class="button-container">
-        <Button text="+" class="add-button" />
-      </FlexboxLayout>
-
-      <FlexboxLayout class="wallets">
-        <ListView for="wallet in sortedWallets">
-          <v-template>
-            <FlexboxLayout class="wallet">
-              <Label :text="wallet.currency" class="currency" />
-              <Label :text="`${wallet.balance} ${wallet.currency}`" />
-              <Label :text="`$${wallet.price}`" />
-              <Label :text="`$${wallet.value}`" class="value" />
-            </FlexboxLayout>
-          </v-template>
-        </ListView>
-
-        <Label :visibility="isThereAvailableWallets" text="No wallet added" class="message" />
-      </FlexboxLayout>
+      <ActivityIndicator :busy="isLoading" />
     </FlexboxLayout>
-  </Page>
+
+    <FlexboxLayout class="button-container">
+      <Button text="+" class="add-button" />
+    </FlexboxLayout>
+
+    <FlexboxLayout class="wallets">
+      <ListView for="wallet in sortedWallets">
+        <v-template>
+          <FlexboxLayout class="wallet">
+            <Label :text="wallet.currency" class="currency" />
+            <Label :text="`${wallet.balance} ${wallet.currency}`" />
+            <Label :text="`$${wallet.price}`" />
+            <Label :text="`$${wallet.value}`" class="value" />
+          </FlexboxLayout>
+        </v-template>
+      </ListView>
+
+      <Label :visibility="isThereAvailableWallets" text="No wallet added" class="message" />
+    </FlexboxLayout>
+  </FlexboxLayout>
 </template>
 
 <script>
-import { fetchXRPWallet, fetchETHWallet, fetchEOSWallet, fetchNEOWallet } from "@/http.js";
+import {
+  fetchXRPWallet,
+  fetchETHWallet,
+  fetchEOSWallet,
+  fetchNEOWallet
+} from "@/http.js";
 import { ETH, XRP, EOS, NEO } from "@/constants.js";
 
 export default {
@@ -122,21 +119,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.action-bar {
-  background-color: #222831;
-
-  .title {
-    color: #00adb5;
-    font-size: 24;
-    vertical-align: center;
-  }
-}
+<style lang="scss" scoped>
+@import "../styles.scss";
 
 .HomePage {
-  background-color: #222831;
+  background-color: $dark-grey;
   flex-direction: column;
-  color: #eee;
+  color: $white;
   align-items: flex-start;
 
   .button-container {
@@ -148,19 +137,19 @@ export default {
       width: 70;
       height: 72;
       font-size: 40;
-      background-color: #393e46;
-      color: #222831;
+      background-color: $grey;
+      color: $dark-grey;
       margin-bottom: 20;
       margin-right: 20;
     }
 
     .add-button:active {
-      color: #00adb5;
+      color: $blue;
     }
   }
 
   .wallets-value {
-    color: #eee;
+    color: $white;
     font-size: 30;
     width: 100%;
     flex-direction: column;
@@ -181,13 +170,13 @@ export default {
     .wallet {
       border-radius: 5;
       padding: 10;
-      background-color: #393e46;
+      background-color: $grey;
       justify-content: space-between;
       align-items: center;
 
       .currency {
         font-size: 20;
-        color: #00adb5;
+        color: $blue;
       }
 
       .value {
