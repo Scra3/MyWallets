@@ -12,8 +12,16 @@ module.exports = {
     sourceType: "module",
     allowImportExportEverywhere: false
   },
+  env: {
+    "jasmine": true
+  },
   rules: {
-    // override/add rules settings here, such as:
-    // 'vue/no-unused-vars': 'error'
+    'vue/max-attributes-per-line': [2, {
+      'singleline': 20,
+      'multiline': {
+        'max': 1,
+        'allowFirstLine': false
+      }
+    }]
   }
-}
+};

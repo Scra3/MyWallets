@@ -3,6 +3,7 @@ import App from "./components/App";
 import VueDevtools from "nativescript-vue-devtools";
 import store from "./store";
 
+/* global TNS_ENV */
 if (TNS_ENV !== "production") {
   Vue.use(VueDevtools);
 }
