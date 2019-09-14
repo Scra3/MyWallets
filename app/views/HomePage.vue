@@ -68,8 +68,9 @@ export default {
       return this.errored ? "visible" : "collapse";
     },
     sortedWallets() {
+      const wallets = this.wallets;
       const sortWallets = (walletA, walletB) => walletB.value - walletA.value;
-      return this.wallets.sort(sortWallets);
+      return wallets.sort(sortWallets);
     },
     walletsValue() {
       if (this.wallets.length > 0) {
