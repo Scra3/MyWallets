@@ -1,4 +1,4 @@
-const httpModule = require("tns-core-modules/http");
+import * as httpModule from "tns-core-modules/http";
 import { ETH, XRP, EOS, NEO } from "@/constants.js";
 
 const fetchXRPPrice = async () =>
