@@ -23,8 +23,9 @@
           <v-template>
             <FlexboxLayout class="wallet">
               <Label :text="wallet.currency" class="currency" />
-              <Label :text="wallet.balance" />
-              <Label :text="wallet.value" class="value" />
+              <Label :text="`${wallet.balance} ${wallet.currency}`" />
+              <Label :text="`$${wallet.price}`" />
+              <Label :text="`$${wallet.value}`" class="value" />
             </FlexboxLayout>
           </v-template>
         </ListView>
@@ -51,7 +52,7 @@ export default {
         },
         { currency: XRP, public_key: "rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR" },
         { currency: EOS, account_name: "gi3tmnzsgqge" },
-        { currency: NEO, public_key: "Abf2qMs1pzQb8kYk9RuxtUb9jtRKJVuBJt" }
+        { currency: NEO, public_key: "ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf" }
       ],
       intervalID: null,
       isLoading: true,
@@ -61,7 +62,7 @@ export default {
   },
   computed: {
     isThereAvailableWallets() {
-      return this.wallets.length > 0 ? "collapse" : "visible";
+      return this.wallets.length || this.isLoading > 0 ? "collapse" : "visible";
     },
     canDisplayWalletsValue() {
       return this.isLoading || this.errored ? "collapse" : "visible";
@@ -77,7 +78,7 @@ export default {
       if (this.wallets.length > 0) {
         const sum = (currentValue, wallet) =>
           currentValue + parseFloat(wallet.value);
-        return parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2);
+        return `$${parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2)}`;
       }
 
       return 0;
