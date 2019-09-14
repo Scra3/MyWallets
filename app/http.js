@@ -1,5 +1,5 @@
 const httpModule = require("tns-core-modules/http");
-import { ETH, XRP, EOS } from "@/constants.js";
+import { ETH, XRP, EOS, NEO } from "@/constants.js";
 
 const fetchXRPPrice = async () =>
   httpModule.getJSON(
@@ -14,6 +14,11 @@ const fetchXETHPrice = async () =>
 const fetchXEOSPrice = async () =>
   httpModule.getJSON(
     "https://api.coingecko.com/api/v3/simple/price?ids=eos&vs_currencies=eur"
+  );
+
+const fetchXNEOPrice = async () =>
+  httpModule.getJSON(
+    "https://api.coingecko.com/api/v3/simple/price?ids=neo&vs_currencies=eur"
   );
 
 const fetchXRPWallet = async address => {
@@ -53,7 +58,9 @@ const fetchEOSWallet = async accountName => {
     const removeEOSUnit = value => value.slice(0, -4);
 
     const available = parseFloat(removeEOSUnit(wallet.core_liquid_balance));
-    const cpuStaked = parseFloat(removeEOSUnit(wallet.core_liquid_balance));
+    const cpuStaked = parseFloat(
+      removeEOSUnit(wallet.total_resources.cpu_weight)
+    );
     const balance = parseFloat(available + cpuStaked * 2);
 
     return {
@@ -87,4 +94,24 @@ const fetchETHWallet = async address => {
   }
 };
 
-export { fetchXRPWallet, fetchXRPPrice, fetchETHWallet, fetchEOSWallet };
+const fetchNEOWallet = async address => {
+  try {
+    const pWallet = httpModule.getJSON(
+      `https://api.neoscan.io/api/main_net/v1/get_balance/${address}`
+    );
+    const pPrice = fetchXNEOPrice();
+    const [price, wallet] = await Promise.all([pPrice, pWallet]);
+
+    const balance = parseFloat(wallet.balance[0].amount);
+    return {
+      currency: NEO,
+      balance: balance,
+      value: (price.neo.eur * balance).toFixed(2)
+    };
+  } catch (error) {
+    console.log(error);
+    throw "NEO address is probably incorrect";
+  }
+};
+
+export { fetchXRPWallet, fetchETHWallet, fetchEOSWallet, fetchNEOWallet };

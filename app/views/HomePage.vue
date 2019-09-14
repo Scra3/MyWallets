@@ -36,8 +36,8 @@
 </template>
 
 <script>
-import { fetchXRPWallet, fetchETHWallet, fetchEOSWallet } from "@/http.js";
-import { ETH, XRP, EOS } from "@/constants.js";
+import { fetchXRPWallet, fetchETHWallet, fetchEOSWallet, fetchNEOWallet } from "@/http.js";
+import { ETH, XRP, EOS, NEO } from "@/constants.js";
 
 export default {
   name: "HomePage",
@@ -50,7 +50,8 @@ export default {
           public_key: "0x70Fe19189628d1050cb0e14aa7A1BBc246A48183"
         },
         { currency: XRP, public_key: "rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR" },
-        { currency: EOS, account_name: "gi3tmnzsgqge" }
+        { currency: EOS, account_name: "gi3tmnzsgqge" },
+        { currency: NEO, public_key: "Abf2qMs1pzQb8kYk9RuxtUb9jtRKJVuBJt" }
       ],
       intervalID: null,
       isLoading: true,
@@ -89,7 +90,6 @@ export default {
   },
   methods: {
     async fetchWallets() {
-      this.wallets = [];
       try {
         const pWallets = this.addresses.map(async address => {
           if (address.currency === XRP) {
@@ -98,6 +98,8 @@ export default {
             return fetchETHWallet(address.public_key);
           } else if (address.currency === EOS) {
             return fetchEOSWallet(address.account_name);
+          } else if (address.currency === NEO) {
+            return fetchNEOWallet(address.public_key);
           }
 
           throw "Address is undefined";
