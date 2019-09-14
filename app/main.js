@@ -3,8 +3,6 @@ import App from "./components/App";
 import VueDevtools from "nativescript-vue-devtools";
 import store from "./store";
 
-import "./style.scss";
-
 if (TNS_ENV !== "production") {
   Vue.use(VueDevtools);
 }
