@@ -19,12 +19,12 @@
       </FlexboxLayout>
 
       <FlexboxLayout class="wallets">
-        <ListView for="portfolio in wallets">
+        <ListView for="wallet in sortedWallets">
           <v-template>
             <FlexboxLayout class="wallet">
-              <Label :text="portfolio.currency" class="currency" />
-              <Label :text="portfolio.balance" />
-              <Label :text="portfolio.value" class="value" />
+              <Label :text="wallet.currency" class="currency" />
+              <Label :text="wallet.balance" />
+              <Label :text="wallet.value" class="value" />
             </FlexboxLayout>
           </v-template>
         </ListView>
@@ -68,6 +68,10 @@ export default {
     },
     isThereError() {
       return this.errored ? "visible" : "collapse";
+    },
+    sortedWallets() {
+      const sortWallets = (walletA, walletB) => walletB.value - walletA.value;
+      return this.wallets.sort(sortWallets);
     },
     walletsValue() {
       if (this.wallets.length > 0) {
