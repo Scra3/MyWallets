@@ -1,13 +1,14 @@
 <template>
   <FlexboxLayout class="HomePage">
     <FlexboxLayout class="wallets-value">
-      <Label v-if="!isLoading && !errored" :text="walletsValue" />
-      <Label v-if="errored" :text="message" class="message" />
-
-      <ActivityIndicator :busy="isLoading" />
+      <ActivityIndicator v-if="isLoading" :busy="isLoading" />
+      <template v-else>
+        <Label :text="walletsValue" />
+        <Image @tap="refresh" src="~/assets/images/refresh.png" class="refresh-button" />
+      </template>
     </FlexboxLayout>
 
-    <FlexboxLayout class="button-container">
+    <FlexboxLayout v-if="!isLoading" class="button-container">
       <Button text="+" class="add-button" />
     </FlexboxLayout>
 
@@ -19,15 +20,20 @@
               <Image :src="logoPath(wallet)" class="logo" />
               <Label :text="wallet.currency" class="currency" />
             </FlexboxLayout>
-            <Label :text="`${wallet.balance} ${wallet.currency}`" />
-            <Label :text="`$${wallet.price}`" />
-            <Label :text="`$${wallet.value}`" class="value" />
+            <template v-if="wallet.errored">
+              <Label text="Error" class="error" />
+            </template>
+            <template v-else>
+              <Label :text="`${wallet.balance} ${wallet.currency}`" />
+              <Label :text="`$${wallet.price}`" />
+              <Label :text="`$${wallet.value}`" class="value" />
+            </template>
           </FlexboxLayout>
         </v-template>
       </ListView>
 
       <Label
-        v-if="wallets.length && isLoading > 0"
+        v-if="wallets.length === 0 && isLoading"
         text="No wallet added"
         class="message"
       />
@@ -85,6 +91,7 @@ export default {
     this.isLoading = true;
     this.fetchWallets();
     this.intervalID = setInterval(this.fetchWallets, 60000);
+    this.isLoading = false;
   },
   beforeDestroy() {
     clearInterval(this.intervalID);
@@ -93,29 +100,27 @@ export default {
     logoPath(wallet) {
       return `~/assets/images/${wallet.currency}.png`;
     },
-    async fetchWallets() {
-      try {
-        const pWallets = this.addresses.map(async address => {
-          if (address.currency === XRP) {
-            return fetchXRPWallet(address.public_key);
-          } else if (address.currency === ETH) {
-            return fetchETHWallet(address.public_key);
-          } else if (address.currency === EOS) {
-            return fetchEOSWallet(address.account_name);
-          } else if (address.currency === NEO) {
-            return fetchNEOWallet(address.public_key);
-          }
-
-          throw "Address is undefined";
-        });
-
-        this.wallets = await Promise.all(pWallets);
-      } catch (error) {
-        this.message = error;
-        this.errored = true;
-      } finally {
+    refresh() {
+      this.isLoading = true;
+      this.fetchWallets();
+      setTimeout(() => {
         this.isLoading = false;
-      }
+      }, 1000);
+    },
+    async fetchWallets() {
+      const pWallets = this.addresses.map(async address => {
+        if (address.currency === XRP) {
+          return fetchXRPWallet(address.public_key);
+        } else if (address.currency === ETH) {
+          return fetchETHWallet(address.public_key);
+        } else if (address.currency === EOS) {
+          return fetchEOSWallet(address.account_name);
+        } else if (address.currency === NEO) {
+          return fetchNEOWallet(address.public_key);
+        }
+      });
+
+      this.wallets = await Promise.all(pWallets);
     }
   }
 };
@@ -154,14 +159,15 @@ export default {
     color: $white;
     font-size: 30;
     width: 100%;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     flex-grow: 1;
     font-weight: bold;
 
-    .message {
-      font-size: 20;
+    .refresh-button {
+      width: 35;
+      height: 35;
+      margin-left: 40;
     }
   }
 
@@ -193,6 +199,10 @@ export default {
 
       .value {
         font-weight: bold;
+      }
+
+      .error {
+        color: $red;
       }
     }
 

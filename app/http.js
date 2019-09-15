@@ -36,11 +36,15 @@ const fetchXRPWallet = async address => {
       currency: XRP,
       balance: balance,
       value: (price * balance).toFixed(2),
-      price: price
+      price: price,
+      errored: false
     };
   } catch (error) {
     console.log(error);
-    throw "Xrp address is probably incorrect";
+    return {
+      errored: true,
+      currency: XRP
+    };
   }
 };
 
@@ -71,11 +75,15 @@ const fetchEOSWallet = async accountName => {
       currency: EOS,
       balance: balance,
       value: (price * balance).toFixed(2),
-      price: price
+      price: price,
+      errored: false
     };
   } catch (error) {
     console.log(error);
-    throw "EOS address is probably incorrect";
+    return {
+      errored: true,
+      currency: EOS
+    };
   }
 };
 
@@ -94,11 +102,15 @@ const fetchETHWallet = async address => {
       currency: ETH,
       balance: balance,
       value: (price * balance).toFixed(2),
-      price: price.toFixed(2)
+      price: price.toFixed(2),
+      errored: false
     };
   } catch (error) {
     console.log(error);
-    throw "ETH address is probably incorrect";
+    return {
+      errored: true,
+      currency: ETH,z
+    };
   }
 };
 
@@ -117,11 +129,15 @@ const fetchNEOWallet = async address => {
       currency: NEO,
       balance: balance,
       value: (price * balance).toFixed(2),
-      price: price
+      price: price,
+      errored: false
     };
   } catch (error) {
     console.log(error);
-    throw "NEO address is probably incorrect";
+    return {
+      errored: true,
+      currency: NEO
+    };
   }
 };
 
