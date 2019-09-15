@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import HomePage from "@/views/HomePage";
+import HomePage from "@/pages/HomePage";
 
 export default {
   components: { HomePage }
@@ -19,7 +19,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../styles.scss";
+@import "styles";
 
 .action-bar {
   background-color: $dark-grey;
