@@ -203,7 +203,7 @@ export default {
       }
 
       .error {
-        color: $red;
+        color: $error-color;
       }
     }
 
