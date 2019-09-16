@@ -8,7 +8,7 @@
       </template>
     </FlexboxLayout>
 
-    <FlexboxLayout v-if="!isLoading" class="button-container">
+    <FlexboxLayout class="button-container">
       <Button text="+" class="add-button" />
     </FlexboxLayout>
 
@@ -26,7 +26,7 @@
             <template v-else>
               <Label :text="`${wallet.balance} ${wallet.currency}`" />
               <Label :text="`$${wallet.price}`" />
-              <Label :text="`$${wallet.value}`" class="value" />
+              <Label :text="`$${wallet.value()}`" class="value" />
             </template>
           </FlexboxLayout>
         </v-template>
@@ -48,6 +48,7 @@ import {
   fetchEOSWallet,
   fetchNEOWallet
 } from "@/http.js";
+
 import { ETH, XRP, EOS, NEO } from "@/constants.js";
 
 export default {
@@ -67,19 +68,19 @@ export default {
       intervalID: null,
       isLoading: true,
       errored: false,
-      message: "Cannot synchronize wallets"
+      message: null
     };
   },
   computed: {
     sortedWallets() {
       const wallets = this.wallets;
-      const sortWallets = (walletA, walletB) => walletB.value - walletA.value;
+      const sortWallets = (walletA, walletB) =>
+        walletB.value() - walletA.value();
       return wallets.sort(sortWallets);
     },
     walletsValue() {
       if (this.wallets.length > 0) {
-        const sum = (currentValue, wallet) =>
-          currentValue + parseFloat(wallet.value);
+        const sum = (currentValue, wallet) => currentValue + parseFloat(wallet.value());
         return `$${parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2)}`;
       }
 

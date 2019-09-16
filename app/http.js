@@ -1,5 +1,5 @@
 import * as httpModule from "tns-core-modules/http";
-import { ETH, XRP, EOS, NEO } from "@/constants.js";
+import { XRPWallet, EOSWallet, ETHWallet, NEOWallet } from "@/models/Wallet.js";
 
 const fetchXRPPrice = async () =>
   httpModule.getJSON(
@@ -22,6 +22,8 @@ const fetchXNEOPrice = async () =>
   );
 
 const fetchXRPWallet = async address => {
+  const xrpWallet = new XRPWallet();
+
   try {
     const pWallet = httpModule.getJSON(
       `https://data.ripple.com/v2/accounts/${address}/balance_changes?descending=true&limit=1)`
@@ -29,26 +31,21 @@ const fetchXRPWallet = async address => {
     const pPrice = fetchXRPPrice();
     let [price, wallet] = await Promise.all([pPrice, pWallet]);
 
-    const balance = parseFloat(wallet.balance_changes[0].final_balance);
-    price = parseFloat(price.ripple.usd);
+    xrpWallet.balance = wallet.balance_changes[0].final_balance;
+    xrpWallet.price = price.ripple.usd;
 
-    return {
-      currency: XRP,
-      balance: balance,
-      value: (price * balance).toFixed(2),
-      price: price,
-      errored: false
-    };
+    return xrpWallet;
   } catch (error) {
     console.log(error);
-    return {
-      errored: true,
-      currency: XRP
-    };
+
+    xrpWallet.errored = true;
+    return xrpWallet;
   }
 };
 
 const fetchEOSWallet = async accountName => {
+  const eosWallet = new EOSWallet();
+
   try {
     const pWallet = httpModule.request({
       url: "https://eos.greymass.com/v1/chain/get_account",
@@ -68,26 +65,21 @@ const fetchEOSWallet = async accountName => {
     const cpuStaked = parseFloat(
       removeEOSUnit(wallet.total_resources.cpu_weight)
     );
-    const balance = parseFloat(available + cpuStaked * 2);
-    price = parseFloat(price.eos.usd);
 
-    return {
-      currency: EOS,
-      balance: balance,
-      value: (price * balance).toFixed(2),
-      price: price,
-      errored: false
-    };
+    eosWallet.balance = available + cpuStaked * 2;
+    eosWallet.price = price.eos.usd;
+    return eosWallet;
   } catch (error) {
     console.log(error);
-    return {
-      errored: true,
-      currency: EOS
-    };
+
+    eosWallet.errored = true;
+    return eosWallet;
   }
 };
 
 const fetchETHWallet = async address => {
+  const ethWallet = new ETHWallet();
+
   try {
     const pWallet = httpModule.getJSON(
       `https://api.etherscan.io/api?module=account&action=balance&address=${address}&tag=latest&apikey=R9D635X3ZRAJHHWH7E4TVJ4IE8N7GBE8QF`
@@ -95,26 +87,21 @@ const fetchETHWallet = async address => {
     const pPrice = fetchXETHPrice();
     let [price, wallet] = await Promise.all([pPrice, pWallet]);
 
-    const balance = parseFloat(wallet.result) / 1000000000000000000;
-    price = parseFloat(price.ethereum.usd);
+    ethWallet.balance = parseFloat(wallet.result) / 1000000000000000000;
+    ethWallet.price = price.ethereum.usd;
 
-    return {
-      currency: ETH,
-      balance: balance,
-      value: (price * balance).toFixed(2),
-      price: price.toFixed(2),
-      errored: false
-    };
+    return ethWallet;
   } catch (error) {
     console.log(error);
-    return {
-      errored: true,
-      currency: ETH,z
-    };
+
+    ethWallet.errored = true;
+    return ethWallet;
   }
 };
 
 const fetchNEOWallet = async address => {
+  const neoWallet = new NEOWallet();
+
   try {
     const pWallet = httpModule.getJSON(
       `https://api.neoscan.io/api/main_net/v1/get_balance/${address}`
@@ -122,22 +109,14 @@ const fetchNEOWallet = async address => {
     const pPrice = fetchXNEOPrice();
     let [price, wallet] = await Promise.all([pPrice, pWallet]);
 
-    const balance = parseFloat(wallet.balance[0].amount);
-    price = parseFloat(price.neo.usd);
-
-    return {
-      currency: NEO,
-      balance: balance,
-      value: (price * balance).toFixed(2),
-      price: price,
-      errored: false
-    };
+    neoWallet.balance = wallet.balance[0].amount;
+    neoWallet.price = price.neo.usd;
+    return neoWallet;
   } catch (error) {
     console.log(error);
-    return {
-      errored: true,
-      currency: NEO
-    };
+
+    neoWallet.errored = true;
+    return neoWallet;
   }
 };
 
