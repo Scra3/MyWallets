@@ -7,7 +7,7 @@
     "lint": "eslint --ext .js,.vue app",
     "stylelint": "stylelint \"app/**/*.vue\" \"app/**/*.scss\"",
     "lint-fix": "eslint --ext .js,.vue app --fix || stylelint \"app/**/*.vue\" \"app/**/*.scss\" --fix",
-    "tests": "tns test android"
+    "test": "tns test android"
   },
   "license": "MIT",
   "nativescript": {
