@@ -1,38 +1,38 @@
 import * as httpModule from "tns-core-modules/http";
 import { XRPWallet, EOSWallet, ETHWallet, NEOWallet } from "@/models/Wallet.js";
 
-const fetchXRPPrice = async () =>
+const fetchXRPPrice = async currency =>
   httpModule.getJSON(
-    "https://api.coingecko.com/api/v3/simple/price?ids=ripple&vs_currencies=usd"
+    `https://api.coingecko.com/api/v3/simple/price?ids=ripple&vs_currencies=${currency}`
   );
 
-const fetchXETHPrice = async () =>
+const fetchXETHPrice = async currency =>
   httpModule.getJSON(
-    "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+    `https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=${currency}`
   );
 
-const fetchXEOSPrice = async () =>
+const fetchXEOSPrice = async currency =>
   httpModule.getJSON(
-    "https://api.coingecko.com/api/v3/simple/price?ids=eos&vs_currencies=usd"
+    `https://api.coingecko.com/api/v3/simple/price?ids=eos&vs_currencies=${currency}`
   );
 
-const fetchXNEOPrice = async () =>
+const fetchXNEOPrice = async currency =>
   httpModule.getJSON(
-    "https://api.coingecko.com/api/v3/simple/price?ids=neo&vs_currencies=usd"
+    `https://api.coingecko.com/api/v3/simple/price?ids=neo&vs_currencies=${currency}`
   );
 
-const fetchXRPWallet = async address => {
+const fetchXRPWallet = async (address, currency) => {
   const xrpWallet = new XRPWallet();
 
   try {
     const pWallet = httpModule.getJSON(
       `https://data.ripple.com/v2/accounts/${address}/balance_changes?descending=true&limit=1)`
     );
-    const pPrice = fetchXRPPrice();
+    const pPrice = fetchXRPPrice(currency);
     let [price, wallet] = await Promise.all([pPrice, pWallet]);
 
     xrpWallet.balance = wallet.balance_changes[0].final_balance;
-    xrpWallet.price = price.ripple.usd;
+    xrpWallet.price = price.ripple[currency];
 
     return xrpWallet;
   } catch (error) {
@@ -43,8 +43,8 @@ const fetchXRPWallet = async address => {
   }
 };
 
-const fetchEOSWallet = async accountName => {
-  const eosWallet = new EOSWallet();
+const fetchEOSWallet = async (accountName, currency) => {
+  const eosWallet = new EOSWallet(currency);
 
   try {
     const pWallet = httpModule.request({
@@ -54,7 +54,7 @@ const fetchEOSWallet = async accountName => {
       content: JSON.stringify({ account_name: accountName })
     });
 
-    const pPrice = fetchXEOSPrice();
+    const pPrice = fetchXEOSPrice(currency);
     let [price, wallet] = await Promise.all([pPrice, pWallet]);
 
     wallet = wallet.content.toJSON();
@@ -67,7 +67,7 @@ const fetchEOSWallet = async accountName => {
     );
 
     eosWallet.balance = available + cpuStaked * 2;
-    eosWallet.price = price.eos.usd;
+    eosWallet.price = price.eos[currency];
     return eosWallet;
   } catch (error) {
     console.log(error);
@@ -77,18 +77,18 @@ const fetchEOSWallet = async accountName => {
   }
 };
 
-const fetchETHWallet = async address => {
-  const ethWallet = new ETHWallet();
+const fetchETHWallet = async (address, currency) => {
+  const ethWallet = new ETHWallet(currency);
 
   try {
     const pWallet = httpModule.getJSON(
       `https://api.etherscan.io/api?module=account&action=balance&address=${address}&tag=latest&apikey=R9D635X3ZRAJHHWH7E4TVJ4IE8N7GBE8QF`
     );
-    const pPrice = fetchXETHPrice();
+    const pPrice = fetchXETHPrice(currency);
     let [price, wallet] = await Promise.all([pPrice, pWallet]);
 
     ethWallet.balance = parseFloat(wallet.result) / 1000000000000000000;
-    ethWallet.price = price.ethereum.usd;
+    ethWallet.price = price.ethereum[currency];
 
     return ethWallet;
   } catch (error) {
@@ -99,18 +99,18 @@ const fetchETHWallet = async address => {
   }
 };
 
-const fetchNEOWallet = async address => {
-  const neoWallet = new NEOWallet();
+const fetchNEOWallet = async (address, currency) => {
+  const neoWallet = new NEOWallet(currency);
 
   try {
     const pWallet = httpModule.getJSON(
       `https://api.neoscan.io/api/main_net/v1/get_balance/${address}`
     );
-    const pPrice = fetchXNEOPrice();
+    const pPrice = fetchXNEOPrice(currency);
     let [price, wallet] = await Promise.all([pPrice, pWallet]);
 
     neoWallet.balance = wallet.balance[0].amount;
-    neoWallet.price = price.neo.usd;
+    neoWallet.price = price.neo[currency];
     return neoWallet;
   } catch (error) {
     console.log(error);

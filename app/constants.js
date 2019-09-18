@@ -3,4 +3,7 @@ const XRP = "XRP";
 const EOS = "EOS";
 const NEO = "NEO";
 
-export { ETH, XRP, EOS, NEO };
+const USD = "usd";
+const EUR = "eur";
+
+export { ETH, XRP, EOS, NEO, USD, EUR };

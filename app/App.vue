@@ -1,20 +1,33 @@
 <template>
   <Page>
-    <ActionBar :flat="true" class="action-bar">
-      <StackLayout orientation="horizontal">
-        <Label text="My Wallets" class="title" />
-      </StackLayout>
+    <ActionBar title="My Wallets" class="action-bar">
+      <ActionItem
+        @tap="toggleCurrency"
+        :text="selectedCurrency"
+        class="currency"
+        android.position="right" />
     </ActionBar>
 
-    <HomePage />
+    <HomePage :currency="selectedCurrency" />
   </Page>
 </template>
 
 <script>
 import HomePage from "@/pages/HomePage";
+import { USD, EUR } from "@/constants.js";
 
 export default {
-  components: { HomePage }
+  components: { HomePage },
+  data() {
+    return {
+      selectedCurrency: USD
+    };
+  },
+  methods: {
+    toggleCurrency() {
+      this.selectedCurrency = this.selectedCurrency === USD ? EUR : USD;
+    }
+  }
 };
 </script>
 
@@ -23,11 +36,11 @@ export default {
 
 .action-bar {
   background-color: $dark-grey;
+  color: $blue;
 
-  .title {
+  .currency {
+    size: 24;
     color: $blue;
-    font-size: 24;
-    vertical-align: center;
   }
 }
 </style>

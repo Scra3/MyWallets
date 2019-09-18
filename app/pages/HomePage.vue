@@ -4,7 +4,7 @@
       <FlexboxLayout class="wallets-value">
         <ActivityIndicator v-if="isLoading" :busy="isLoading" />
         <template v-else>
-          <Label :text="walletsValue" />
+          <Label :text="`${currencySymbol}${walletsValue}`" />
         </template>
       </FlexboxLayout>
 
@@ -25,15 +25,15 @@
               </template>
               <template v-else>
                 <Label :text="`${wallet.balance} ${wallet.currency}`" />
-                <Label :text="`$${wallet.price}`" />
-                <Label :text="`$${wallet.value()}`" class="value" />
+                <Label :text="`${currencySymbol}${wallet.price}`" />
+                <Label :text="`${currencySymbol}${wallet.value()}`" class="value" />
               </template>
             </FlexboxLayout>
           </v-template>
         </ListView>
 
         <Label
-          v-if="wallets.length === 0 && isLoading"
+          v-if="wallets.length === 0 && !isLoading"
           text="No wallet added"
           class="message"
         />
@@ -54,6 +54,12 @@ import { ETH, XRP, EOS, NEO } from "@/constants.js";
 
 export default {
   name: "HomePage",
+  props: {
+    currency: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       wallets: [],
@@ -72,7 +78,17 @@ export default {
       message: null
     };
   },
+  watch: {
+    async currency() {
+      this.isLoading = true;
+      await this.fetchWallets();
+      this.isLoading = false;
+    }
+  },
   computed: {
+    currencySymbol() {
+      return this.currency === "usd" ? "$" : "€";
+    },
     sortedWallets() {
       const wallets = this.wallets;
       const sortWallets = (walletA, walletB) =>
@@ -83,16 +99,16 @@ export default {
       if (this.wallets.length > 0) {
         const sum = (currentValue, wallet) =>
           currentValue + parseFloat(wallet.value());
-        return `$${parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2)}`;
+        return parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2);
       }
 
       return 0;
     }
   },
-  mounted() {
+  async mounted() {
     // Loader must be display only for the first request
     this.isLoading = true;
-    this.fetchWallets();
+    await this.fetchWallets();
     this.intervalID = setInterval(this.fetchWallets, 60000);
     this.isLoading = false;
   },
@@ -115,13 +131,13 @@ export default {
     async fetchWallets() {
       const pWallets = this.addresses.map(async address => {
         if (address.currency === XRP) {
-          return fetchXRPWallet(address.public_key);
+          return fetchXRPWallet(address.public_key, this.currency);
         } else if (address.currency === ETH) {
-          return fetchETHWallet(address.public_key);
+          return fetchETHWallet(address.public_key, this.currency);
         } else if (address.currency === EOS) {
-          return fetchEOSWallet(address.account_name);
+          return fetchEOSWallet(address.account_name, this.currency);
         } else if (address.currency === NEO) {
-          return fetchNEOWallet(address.public_key);
+          return fetchNEOWallet(address.public_key, this.currency);
         }
       });
 

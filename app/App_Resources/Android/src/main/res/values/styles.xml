@@ -23,8 +23,9 @@
         <item name="toolbarStyle">@style/NativeScriptToolbarStyle</item>
 
         <item name="colorPrimary">@color/ns_primary</item>
-        <item name="colorPrimaryDark">@color/ns_primaryDark</item>
+        <item name="colorPrimaryDark">#222831</item>
         <item name="colorAccent">@color/ns_accent</item>
+        <item name="android:actionMenuTextColor">#00adb5</item>
     </style>
 
     <style name="AppTheme" parent="AppThemeBase">
