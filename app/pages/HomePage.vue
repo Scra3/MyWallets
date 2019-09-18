@@ -1,44 +1,45 @@
 <template>
-  <FlexboxLayout class="HomePage">
-    <FlexboxLayout class="wallets-value">
-      <ActivityIndicator v-if="isLoading" :busy="isLoading" />
-      <template v-else>
-        <Label :text="walletsValue" />
-        <Image @tap="refresh" src="~/assets/images/refresh.png" class="refresh-button" />
-      </template>
-    </FlexboxLayout>
+  <PullToRefresh @refresh="refresh">
+    <FlexboxLayout class="HomePage">
+      <FlexboxLayout class="wallets-value">
+        <ActivityIndicator v-if="isLoading" :busy="isLoading" />
+        <template v-else>
+          <Label :text="walletsValue" />
+        </template>
+      </FlexboxLayout>
 
-    <FlexboxLayout class="button-container">
-      <Button text="+" class="add-button" />
-    </FlexboxLayout>
+      <FlexboxLayout class="button-container">
+        <Button text="+" class="add-button" />
+      </FlexboxLayout>
 
-    <FlexboxLayout class="wallets">
-      <ListView for="wallet in sortedWallets">
-        <v-template>
-          <FlexboxLayout class="wallet">
-            <FlexboxLayout class="title">
-              <Image :src="logoPath(wallet)" class="logo" />
-              <Label :text="wallet.currency" class="currency" />
+      <FlexboxLayout class="wallets">
+        <ListView for="wallet in sortedWallets">
+          <v-template>
+            <FlexboxLayout class="wallet">
+              <FlexboxLayout class="title">
+                <Image :src="logoPath(wallet)" class="logo" />
+                <Label :text="wallet.currency" class="currency" />
+              </FlexboxLayout>
+              <template v-if="wallet.errored">
+                <Label text="Error" class="error" />
+              </template>
+              <template v-else>
+                <Label :text="`${wallet.balance} ${wallet.currency}`" />
+                <Label :text="`$${wallet.price}`" />
+                <Label :text="`$${wallet.value()}`" class="value" />
+              </template>
             </FlexboxLayout>
-            <template v-if="wallet.errored">
-              <Label text="Error" class="error" />
-            </template>
-            <template v-else>
-              <Label :text="`${wallet.balance} ${wallet.currency}`" />
-              <Label :text="`$${wallet.price}`" />
-              <Label :text="`$${wallet.value()}`" class="value" />
-            </template>
-          </FlexboxLayout>
-        </v-template>
-      </ListView>
+          </v-template>
+        </ListView>
 
-      <Label
-        v-if="wallets.length === 0 && isLoading"
-        text="No wallet added"
-        class="message"
-      />
+        <Label
+          v-if="wallets.length === 0 && isLoading"
+          text="No wallet added"
+          class="message"
+        />
+      </FlexboxLayout>
     </FlexboxLayout>
-  </FlexboxLayout>
+  </PullToRefresh>
 </template>
 
 <script>
@@ -80,7 +81,8 @@ export default {
     },
     walletsValue() {
       if (this.wallets.length > 0) {
-        const sum = (currentValue, wallet) => currentValue + parseFloat(wallet.value());
+        const sum = (currentValue, wallet) =>
+          currentValue + parseFloat(wallet.value());
         return `$${parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2)}`;
       }
 
@@ -101,12 +103,14 @@ export default {
     logoPath(wallet) {
       return `~/assets/images/${wallet.currency}.png`;
     },
-    refresh() {
+    async refresh(event) {
+      const pullRefresh = event.object;
       this.isLoading = true;
-      this.fetchWallets();
-      setTimeout(() => {
-        this.isLoading = false;
-      }, 1000);
+
+      await this.fetchWallets();
+
+      this.isLoading = false;
+      pullRefresh.refreshing = false;
     },
     async fetchWallets() {
       const pWallets = this.addresses.map(async address => {
@@ -164,6 +168,7 @@ export default {
     align-items: center;
     flex-grow: 1;
     font-weight: bold;
+    flex-direction: column;
 
     .refresh-button {
       width: 35;
