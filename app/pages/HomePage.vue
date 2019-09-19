@@ -26,7 +26,10 @@
               <template v-else>
                 <Label :text="`${wallet.balance} ${wallet.currency}`" />
                 <Label :text="`${currencySymbol}${wallet.price}`" />
-                <Label :text="`${currencySymbol}${wallet.value()}`" class="value" />
+                <Label
+                  :text="`${currencySymbol}${wallet.value()}`"
+                  class="value"
+                />
               </template>
             </FlexboxLayout>
           </v-template>
@@ -78,13 +81,6 @@ export default {
       message: null
     };
   },
-  watch: {
-    async currency() {
-      this.isLoading = true;
-      await this.fetchWallets();
-      this.isLoading = false;
-    }
-  },
   computed: {
     currencySymbol() {
       return this.currency === "usd" ? "$" : "€";
@@ -103,6 +99,13 @@ export default {
       }
 
       return 0;
+    }
+  },
+  watch: {
+    async currency() {
+      this.isLoading = true;
+      await this.fetchWallets();
+      this.isLoading = false;
     }
   },
   async mounted() {

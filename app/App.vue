@@ -5,7 +5,8 @@
         @tap="toggleCurrency"
         :text="selectedCurrency"
         class="currency"
-        android.position="right" />
+        android.position="right"
+      />
     </ActionBar>
 
     <HomePage :currency="selectedCurrency" />
