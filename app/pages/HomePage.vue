@@ -1,18 +1,18 @@
 <template>
-  <PullToRefresh @refresh="refresh">
-    <FlexboxLayout class="HomePage">
-      <FlexboxLayout class="wallets-value">
-        <ActivityIndicator v-if="isLoading" :busy="isLoading" />
-        <template v-else>
-          <Label :text="`${currencySymbol}${walletsValue}`" />
-        </template>
-      </FlexboxLayout>
+  <FlexboxLayout class="HomePage">
+    <FlexboxLayout class="wallets-value">
+      <ActivityIndicator v-if="isLoading" :busy="isLoading" color="#43ab92"/>
+      <template v-else>
+        <Label :text="`${currencySymbol}${walletsValue}`" />
+      </template>
+    </FlexboxLayout>
 
-      <FlexboxLayout class="button-container">
-        <Button text="+" class="add-button" />
-      </FlexboxLayout>
+    <FlexboxLayout class="button-container">
+      <Button text="+" class="add-button" />
+    </FlexboxLayout>
 
-      <FlexboxLayout class="wallets">
+    <FlexboxLayout class="wallets">
+      <PullToRefresh @refresh="refresh" color="#43ab92">
         <ListView for="wallet in sortedWallets">
           <v-template>
             <FlexboxLayout class="wallet">
@@ -34,15 +34,15 @@
             </FlexboxLayout>
           </v-template>
         </ListView>
+      </PullToRefresh>
 
-        <Label
-          v-if="wallets.length === 0 && !isLoading"
-          text="No wallet added"
-          class="message"
-        />
-      </FlexboxLayout>
+      <Label
+        v-if="wallets.length === 0 && !isLoading"
+        text="No wallet added"
+        class="message"
+      />
     </FlexboxLayout>
-  </PullToRefresh>
+  </FlexboxLayout>
 </template>
 
 <script>
@@ -73,6 +73,8 @@ export default {
         },
         { currency: XRP, public_key: "rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR" },
         { currency: EOS, account_name: "gi3tmnzsgqge" },
+        { currency: NEO, public_key: "ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf" },
+        { currency: NEO, public_key: "ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf" },
         { currency: NEO, public_key: "ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf" }
       ],
       intervalID: null,
@@ -156,7 +158,6 @@ export default {
 .HomePage {
   background-color: $dark-grey;
   flex-direction: column;
-  color: $white;
   align-items: flex-start;
 
   .button-container {
@@ -200,11 +201,13 @@ export default {
     height: 200;
     flex-direction: column;
 
+
     .wallet {
       padding: 10;
       background-color: $grey;
       justify-content: space-between;
       align-items: center;
+      color: $white;
 
       .title {
         justify-content: center;
