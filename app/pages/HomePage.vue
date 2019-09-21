@@ -1,7 +1,7 @@
 <template>
   <FlexboxLayout class="HomePage">
     <FlexboxLayout class="wallets-value">
-      <ActivityIndicator v-if="isLoading" :busy="isLoading" color="#43ab92"/>
+      <ActivityIndicator v-if="isLoading" :busy="isLoading" color="#43ab92" />
       <template v-else>
         <Label :text="`${currencySymbol}${walletsValue}`" />
       </template>
@@ -18,14 +18,22 @@
             <FlexboxLayout class="wallet">
               <FlexboxLayout class="title">
                 <Image :src="logoPath(wallet)" class="logo" />
-                <Label :text="wallet.currency" class="currency" />
+                <Label :text="wallet.coin" class="coin" />
               </FlexboxLayout>
               <template v-if="wallet.errored">
                 <Label text="Error" class="error" />
               </template>
               <template v-else>
-                <Label :text="`${wallet.balance} ${wallet.currency}`" />
+                <Label :text="`${wallet.balance} ${wallet.coin}`" />
                 <Label :text="`${currencySymbol}${wallet.price}`" />
+                <Label
+                  :text="wallet.change()"
+                  :class="[
+                    wallet.change()[0] === '+'
+                      ? 'positiveChange'
+                      : 'negativeChange'
+                  ]"
+                />
                 <Label
                   :text="`${currencySymbol}${wallet.value()}`"
                   class="value"
@@ -122,7 +130,7 @@ export default {
   },
   methods: {
     logoPath(wallet) {
-      return `~/assets/images/${wallet.currency}.png`;
+      return `~/assets/images/${wallet.coin}.png`;
     },
     async refresh(event) {
       const pullRefresh = event.object;
@@ -201,7 +209,6 @@ export default {
     height: 200;
     flex-direction: column;
 
-
     .wallet {
       padding: 10;
       background-color: $grey;
@@ -213,7 +220,7 @@ export default {
         justify-content: center;
         align-items: center;
 
-        .currency {
+        .coin {
           font-size: 15;
           color: $blue;
           margin-left: 20;
@@ -223,6 +230,14 @@ export default {
           height: 20;
           width: 20;
         }
+      }
+
+      .positiveChange {
+        color: $success-color;
+      }
+
+      .negativeChange {
+        color: $error-color;
       }
 
       .value {
