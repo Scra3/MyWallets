@@ -3,8 +3,8 @@ import { ETH, XRP, EOS, NEO } from "@/constants.js";
 class Wallet {
   constructor(coin, balance = 0, price = 0, prices = []) {
     this.coin = coin;
-    this.balance = parseFloat(balance).toFixed(2);
-    this.price = parseFloat(price).toFixed(2);
+    this.balance = parseFloat(balance);
+    this.price = parseFloat(price);
     this.prices = prices;
     this.errored = false;
   }
@@ -23,14 +23,13 @@ class Wallet {
 
     const currentPrice = this.prices[this.prices.length - 1][1];
     const firsPrice = this.prices[0][1];
+    const change = Math.abs(
+      ((currentPrice - firsPrice) * 100) / firsPrice
+    ).toFixed(2);
     if (currentPrice - firsPrice > 0) {
-      return `+${Math.abs(
-        ((currentPrice - firsPrice) * 100) / firsPrice
-      ).toFixed(2)}%`;
+      return `+${change}%`;
     } else {
-      return `-${Math.abs(
-        ((currentPrice - firsPrice) * 100) / firsPrice
-      ).toFixed(2)}%`;
+      return `-${change}%`;
     }
   }
 }
