@@ -25,15 +25,17 @@
               </template>
               <template v-else>
                 <Label :text="`${wallet.balance} ${wallet.coin}`" />
-                <Label :text="`${currencySymbol}${wallet.lastPrice()}`" />
-                <Label
-                  :text="`${wallet.change()}%`"
-                  :class="[
-                    wallet.change()[0] === '+'
-                      ? 'positiveChange'
-                      : 'negativeChange'
-                  ]"
-                />
+                <FlexboxLayout class="price">
+                  <Label :text="`${currencySymbol}${wallet.lastPrice()}`" />
+                  <Label
+                    :text="`${wallet.change()}%`"
+                    :class="[
+                      wallet.change()[0] === '+'
+                        ? 'positiveChange'
+                        : 'negativeChange'
+                    ]"
+                  />
+                </FlexboxLayout>
                 <Label
                   :text="`${currencySymbol}${wallet.value()}`"
                   class="value"
@@ -167,11 +169,11 @@ export default {
     text-align: center;
     vertical-align: center;
     margin: 10;
-    background: linear-gradient(to right, $success-color, $blue);
+    background: linear-gradient(to right, #fe8c00, #f83600); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     border-radius: 10;
-    height: 100;
+    height: 60;
     color: $white;
-    font-size: 30;
+    font-size: 25;
     font-weight: bold;
     width: 100%;
 
@@ -190,10 +192,10 @@ export default {
     .wallet {
       height: 60;
       padding: 10;
-      background-color: $grey;
       justify-content: space-between;
       align-items: center;
       color: $white;
+      background-image: linear-gradient(to right, #393e46, #333841, #2d333b, #282d36, #222831);
 
       .title {
         justify-content: center;
@@ -211,12 +213,18 @@ export default {
         }
       }
 
-      .positiveChange {
-        color: $success-color;
-      }
+      .price {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
 
-      .negativeChange {
-        color: $error-color;
+        .positiveChange {
+          color: $success-color;
+        }
+
+        .negativeChange {
+          color: $error-color;
+        }
       }
 
       .value {

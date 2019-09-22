@@ -37,7 +37,7 @@ export default {
 
 .action-bar {
   background-color: $dark-grey;
-  color: $blue;
+  color: $white;
 
   .currency {
     size: 24;
