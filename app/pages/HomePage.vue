@@ -25,7 +25,7 @@
               </template>
               <template v-else>
                 <Label :text="`${wallet.balance} ${wallet.coin}`" />
-                <Label :text="`${currencySymbol}${wallet.price}`" />
+                <Label :text="`${currencySymbol}${wallet.lastPrice()}`" />
                 <Label
                   :text="wallet.change()"
                   :class="[
@@ -81,8 +81,6 @@ export default {
         },
         { currency: XRP, public_key: "rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR" },
         { currency: EOS, account_name: "gi3tmnzsgqge" },
-        { currency: NEO, public_key: "ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf" },
-        { currency: NEO, public_key: "ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf" },
         { currency: NEO, public_key: "ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf" }
       ],
       intervalID: null,

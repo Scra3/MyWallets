@@ -1,10 +1,9 @@
 import { ETH, XRP, EOS, NEO } from "@/constants.js";
 
 class Wallet {
-  constructor(coin, balance = 0, price = 0, prices = []) {
+  constructor(coin, balance = 0, prices = []) {
     this.coin = coin;
     this.balance = parseFloat(balance);
-    this.price = parseFloat(price);
     this.prices = prices;
     this.errored = false;
   }
@@ -13,7 +12,7 @@ class Wallet {
     if (this.errored) {
       return 0;
     }
-    return parseFloat(this.price * this.balance).toFixed(2);
+    return parseFloat(this.lastPrice() * this.balance).toFixed(2);
   }
 
   change() {
@@ -31,6 +30,14 @@ class Wallet {
     } else {
       return `-${change}%`;
     }
+  }
+
+  lastPrice() {
+    if (this.prices.length === 0 || !this.prices) {
+      return undefined;
+    }
+
+    return parseFloat(this.prices[this.prices.length - 1][1]).toFixed(2);
   }
 }
 
