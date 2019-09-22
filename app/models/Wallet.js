@@ -17,19 +17,14 @@ class Wallet {
 
   change() {
     if (this.prices.length === 0 || !this.prices) {
-      return "?";
+      return 0;
     }
 
     const currentPrice = this.prices[this.prices.length - 1][1];
     const firsPrice = this.prices[0][1];
-    const change = Math.abs(
-      ((currentPrice - firsPrice) * 100) / firsPrice
-    ).toFixed(2);
-    if (currentPrice - firsPrice > 0) {
-      return `+${change}%`;
-    } else {
-      return `-${change}%`;
-    }
+    return parseFloat(((currentPrice - firsPrice) * 100) / firsPrice).toFixed(
+      2
+    );
   }
 
   lastPrice() {

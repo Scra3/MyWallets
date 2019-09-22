@@ -1,17 +1,17 @@
 <template>
-  <FlexboxLayout class="HomePage">
-    <FlexboxLayout class="wallets-value">
-      <ActivityIndicator v-if="isLoading" :busy="isLoading" color="#43ab92" />
+  <StackLayout class="HomePage">
+    <StackLayout class="wallets-value">
+      <ActivityIndicator
+        v-if="isLoading"
+        :busy="isLoading"
+        class="activity-indicator"
+      />
       <template v-else>
         <Label :text="`${currencySymbol}${walletsValue}`" />
       </template>
-    </FlexboxLayout>
+    </StackLayout>
 
-    <FlexboxLayout class="button-container">
-      <Button text="+" class="add-button" />
-    </FlexboxLayout>
-
-    <FlexboxLayout class="wallets">
+    <StackLayout class="wallets">
       <PullToRefresh @refresh="refresh" color="#43ab92">
         <ListView for="wallet in sortedWallets">
           <v-template>
@@ -27,7 +27,7 @@
                 <Label :text="`${wallet.balance} ${wallet.coin}`" />
                 <Label :text="`${currencySymbol}${wallet.lastPrice()}`" />
                 <Label
-                  :text="wallet.change()"
+                  :text="`${wallet.change()}%`"
                   :class="[
                     wallet.change()[0] === '+'
                       ? 'positiveChange'
@@ -49,8 +49,8 @@
         text="No wallet added"
         class="message"
       />
-    </FlexboxLayout>
-  </FlexboxLayout>
+    </StackLayout>
+  </StackLayout>
 </template>
 
 <script>
@@ -100,13 +100,12 @@ export default {
       return wallets.sort(sortWallets);
     },
     walletsValue() {
-      if (this.wallets.length > 0) {
-        const sum = (currentValue, wallet) =>
-          currentValue + parseFloat(wallet.value());
-        return parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2);
+      if (this.wallets.length === 0) {
+        return 0;
       }
-
-      return 0;
+      const sum = (currentValue, wallet) =>
+        currentValue + parseFloat(wallet.value());
+      return parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2);
     }
   },
   watch: {
@@ -163,38 +162,22 @@ export default {
 
 .HomePage {
   background-color: $dark-grey;
-  flex-direction: column;
-  align-items: flex-start;
-
-  .button-container {
-    width: 100%;
-    justify-content: flex-end;
-
-    .add-button {
-      border-radius: 100;
-      width: 60;
-      height: 60;
-      font-size: 30;
-      background-color: $grey;
-      color: $dark-grey;
-      margin-bottom: 20;
-      margin-right: 20;
-    }
-
-    .add-button:active {
-      color: $blue;
-    }
-  }
 
   .wallets-value {
+    text-align: center;
+    vertical-align: center;
+    margin: 10;
+    background: linear-gradient(to right, $success-color, $blue);
+    border-radius: 10;
+    height: 100;
     color: $white;
     font-size: 30;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1;
     font-weight: bold;
-    flex-direction: column;
+    width: 100%;
+
+    .activity-indicator {
+      color: $white;
+    }
 
     .refresh-button {
       width: 35;
@@ -204,10 +187,8 @@ export default {
   }
 
   .wallets {
-    height: 200;
-    flex-direction: column;
-
     .wallet {
+      height: 60;
       padding: 10;
       background-color: $grey;
       justify-content: space-between;
@@ -220,7 +201,7 @@ export default {
 
         .coin {
           font-size: 15;
-          color: $blue;
+          color: $white;
           margin-left: 20;
         }
 
