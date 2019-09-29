@@ -42,6 +42,7 @@ const fetchWalletsMarket = async (wallets, currency) => {
 
     wallet.priceChangePercentage24h = walletMarket.price_change_percentage_24h;
     wallet.currentPrice = walletMarket.current_price;
+    wallet.priceChange24 = walletMarket.price_change_24h;
   });
 
   return wallets;

@@ -1,15 +1,16 @@
 <template>
   <StackLayout class="HomePage">
-    <StackLayout class="wallets-value">
-      <ActivityIndicator
-        v-if="isLoading"
-        :busy="isLoading"
-        class="activity-indicator"
-      />
-      <template v-else>
+    <ActivityIndicator
+      v-if="isLoading"
+      :busy="isLoading"
+      class="activity-indicator"
+    />
+    <FlexboxLayout v-else class="wallets-value">
+      <template>
         <Label :text="`${currencySymbol}${walletsValue}`" />
+        <Label :text="`${walletsPriceChange24}${currencySymbol}`" />
       </template>
-    </StackLayout>
+    </FlexboxLayout>
 
     <StackLayout class="wallets">
       <PullToRefresh @refresh="refresh" color="#43ab92">
@@ -109,6 +110,14 @@ export default {
       const sum = (currentValue, wallet) =>
         currentValue + parseFloat(wallet.value());
       return parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2);
+    },
+    walletsPriceChange24() {
+      if (this.wallets.length === 0) {
+        return 0;
+      }
+      const sum = (currentValue, wallet) =>
+        currentValue + parseFloat(wallet.priceChange24);
+      return parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2);
     }
   },
   watch: {
@@ -167,9 +176,14 @@ export default {
 .HomePage {
   background-color: $dark-grey;
 
+  .activity-indicator {
+    height: 60;
+    margin: 10;
+  }
+
   .wallets-value {
-    text-align: center;
-    vertical-align: center;
+    justify-content: space-between;
+    align-items: center;
     margin: 10;
     border-radius: 10;
     height: 60;
@@ -177,10 +191,6 @@ export default {
     font-size: 25;
     font-weight: bold;
     width: 100%;
-
-    .activity-indicator {
-      color: $white;
-    }
 
     .refresh-button {
       width: 35;
@@ -196,7 +206,14 @@ export default {
       justify-content: space-between;
       align-items: center;
       color: $white;
-      background-image: linear-gradient(to right, #393e46, #333841, #2d333b, #282d36, #222831);
+      background-image: linear-gradient(
+        to right,
+        #393e46,
+        #333841,
+        #2d333b,
+        #282d36,
+        #222831
+      );
 
       .title {
         justify-content: center;

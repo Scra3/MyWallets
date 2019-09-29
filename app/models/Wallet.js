@@ -6,7 +6,8 @@ class Wallet {
     id,
     balance = 0,
     currentPrice = null,
-    priceChangePercentage24h = null
+    priceChangePercentage24h = null,
+    priceChange24 = null
   ) {
     this._id = id;
     this._balance = parseFloat(balance);
@@ -18,6 +19,8 @@ class Wallet {
     this._priceChangePercentage24h = parseFloat(
       priceChangePercentage24h
     ).toFixed(2);
+    this.priceChange24 = parseFloat(priceChange24).toFixed();
+    this._priceChange24 = priceChange24;
   }
 
   value() {
@@ -49,6 +52,14 @@ class Wallet {
 
   set id(value) {
     this._id = value;
+  }
+
+  set priceChange24(value) {
+    this._priceChange24 = value;
+  }
+
+  get priceChange24() {
+    return this._priceChange24;
   }
 
   get id() {
