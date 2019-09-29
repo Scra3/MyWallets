@@ -26,13 +26,13 @@
               <template v-else>
                 <Label :text="`${wallet.balance} ${wallet.coin}`" />
                 <FlexboxLayout class="price">
-                  <Label :text="`${currencySymbol}${wallet.lastPrice()}`" />
+                  <Label :text="`${currencySymbol}${wallet.currentPrice}`" />
                   <Label
-                    :text="`${wallet.change()}%`"
+                    :text="`${wallet.priceChangePercentage24h}%`"
                     :class="[
-                      wallet.change()[0] === '+'
-                        ? 'positiveChange'
-                        : 'negativeChange'
+                      wallet.priceChangePercentage24h[0] === '-'
+                        ? 'negativeChange'
+                        : 'positiveChange'
                     ]"
                   />
                 </FlexboxLayout>
@@ -60,7 +60,8 @@ import {
   fetchXRPWallet,
   fetchETHWallet,
   fetchEOSWallet,
-  fetchNEOWallet
+  fetchNEOWallet,
+  fetchWalletsMarket
 } from "@/http.js";
 
 import { ETH, XRP, EOS, NEO } from "@/constants.js";
@@ -154,6 +155,7 @@ export default {
       });
 
       this.wallets = await Promise.all(pWallets);
+      this.wallets = await fetchWalletsMarket(this.wallets, this.currency);
     }
   }
 };

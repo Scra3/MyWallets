@@ -1,5 +1,5 @@
-const ETH = "ETH";
-const XRP = "XRP";
+const ETH = "ETHEREUM";
+const XRP = "RIPPLE";
 const EOS = "EOS";
 const NEO = "NEO";
 

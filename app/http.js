@@ -1,20 +1,61 @@
 import * as httpModule from "tns-core-modules/http";
 import { XRPWallet, EOSWallet, ETHWallet, NEOWallet } from "@/models/Wallet.js";
 
-const fetchXRPWallet = async (address, currency) => {
+const fetchWalletsMarket = async (wallets, currency) => {
+  const ids = wallets.map(wallet => wallet.coin.toLowerCase()).join(",");
+  /*
+    {
+      "id": "eos",
+      "symbol": "eos",
+      "name": "EOS",
+      "image": "https://assets.coingecko.com/coins/images/738/large/eos-eos-logo.png?1547034481",
+      "current_price": 2.79,
+      "market_cap": 2872054092,
+      "market_cap_rank": 7,
+      "total_volume": 1411009423,
+      "high_24h": 2.87,
+      "low_24h": 2.77,
+      "price_change_24h": -0.0453254,
+      "price_change_percentage_24h": -1.59711,
+      "market_cap_change_24h": -46583115.64140131,
+      "market_cap_change_percentage_24h": -1.59606,
+      "circulating_supply": 1028457746.7103,
+      "total_supply": null,
+      "ath": 22.71,
+      "ath_change_percentage": -87.70379,
+      "ath_date": "2018-04-29T07:50:33.540Z",
+      "roi": {
+        "times": 1.8208647454663405,
+        "currency": "usd",
+        "percentage": 182.08647454663404
+      },
+      "last_updated": "2019-09-29T08:40:04.005Z"
+    }
+   */
+  const walletsMarket = await httpModule.getJSON(
+    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&ids=${ids}&order=market_cap_desc&per_page=100&page=1&sparkline=false`
+  );
+
+  wallets.forEach(wallet => {
+    const walletMarket = walletsMarket.find(w => w.id === wallet.coin.toLowerCase());
+
+    wallet.setPriceChangePercentage24h =
+      walletMarket.price_change_percentage_24h;
+    wallet.setCurrentPrice = walletMarket.current_price;
+  });
+
+  return wallets;
+};
+
+const fetchXRPWallet = async address => {
   const xrpWallet = new XRPWallet();
 
   try {
-    const pWallet = httpModule.getJSON(
+    const wallet = await httpModule.getJSON(
       `https://data.ripple.com/v2/accounts/${address}/balance_changes?descending=true&limit=1)`
     );
-    const pPrices = fetchDailyPrices("ripple", currency);
-
-    let [wallet, { prices }] = await Promise.all([pWallet, pPrices]);
 
     xrpWallet.balance = wallet.balance_changes[0].final_balance;
-    xrpWallet.prices = prices;
-
     return xrpWallet;
   } catch (error) {
     console.log(error);
@@ -28,17 +69,12 @@ const fetchEOSWallet = async (accountName, currency) => {
   const eosWallet = new EOSWallet(currency);
 
   try {
-    const pWallet = httpModule.request({
+    let wallet = await httpModule.request({
       url: "https://eos.greymass.com/v1/chain/get_account",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       content: JSON.stringify({ account_name: accountName })
     });
-
-    const pPrices = fetchDailyPrices("eos", currency);
-
-    let [wallet, { prices }] = await Promise.all([pWallet, pPrices]);
-
     wallet = wallet.content.toJSON();
 
     const removeEOSUnit = value => value.slice(0, -4);
@@ -49,7 +85,6 @@ const fetchEOSWallet = async (accountName, currency) => {
     );
 
     eosWallet.balance = available + cpuStaked * 2;
-    eosWallet.prices = prices;
 
     return eosWallet;
   } catch (error) {
@@ -64,15 +99,10 @@ const fetchETHWallet = async (address, currency) => {
   const ethWallet = new ETHWallet(currency);
 
   try {
-    const pWallet = httpModule.getJSON(
+    const wallet = await httpModule.getJSON(
       `https://api.etherscan.io/api?module=account&action=balance&address=${address}&tag=latest&apikey=R9D635X3ZRAJHHWH7E4TVJ4IE8N7GBE8QF`
     );
-    const pPrices = fetchDailyPrices("ethereum", currency);
-
-    let [wallet, { prices }] = await Promise.all([pWallet, pPrices]);
-
     ethWallet.balance = parseFloat(wallet.result) / 1000000000000000000;
-    ethWallet.prices = prices;
 
     return ethWallet;
   } catch (error) {
@@ -87,15 +117,11 @@ const fetchNEOWallet = async (address, currency) => {
   const neoWallet = new NEOWallet(currency);
 
   try {
-    const pWallet = httpModule.getJSON(
+    const wallet = await httpModule.getJSON(
       `https://api.neoscan.io/api/main_net/v1/get_balance/${address}`
     );
-    const pPrices = fetchDailyPrices("neo", currency);
-
-    let [wallet, { prices }] = await Promise.all([pWallet, pPrices]);
 
     neoWallet.balance = wallet.balance[0].amount;
-    neoWallet.prices = prices;
 
     return neoWallet;
   } catch (error) {
@@ -106,17 +132,10 @@ const fetchNEOWallet = async (address, currency) => {
   }
 };
 
-const fetchDailyPrices = (coin, currency) => {
-  const date = new Date();
-  const from = Math.floor(date.setDate(date.getDate() - 1) / 1000);
-  const to = Math.floor(Date.now() / 1000);
-  try {
-    return httpModule.getJSON(
-      `https://api.coingecko.com/api/v3/coins/${coin}/market_chart/range?vs_currency=${currency}&from=${from}&to=${to}`
-    );
-  } catch (error) {
-    console.log(error);
-  }
+export {
+  fetchXRPWallet,
+  fetchETHWallet,
+  fetchEOSWallet,
+  fetchNEOWallet,
+  fetchWalletsMarket
 };
-
-export { fetchXRPWallet, fetchETHWallet, fetchEOSWallet, fetchNEOWallet };

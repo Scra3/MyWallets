@@ -1,38 +1,66 @@
 import { ETH, XRP, EOS, NEO } from "@/constants.js";
 
 class Wallet {
-  constructor(coin, balance = 0, prices = []) {
-    this.coin = coin;
-    this.balance = parseFloat(balance);
-    this.prices = prices;
-    this.errored = false;
+  constructor(
+    coin,
+    balance = 0,
+    currentPrice = null,
+    priceChangePercentage24h = null
+  ) {
+    this._balance = parseFloat(balance);
+    this._currentPrice = parseFloat(currentPrice);
+    this._errored = false;
+    this._coin = coin;
+    this._balance = parseFloat(balance);
+    this._currentPrice = parseFloat(currentPrice);
+    this._priceChangePercentage24h = priceChangePercentage24h;
   }
 
   value() {
     if (this.errored) {
       return 0;
     }
-    return parseFloat(this.lastPrice() * this.balance).toFixed(2);
+    return parseFloat(this._currentPrice * this._balance).toFixed(2);
   }
 
-  change() {
-    if (this.prices.length === 0 || !this.prices) {
-      return 0;
-    }
-
-    const currentPrice = this.prices[this.prices.length - 1][1];
-    const firsPrice = this.prices[0][1];
-    return parseFloat(((currentPrice - firsPrice) * 100) / firsPrice).toFixed(
-      2
-    );
+  set coin(value) {
+    this._coin = value;
   }
 
-  lastPrice() {
-    if (this.prices.length === 0 || !this.prices) {
-      return undefined;
-    }
+  set balance(value) {
+    this._balance = parseFloat(value);
+  }
 
-    return parseFloat(this.prices[this.prices.length - 1][1]).toFixed(2);
+  set currentPrice(value) {
+    this._currentPrice = parseFloat(value);
+  }
+
+  set priceChangePercentage24h(value) {
+    this._priceChangePercentage24h = value;
+  }
+
+  set errored(value) {
+    this._errored = value;
+  }
+
+  get coin() {
+    return this._coin;
+  }
+
+  get balance() {
+    return this._balance;
+  }
+
+  get currentPrice() {
+    return this._currentPrice;
+  }
+
+  get priceChangePercentage24h() {
+    return this._priceChangePercentage24h;
+  }
+
+  get errored() {
+    return this._errored;
   }
 }
 
