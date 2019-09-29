@@ -5,11 +5,10 @@ export class Wallet {
   constructor(coin, balance) {
     this._coin = coin;
     this._balance = balance;
-    this._errored = false;
   }
 
   value() {
-    if (this.errored || !this._coin._currentPrice || !this._balance) {
+    if (!this._coin._currentPrice || !this._balance) {
       return null;
     }
     return parseFloat(this._coin._currentPrice * this._balance).toFixed(2);
@@ -29,14 +28,6 @@ export class Wallet {
 
   set balance(value) {
     this._balance = value;
-  }
-
-  get errored() {
-    return this._errored;
-  }
-
-  set errored(value) {
-    this._errored = value;
   }
 }
 

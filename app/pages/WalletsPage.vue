@@ -28,10 +28,7 @@
                 <Image :src="wallet.coin.image" class="logo" />
                 <Label :text="wallet.coin.name" class="name" />
               </FlexboxLayout>
-              <template v-if="wallet.errored">
-                <Label text="Error" class="error" />
-              </template>
-              <template v-else>
+              <template>
                 <Label :text="`${wallet.balance} ${wallet.coin.name}`" />
                 <FlexboxLayout class="current-price">
                   <Label
@@ -234,10 +231,6 @@ export default {
 
       .value {
         font-weight: bold;
-      }
-
-      .error {
-        color: $error-color;
       }
     }
 
