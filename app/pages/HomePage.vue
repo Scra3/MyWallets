@@ -25,7 +25,7 @@
           <v-template>
             <FlexboxLayout class="wallet">
               <FlexboxLayout class="title">
-                <Image :src="logoPath(wallet)" class="logo" />
+                <Image :src="wallet.image" class="logo" />
                 <Label :text="wallet.coin" class="coin" />
               </FlexboxLayout>
               <template v-if="wallet.errored">
@@ -145,9 +145,6 @@ export default {
     clearInterval(this.intervalID);
   },
   methods: {
-    logoPath(wallet) {
-      return `~/assets/images/${wallet.coin}.png`;
-    },
     async refresh(event) {
       const pullRefresh = event.object;
       this.isLoading = true;
@@ -187,6 +184,7 @@ export default {
   .activity-indicator {
     height: 60;
     margin: 10;
+    color: $blue;
   }
 
   .wallets-overview {
@@ -214,6 +212,7 @@ export default {
         #282d36,
         #222831
       );
+      color: $white;
 
       .title {
         justify-content: center;
