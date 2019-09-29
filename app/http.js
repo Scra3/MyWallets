@@ -2,7 +2,8 @@ import * as httpModule from "tns-core-modules/http";
 import { XRPWallet, EOSWallet, ETHWallet, NEOWallet } from "@/models/Wallet.js";
 
 const fetchWalletsMarket = async (wallets, currency) => {
-  const ids = wallets.map(wallet => wallet.coin.toLowerCase()).join(",");
+  const ids = wallets.map(wallet => wallet.id).join(",");
+
   /*
     {
       "id": "eos",
@@ -37,11 +38,10 @@ const fetchWalletsMarket = async (wallets, currency) => {
   );
 
   wallets.forEach(wallet => {
-    const walletMarket = walletsMarket.find(w => w.id === wallet.coin.toLowerCase());
+    const walletMarket = walletsMarket.find(w => w.id === wallet.id);
 
-    wallet.setPriceChangePercentage24h =
-      walletMarket.price_change_percentage_24h;
-    wallet.setCurrentPrice = walletMarket.current_price;
+    wallet.priceChangePercentage24h = walletMarket.price_change_percentage_24h;
+    wallet.currentPrice = walletMarket.current_price;
   });
 
   return wallets;

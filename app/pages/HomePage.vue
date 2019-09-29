@@ -25,14 +25,14 @@
               </template>
               <template v-else>
                 <Label :text="`${wallet.balance} ${wallet.coin}`" />
-                <FlexboxLayout class="price">
+                <FlexboxLayout class="current-price">
                   <Label :text="`${currencySymbol}${wallet.currentPrice}`" />
                   <Label
                     :text="`${wallet.priceChangePercentage24h}%`"
                     :class="[
                       wallet.priceChangePercentage24h[0] === '-'
-                        ? 'negativeChange'
-                        : 'positiveChange'
+                        ? 'negative-change'
+                        : 'positive-change'
                     ]"
                   />
                 </FlexboxLayout>
@@ -154,8 +154,8 @@ export default {
         }
       });
 
-      this.wallets = await Promise.all(pWallets);
-      this.wallets = await fetchWalletsMarket(this.wallets, this.currency);
+      const wallets = await Promise.all(pWallets);
+      this.wallets = await fetchWalletsMarket(wallets, this.currency);
     }
   }
 };
@@ -171,7 +171,6 @@ export default {
     text-align: center;
     vertical-align: center;
     margin: 10;
-    background: linear-gradient(to right, #fe8c00, #f83600); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     border-radius: 10;
     height: 60;
     color: $white;
@@ -215,16 +214,16 @@ export default {
         }
       }
 
-      .price {
+      .current-price {
         flex-direction: column;
         justify-content: center;
         align-items: center;
 
-        .positiveChange {
+        .positive-change {
           color: $success-color;
         }
 
-        .negativeChange {
+        .negative-change {
           color: $error-color;
         }
       }
