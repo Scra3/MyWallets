@@ -86,7 +86,7 @@ export default {
   },
   data() {
     return {
-      wallets: [],
+      wallets: null,
       addresses: [
         {
           coinName: ETH,
@@ -97,9 +97,7 @@ export default {
         { coinName: NEO, publicKey: "ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf" }
       ],
       intervalID: null,
-      isLoading: true,
-      errored: false,
-      message: null
+      isLoading: true
     };
   },
   computed: {
