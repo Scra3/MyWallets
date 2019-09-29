@@ -1,122 +1,65 @@
 import { ETH, XRP, EOS, NEO } from "@/constants.js";
+import { Coin } from "@/models/Coin.js";
 
-class Wallet {
-  constructor(
-    coin,
-    id,
-    balance = 0,
-    currentPrice = null,
-    priceChangePercentage24h = null,
-    priceChange24 = null,
-    image = null
-  ) {
-    this._id = id;
-    this._balance = parseFloat(balance);
-    this._currentPrice = parseFloat(currentPrice).toFixed(2);
-    this._errored = false;
+export class Wallet {
+  constructor(coin, balance) {
     this._coin = coin;
-    this._balance = parseFloat(balance);
-    this._currentPrice = parseFloat(currentPrice);
-    this._priceChangePercentage24h = parseFloat(
-      priceChangePercentage24h
-    ).toFixed(2);
-    this.priceChange24 = parseFloat(priceChange24).toFixed();
-    this._priceChange24 = priceChange24;
-    this._image = image;
+    this._balance = balance;
+    this._errored = false;
   }
 
   value() {
-    if (this.errored) {
-      return 0;
+    if (this.errored || !this._coin._currentPrice || !this._balance) {
+      return null;
     }
-    return parseFloat(this._currentPrice * this._balance).toFixed(2);
-  }
-
-  set image(value) {
-    this._image = value;
-  }
-
-  set coin(value) {
-    this._coin = value;
-  }
-
-  set balance(value) {
-    this._balance = parseFloat(value);
-  }
-
-  set currentPrice(value) {
-    this._currentPrice = parseFloat(value).toFixed(2);
-  }
-
-  set priceChangePercentage24h(value) {
-    this._priceChangePercentage24h = parseFloat(value).toFixed(2);
-  }
-
-  set errored(value) {
-    this._errored = value;
-  }
-
-  set id(value) {
-    this._id = value;
-  }
-
-  set priceChange24(value) {
-    this._priceChange24 = value;
-  }
-
-  get image() {
-    return this._image;
-  }
-
-  get priceChange24() {
-    return this._priceChange24;
-  }
-
-  get id() {
-    return this._id;
+    return parseFloat(this._coin._currentPrice * this._balance).toFixed(2);
   }
 
   get coin() {
     return this._coin;
   }
 
+  set coin(value) {
+    this._coin = value;
+  }
+
   get balance() {
     return this._balance;
   }
 
-  get currentPrice() {
-    return this._currentPrice;
-  }
-
-  get priceChangePercentage24h() {
-    return this._priceChangePercentage24h;
+  set balance(value) {
+    this._balance = value;
   }
 
   get errored() {
     return this._errored;
   }
+
+  set errored(value) {
+    this._errored = value;
+  }
 }
 
 export class XRPWallet extends Wallet {
-  constructor(...args) {
-    super(XRP, "ripple", ...args);
+  constructor(balance) {
+    super(new Coin("ripple", XRP), balance);
   }
 }
 
 export class EOSWallet extends Wallet {
-  constructor(...args) {
-    super(EOS, "eos", ...args);
+  constructor(balance) {
+    super(new Coin("eos", EOS), balance);
   }
 }
 
 export class ETHWallet extends Wallet {
-  constructor(...args) {
-    super(ETH, "ethereum", ...args);
+  constructor(balance) {
+    super(new Coin("ethereum", ETH), balance);
   }
 }
 
 export class NEOWallet extends Wallet {
-  constructor(...args) {
-    super(NEO, "neo", ...args);
+  constructor(balance) {
+    super(new Coin("neo", NEO), balance);
   }
 }
