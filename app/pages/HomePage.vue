@@ -5,10 +5,17 @@
       :busy="isLoading"
       class="activity-indicator"
     />
-    <FlexboxLayout v-else class="wallets-value">
+    <FlexboxLayout v-else class="wallets-overview">
       <template>
         <Label :text="`${currencySymbol}${walletsValue}`" />
-        <Label :text="`${walletsPriceChange24}${currencySymbol}`" />
+        <Label
+          :text="`${walletsPriceChange24}${currencySymbol}`"
+          :class="[
+            walletsPriceChange24[0] === '-'
+              ? 'negative-change'
+              : 'positive-change'
+          ]"
+        />
       </template>
     </FlexboxLayout>
 
@@ -175,28 +182,22 @@ export default {
 
 .HomePage {
   background-color: $dark-grey;
+  color: $white;
 
   .activity-indicator {
     height: 60;
     margin: 10;
   }
 
-  .wallets-value {
+  .wallets-overview {
     justify-content: space-between;
     align-items: center;
     margin: 10;
     border-radius: 10;
     height: 60;
-    color: $white;
     font-size: 25;
     font-weight: bold;
     width: 100%;
-
-    .refresh-button {
-      width: 35;
-      height: 35;
-      margin-left: 40;
-    }
   }
 
   .wallets {
@@ -205,7 +206,6 @@ export default {
       padding: 10;
       justify-content: space-between;
       align-items: center;
-      color: $white;
       background-image: linear-gradient(
         to right,
         #393e46,
@@ -221,7 +221,6 @@ export default {
 
         .coin {
           font-size: 15;
-          color: $white;
           margin-left: 20;
         }
 
@@ -235,14 +234,6 @@ export default {
         flex-direction: column;
         justify-content: center;
         align-items: center;
-
-        .positive-change {
-          color: $success-color;
-        }
-
-        .negative-change {
-          color: $error-color;
-        }
       }
 
       .value {
@@ -259,6 +250,14 @@ export default {
       width: 100%;
       font-weight: bold;
     }
+  }
+
+  .positive-change {
+    color: $success-color;
+  }
+
+  .negative-change {
+    color: $error-color;
   }
 }
 </style>
