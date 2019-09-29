@@ -11,7 +11,7 @@
         <Label
           :text="`${walletsPriceChange24}${currencySymbol}`"
           :class="[
-            walletsPriceChange24[0] === '-'
+            walletsPriceChange24.toString()[0] === '-'
               ? 'negative-change'
               : 'positive-change'
           ]"
@@ -25,20 +25,22 @@
           <v-template>
             <FlexboxLayout class="wallet">
               <FlexboxLayout class="title">
-                <Image :src="wallet.image" class="logo" />
-                <Label :text="wallet.coin" class="coin" />
+                <Image :src="wallet.coin.image" class="logo" />
+                <Label :text="wallet.coin.name" class="name" />
               </FlexboxLayout>
               <template v-if="wallet.errored">
                 <Label text="Error" class="error" />
               </template>
               <template v-else>
-                <Label :text="`${wallet.balance} ${wallet.coin}`" />
+                <Label :text="`${wallet.balance} ${wallet.coin.name}`" />
                 <FlexboxLayout class="current-price">
-                  <Label :text="`${currencySymbol}${wallet.currentPrice}`" />
                   <Label
-                    :text="`${wallet.priceChangePercentage24h}%`"
+                    :text="`${currencySymbol}${wallet.coin.currentPrice}`"
+                  />
+                  <Label
+                    :text="`${wallet.coin.priceChangePercentage24h}%`"
                     :class="[
-                      wallet.priceChangePercentage24h[0] === '-'
+                      wallet.coin.priceChangePercentage24h.toString()[0] === '-'
                         ? 'negative-change'
                         : 'positive-change'
                     ]"
@@ -75,7 +77,7 @@ import {
 import { ETH, XRP, EOS, NEO } from "@/constants.js";
 
 export default {
-  name: "HomePage",
+  name: "WalletsPage",
   props: {
     currency: {
       type: String,
@@ -87,12 +89,12 @@ export default {
       wallets: [],
       addresses: [
         {
-          currency: ETH,
-          public_key: "0x70Fe19189628d1050cb0e14aa7A1BBc246A48183"
+          coinName: ETH,
+          publicKey: "0x70Fe19189628d1050cb0e14aa7A1BBc246A48183"
         },
-        { currency: XRP, public_key: "rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR" },
-        { currency: EOS, account_name: "gi3tmnzsgqge" },
-        { currency: NEO, public_key: "ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf" }
+        { coinName: XRP, publicKey: "rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR" },
+        { coinName: EOS, accountName: "gi3tmnzsgqge" },
+        { coinName: NEO, publicKey: "ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf" }
       ],
       intervalID: null,
       isLoading: true,
@@ -123,7 +125,7 @@ export default {
         return 0;
       }
       const sum = (currentValue, wallet) =>
-        currentValue + parseFloat(wallet.priceChange24);
+        currentValue + parseFloat(wallet.coin.priceChange24);
       return parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2);
     }
   },
@@ -156,14 +158,14 @@ export default {
     },
     async fetchWallets() {
       const pWallets = this.addresses.map(async address => {
-        if (address.currency === XRP) {
-          return fetchXRPWallet(address.public_key, this.currency);
-        } else if (address.currency === ETH) {
-          return fetchETHWallet(address.public_key, this.currency);
-        } else if (address.currency === EOS) {
-          return fetchEOSWallet(address.account_name, this.currency);
-        } else if (address.currency === NEO) {
-          return fetchNEOWallet(address.public_key, this.currency);
+        if (address.coinName === XRP) {
+          return fetchXRPWallet(address.publicKey);
+        } else if (address.coinName === ETH) {
+          return fetchETHWallet(address.publicKey);
+        } else if (address.coinName === EOS) {
+          return fetchEOSWallet(address.accountName);
+        } else if (address.coinName === NEO) {
+          return fetchNEOWallet(address.publicKey);
         }
       });
 
@@ -178,9 +180,6 @@ export default {
 @import "../styles.scss";
 
 .HomePage {
-  background-color: $dark-grey;
-  color: $white;
-
   .activity-indicator {
     height: 60;
     margin: 10;
@@ -218,7 +217,7 @@ export default {
         justify-content: center;
         align-items: center;
 
-        .coin {
+        .name {
           font-size: 15;
           margin-left: 20;
         }
