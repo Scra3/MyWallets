@@ -83,7 +83,7 @@ export default {
   },
   data() {
     return {
-      wallets: null,
+      wallets: [],
       addresses: [
         {
           coinName: ETH,
@@ -198,14 +198,6 @@ export default {
       padding: 10;
       justify-content: space-between;
       align-items: center;
-      background-image: linear-gradient(
-        to right,
-        #393e46,
-        #333841,
-        #2d333b,
-        #282d36,
-        #222831
-      );
       color: $white;
 
       .title {
