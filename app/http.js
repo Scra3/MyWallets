@@ -68,20 +68,14 @@ const fetchWalletsMarket = async (wallets, currency) => {
 };
 
 const fetchXRPWallet = async address => {
-  const xrpWallet = new XRPWallet();
-
   try {
     const wallet = await httpModule.getJSON(
       `https://data.ripple.com/v2/accounts/${address}/balance_changes?descending=true&limit=1)`
     );
 
-    xrpWallet.balance = wallet.balance_changes[0].final_balance;
-    return xrpWallet;
+    return new XRPWallet(wallet.balance_changes[0].final_balance);
   } catch (error) {
     console.log(error);
-
-    xrpWallet.errored = true;
-    return xrpWallet;
   }
 };
 
