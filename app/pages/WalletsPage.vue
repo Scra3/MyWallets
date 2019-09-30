@@ -184,12 +184,13 @@ export default {
   .wallets-overview {
     justify-content: space-between;
     align-items: center;
-    margin: 10;
+    padding: 10;
     border-radius: 10;
-    height: 60;
+    height: 120;
     font-size: 25;
     font-weight: bold;
     width: 100%;
+    background-color: $grey;
   }
 
   .wallets {

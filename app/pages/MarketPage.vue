@@ -54,8 +54,9 @@ export default {
   .coin {
     justify-content: space-between;
     flex-direction: row;
-    height: 40;
+    height: 60;
     align-items: center;
+    padding: 10;
   }
 }
 
