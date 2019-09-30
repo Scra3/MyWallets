@@ -63,6 +63,8 @@ const fetchWalletsMarket = async (wallets, currency) => {
     wallet.coin.currentPrice = coin.current_price;
     wallet.coin.priceChange24 = coin.price_change_24h;
     wallet.coin.image = coin.image;
+    wallet.coin.name = coin.name;
+    wallet.coin.symbol = coin.symbol;
     return wallet;
   });
 };

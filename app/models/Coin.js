@@ -1,7 +1,7 @@
 export class Coin {
   constructor(
     id,
-    name,
+    name = null,
     currentPrice = null,
     priceChangePercentage24h = null,
     priceChange24 = null,

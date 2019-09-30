@@ -1,4 +1,3 @@
-import { ETH, XRP, EOS, NEO } from "@/constants.js";
 import { Coin } from "@/models/Coin.js";
 
 export class Wallet {
@@ -33,24 +32,24 @@ export class Wallet {
 
 export class XRPWallet extends Wallet {
   constructor(balance) {
-    super(new Coin("ripple", XRP), balance);
+    super(new Coin("ripple"), balance);
   }
 }
 
 export class EOSWallet extends Wallet {
   constructor(balance) {
-    super(new Coin("eos", EOS), balance);
+    super(new Coin("eos"), balance);
   }
 }
 
 export class ETHWallet extends Wallet {
   constructor(balance) {
-    super(new Coin("ethereum", ETH), balance);
+    super(new Coin("ethereum"), balance);
   }
 }
 
 export class NEOWallet extends Wallet {
   constructor(balance) {
-    super(new Coin("neo", NEO), balance);
+    super(new Coin("neo"), balance);
   }
 }

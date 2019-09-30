@@ -1,20 +1,15 @@
 <template>
   <StackLayout class="HomePage">
-    <ActivityIndicator
-      v-if="isLoading"
-      :busy="isLoading"
-      class="activity-indicator"
-    />
-    <FlexboxLayout v-else class="wallets-overview">
-      <template>
+    <FlexboxLayout :class="{ loading: isLoading }" class="wallets-overview">
+      <ActivityIndicator v-if="isLoading" :busy="isLoading" />
+
+      <template v-else>
         <Label :text="`${currencySymbol}${walletsValue}`" />
         <Label
-          :text="`${walletsPriceChange24}${currencySymbol}`"
-          :class="[
-            walletsPriceChange24.toString()[0] === '-'
-              ? 'negative-change'
-              : 'positive-change'
-          ]"
+          :text="
+            `${displayValueWithSign(walletsPriceChange24)}${currencySymbol}`
+          "
+          :class="changeClass(walletsPriceChange24)"
         />
       </template>
     </FlexboxLayout>
@@ -29,18 +24,22 @@
                 <Label :text="wallet.coin.name" class="name" />
               </FlexboxLayout>
               <template>
-                <Label :text="`${wallet.balance} ${wallet.coin.name}`" />
+                <Label
+                  :text="
+                    `${wallet.balance} ${wallet.coin.symbol.toUpperCase()}`
+                  "
+                />
                 <FlexboxLayout class="current-price">
                   <Label
                     :text="`${currencySymbol}${wallet.coin.currentPrice}`"
                   />
                   <Label
-                    :text="`${wallet.coin.priceChangePercentage24h}%`"
-                    :class="[
-                      wallet.coin.priceChangePercentage24h.toString()[0] === '-'
-                        ? 'negative-change'
-                        : 'positive-change'
-                    ]"
+                    :text="
+                      `${displayValueWithSign(
+                        wallet.coin.priceChangePercentage24h
+                      )}%`
+                    "
+                    :class="changeClass(wallet.coin.priceChangePercentage24h)"
                   />
                 </FlexboxLayout>
                 <Label
@@ -166,6 +165,12 @@ export default {
 
       const wallets = await Promise.all(pWallets);
       this.wallets = await fetchWalletsMarket(wallets, this.currency);
+    },
+    changeClass(price) {
+      return Math.sign(price) ? "positive-change" : "negative-change";
+    },
+    displayValueWithSign(value) {
+      return Math.sign(value) ? `+${value}` : value;
     }
   }
 };
@@ -175,12 +180,6 @@ export default {
 @import "../styles.scss";
 
 .HomePage {
-  .activity-indicator {
-    height: 60;
-    margin: 10;
-    color: $blue;
-  }
-
   .wallets-overview {
     justify-content: space-between;
     align-items: center;
@@ -191,6 +190,11 @@ export default {
     font-weight: bold;
     width: 100%;
     background-color: $grey;
+
+    &.loading {
+      color: $blue;
+      justify-content: center;
+    }
   }
 
   .wallets {
