@@ -7,7 +7,7 @@
     "lint": "eslint --ext .js,.vue app",
     "stylelint": "stylelint \"app/**/*.vue\" \"app/**/*.scss\"",
     "lint-fix": "eslint --ext .js,.vue app --fix || stylelint \"app/**/*.vue\" \"app/**/*.scss\" --fix",
-    "test": "tns test android"
+    "test": "jest"
   },
   "license": "MIT",
   "nativescript": {
@@ -33,14 +33,18 @@
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-env": "^7.6.3",
+    "@vue/test-utils": "^1.0.0-beta.29",
+    "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.3",
+    "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.2",
     "eslint": "^6.3.0",
     "eslint-config-prettier": "^6.2.0",
     "eslint-loader": "^3.0.0",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-vue": "^5.2.3",
+    "jest": "^24.9.0",
     "karma": "4.3.0",
     "karma-jasmine": "2.0.1",
     "karma-nativescript-launcher": "0.4.0",
@@ -53,7 +57,10 @@
     "stylelint-config-standard": "^18.3.0",
     "stylelint-processor-html": "^1.0.0",
     "stylelint-webpack-plugin": "^0.10.5",
+    "vue": "^2.6.10",
     "vue-eslint-parser": "^6.0.4",
-    "vue-loader": "^15.4.0"
+    "vue-jest": "^3.0.5",
+    "vue-loader": "^15.4.0",
+    "vue-template-compiler": "^2.6.10"
   }
 }
