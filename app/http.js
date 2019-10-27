@@ -1,6 +1,6 @@
-import * as httpModule from "tns-core-modules/http";
-import { XRPWallet, EOSWallet, ETHWallet, NEOWallet } from "@/models/Wallet.js";
-import { Coin } from "@/models/Coin.js";
+import * as httpModule from "tns-core-modules/http"
+import { XRPWallet, EOSWallet, ETHWallet, NEOWallet } from "@/models/Wallet.js"
+import { Coin } from "@/models/Coin.js"
 
 /*
  {
@@ -34,7 +34,7 @@ import { Coin } from "@/models/Coin.js";
 const fetchMarket = async currency => {
   const coinsMarket = await httpModule.getJSON(
     `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=100&page=1&sparkline=false`
-  );
+  )
 
   return coinsMarket.map(c => {
     const coin = new Coin(
@@ -44,42 +44,42 @@ const fetchMarket = async currency => {
       c.price_change_percentage_24h,
       c.price_change_24h,
       c.image
-    );
+    )
 
-    return coin;
-  });
-};
+    return coin
+  })
+}
 
 const fetchWalletsMarket = async (wallets, currency) => {
-  const ids = wallets.map(wallet => wallet.coin.id).join(",");
+  const ids = wallets.map(wallet => wallet.coin.id).join(",")
   const coinsMarket = await httpModule.getJSON(
     `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&ids=${ids}&order=market_cap_desc&per_page=100&page=1&sparkline=false`
-  );
+  )
 
   return wallets.map(wallet => {
-    const coin = coinsMarket.find(w => w.id === wallet.coin.id);
+    const coin = coinsMarket.find(w => w.id === wallet.coin.id)
 
-    wallet.coin.priceChangePercentage24h = coin.price_change_percentage_24h;
-    wallet.coin.currentPrice = coin.current_price;
-    wallet.coin.priceChange24 = coin.price_change_24h;
-    wallet.coin.image = coin.image;
-    wallet.coin.name = coin.name;
-    wallet.coin.symbol = coin.symbol;
-    return wallet;
-  });
-};
+    wallet.coin.priceChangePercentage24h = coin.price_change_percentage_24h
+    wallet.coin.currentPrice = coin.current_price
+    wallet.coin.priceChange24 = coin.price_change_24h
+    wallet.coin.image = coin.image
+    wallet.coin.name = coin.name
+    wallet.coin.symbol = coin.symbol
+    return wallet
+  })
+}
 
 const fetchXRPWallet = async address => {
   try {
     const wallet = await httpModule.getJSON(
       `https://data.ripple.com/v2/accounts/${address}/balance_changes?descending=true&limit=1)`
-    );
+    )
 
-    return new XRPWallet(wallet.balance_changes[0].final_balance);
+    return new XRPWallet(wallet.balance_changes[0].final_balance)
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
 const fetchEOSWallet = async accountName => {
   try {
@@ -88,44 +88,44 @@ const fetchEOSWallet = async accountName => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       content: JSON.stringify({ account_name: accountName })
-    });
-    wallet = wallet.content.toJSON();
+    })
+    wallet = wallet.content.toJSON()
 
-    const removeEOSUnit = value => value.slice(0, -4);
+    const removeEOSUnit = value => value.slice(0, -4)
 
-    const available = parseFloat(removeEOSUnit(wallet.core_liquid_balance));
+    const available = parseFloat(removeEOSUnit(wallet.core_liquid_balance))
     const cpuStaked = parseFloat(
       removeEOSUnit(wallet.total_resources.cpu_weight)
-    );
+    )
 
-    return new EOSWallet(available + cpuStaked * 2);
+    return new EOSWallet(available + cpuStaked * 2)
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
 const fetchETHWallet = async address => {
   try {
     const wallet = await httpModule.getJSON(
       `https://api.etherscan.io/api?module=account&action=balance&address=${address}&tag=latest&apikey=R9D635X3ZRAJHHWH7E4TVJ4IE8N7GBE8QF`
-    );
-    return new ETHWallet(parseFloat(wallet.result) / 1000000000000000000);
+    )
+    return new ETHWallet(parseFloat(wallet.result) / 1000000000000000000)
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
 const fetchNEOWallet = async address => {
   try {
     const wallet = await httpModule.getJSON(
       `https://api.neoscan.io/api/main_net/v1/get_balance/${address}`
-    );
+    )
 
-    return new NEOWallet(wallet.balance[0].amount);
+    return new NEOWallet(wallet.balance[0].amount)
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
 export {
   fetchXRPWallet,
@@ -134,4 +134,4 @@ export {
   fetchNEOWallet,
   fetchWalletsMarket,
   fetchMarket
-};
+}

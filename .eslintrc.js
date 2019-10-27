@@ -16,7 +16,14 @@ module.exports = {
     "jasmine": true
   },
   rules: {
-    'vue/max-attributes-per-line': [2, {
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "semi": false,
+      }
+      ],
+      'vue/max-attributes-per-line': [2, {
       'singleline': 20,
       'multiline': {
         'max': 1,

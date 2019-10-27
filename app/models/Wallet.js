@@ -1,55 +1,55 @@
-import { Coin } from "@/models/Coin.js";
+import { Coin } from "@/models/Coin.js"
 
 export class Wallet {
   constructor(coin, balance) {
-    this._coin = coin;
-    this._balance = balance;
+    this._coin = coin
+    this._balance = balance
   }
 
   value() {
     if (!this._coin._currentPrice || !this._balance) {
-      return null;
+      return null
     }
-    return parseFloat(this._coin._currentPrice * this._balance).toFixed(2);
+    return parseFloat(this._coin._currentPrice * this._balance).toFixed(2)
   }
 
   get coin() {
-    return this._coin;
+    return this._coin
   }
 
   set coin(value) {
-    this._coin = value;
+    this._coin = value
   }
 
   get balance() {
-    return this._balance;
+    return this._balance
   }
 
   set balance(value) {
-    this._balance = value;
+    this._balance = value
   }
 }
 
 export class XRPWallet extends Wallet {
   constructor(balance) {
-    super(new Coin("ripple"), balance);
+    super(new Coin("ripple"), balance)
   }
 }
 
 export class EOSWallet extends Wallet {
   constructor(balance) {
-    super(new Coin("eos"), balance);
+    super(new Coin("eos"), balance)
   }
 }
 
 export class ETHWallet extends Wallet {
   constructor(balance) {
-    super(new Coin("ethereum"), balance);
+    super(new Coin("ethereum"), balance)
   }
 }
 
 export class NEOWallet extends Wallet {
   constructor(balance) {
-    super(new Coin("neo"), balance);
+    super(new Coin("neo"), balance)
   }
 }

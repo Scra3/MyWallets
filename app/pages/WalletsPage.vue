@@ -68,9 +68,9 @@ import {
   fetchEOSWallet,
   fetchNEOWallet,
   fetchWalletsMarket
-} from "@/http.js";
+} from "@/http.js"
 
-import { ETH, XRP, EOS, NEO } from "@/constants.js";
+import { ETH, XRP, EOS, NEO } from "@/constants.js"
 
 export default {
   name: "WalletsPage",
@@ -94,86 +94,86 @@ export default {
       ],
       intervalID: null,
       isLoading: true
-    };
+    }
   },
   computed: {
     currencySymbol() {
-      return this.currency === "usd" ? "$" : "€";
+      return this.currency === "usd" ? "$" : "€"
     },
     sortedWallets() {
-      const wallets = this.wallets;
+      const wallets = this.wallets
       const sortWallets = (walletA, walletB) =>
-        walletB.value() - walletA.value();
-      return wallets.sort(sortWallets);
+        walletB.value() - walletA.value()
+      return wallets.sort(sortWallets)
     },
     walletsValue() {
       if (this.wallets.length === 0) {
-        return 0;
+        return 0
       }
       const sum = (currentValue, wallet) =>
-        currentValue + parseFloat(wallet.value());
-      return parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2);
+        currentValue + parseFloat(wallet.value())
+      return parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2)
     },
     walletsPriceChange24() {
       if (this.wallets.length === 0) {
-        return 0;
+        return 0
       }
       const sum = (currentValue, wallet) =>
-        currentValue + parseFloat(wallet.coin.priceChange24);
-      return parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2);
+        currentValue + parseFloat(wallet.coin.priceChange24)
+      return parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2)
     }
   },
   watch: {
     async currency() {
-      this.isLoading = true;
-      await this.fetchWallets();
-      this.isLoading = false;
+      this.isLoading = true
+      await this.fetchWallets()
+      this.isLoading = false
     }
   },
   async mounted() {
     // Loader must be display only for the first request
-    this.isLoading = true;
-    await this.fetchWallets();
-    this.intervalID = setInterval(this.fetchWallets, 60000);
-    this.isLoading = false;
+    this.isLoading = true
+    await this.fetchWallets()
+    this.intervalID = setInterval(this.fetchWallets, 60000)
+    this.isLoading = false
   },
   beforeDestroy() {
-    clearInterval(this.intervalID);
+    clearInterval(this.intervalID)
   },
   methods: {
     async refresh(event) {
-      const pullRefresh = event.object;
-      this.isLoading = true;
+      const pullRefresh = event.object
+      this.isLoading = true
 
-      await this.fetchWallets();
+      await this.fetchWallets()
 
-      this.isLoading = false;
-      pullRefresh.refreshing = false;
+      this.isLoading = false
+      pullRefresh.refreshing = false
     },
     async fetchWallets() {
       const pWallets = this.addresses.map(async address => {
         if (address.coinName === XRP) {
-          return fetchXRPWallet(address.publicKey);
+          return fetchXRPWallet(address.publicKey)
         } else if (address.coinName === ETH) {
-          return fetchETHWallet(address.publicKey);
+          return fetchETHWallet(address.publicKey)
         } else if (address.coinName === EOS) {
-          return fetchEOSWallet(address.accountName);
+          return fetchEOSWallet(address.accountName)
         } else if (address.coinName === NEO) {
-          return fetchNEOWallet(address.publicKey);
+          return fetchNEOWallet(address.publicKey)
         }
-      });
+      })
 
-      const wallets = await Promise.all(pWallets);
-      this.wallets = await fetchWalletsMarket(wallets, this.currency);
+      const wallets = await Promise.all(pWallets)
+      this.wallets = await fetchWalletsMarket(wallets, this.currency)
     },
     changeClass(price) {
-      return Math.sign(price) ? "positive-change" : "negative-change";
+      return Math.sign(price) ? "positive-change" : "negative-change"
     },
     displayValueWithSign(value) {
-      return Math.sign(value) ? `+${value}` : value;
+      return Math.sign(value) ? `+${value}` : value
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

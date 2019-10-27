@@ -26,9 +26,9 @@
 </template>
 
 <script>
-import WalletsPage from "@/pages/WalletsPage";
-import MarketPage from "@/pages/MarketPage";
-import { USD, EUR } from "@/constants.js";
+import WalletsPage from "@/pages/WalletsPage"
+import MarketPage from "@/pages/MarketPage"
+import { USD, EUR } from "@/constants.js"
 
 export default {
   name: "App",
@@ -37,17 +37,17 @@ export default {
     return {
       selectedCurrency: USD,
       selectedIndex: 0
-    };
+    }
   },
   methods: {
     toggleCurrency() {
-      this.selectedCurrency = this.selectedCurrency === USD ? EUR : USD;
+      this.selectedCurrency = this.selectedCurrency === USD ? EUR : USD
     },
     indexChange: function(args) {
-      this.selectedIndex = args.value;
+      this.selectedIndex = args.value
     }
   }
-};
+}
 </script>
 
 <style lang="scss">

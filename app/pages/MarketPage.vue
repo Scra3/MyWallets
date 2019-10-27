@@ -4,7 +4,7 @@
       <v-template>
         <FlexboxLayout class="coin">
           <Image :src="coin.image" class="logo" />
-          <label data-test="name" :text="coin.name" />
+          <label :text="coin.name" data-test="name" />
           <label :text="coin.priceChangePercentage24h" />
           <label :text="coin.currentPrice" />
         </FlexboxLayout>
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { fetchMarket } from "@/http.js";
+import { fetchMarket } from "@/http.js"
 export default {
   name: "MarketPage",
   props: {
@@ -26,22 +26,22 @@ export default {
   data() {
     return {
       coins: null
-    };
+    }
   },
   watch: {
     currency() {
-      this.fetchMarket();
+      this.fetchMarket()
     }
   },
   mounted() {
-    this.fetchMarket();
+    this.fetchMarket()
   },
   methods: {
     async fetchMarket() {
-      this.coins = await fetchMarket(this.currency);
+      this.coins = await fetchMarket(this.currency)
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

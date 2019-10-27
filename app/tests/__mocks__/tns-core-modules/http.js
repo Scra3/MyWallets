@@ -26,4 +26,5 @@ module.exports = {
         last_updated: "2019-10-27T20:35:48.744Z"
       }
     ])
-  )};
+  )
+}
