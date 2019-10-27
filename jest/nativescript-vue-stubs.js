@@ -11,7 +11,10 @@ const NSElements = [
   "StackLayout",
   "TabView",
   "TabViewItem",
-  "TextField"
+  "TextField",
+  "FlexboxLayout",
+  "ListView",
+  "v-template"
 ];
 
 NSElements.forEach(ele => {

@@ -1,10 +1,10 @@
 <template>
   <flexboxLayout class="markets">
-    <ListView for="coin in coins">
+    <ListView v-for="coin in coins">
       <v-template>
         <FlexboxLayout class="coin">
           <Image :src="coin.image" class="logo" />
-          <label :text="coin.name" />
+          <label data-test="name" :text="coin.name" />
           <label :text="coin.priceChangePercentage24h" />
           <label :text="coin.currentPrice" />
         </FlexboxLayout>
@@ -25,7 +25,7 @@ export default {
   },
   data() {
     return {
-      coins: []
+      coins: null
     };
   },
   watch: {
