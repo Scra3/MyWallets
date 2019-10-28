@@ -44,6 +44,12 @@ describe('MarketPage.vue', () => {
     await flushPromises()
   })
 
+  it('displays index starting to 1', () => {
+    expect(wrapper.find("[data-test='index']").attributes().text).toEqual(
+      '1'
+    )
+  })
+
   it('displays coins name', () => {
     expect(wrapper.find("[data-test='name']").attributes().text).toEqual(
       'Bitcoin'
@@ -51,9 +57,9 @@ describe('MarketPage.vue', () => {
   })
 
   it('displays price change percentage of 24h', () => {
-    expect(
-      wrapper.find("[data-test='change-percentage']").attributes().text
-    ).toEqual('7.17426')
+    expect(wrapper.find('ChangePercentageLabel-stub').props().value).toEqual(
+      7.17426
+    )
   })
 
   it('displays image', () => {

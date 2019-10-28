@@ -1,15 +1,20 @@
 <template>
   <flexboxLayout class="markets">
-    <ListView v-for="coin in coins">
+    <ListView v-for="(coin, index) in coins">
       <v-template>
         <FlexboxLayout class="coin">
+          <label :text="index + 1" class="index" data-test="index" />
           <Image :src="coin.image" class="image" data-test="image" />
-          <label :text="coin.name" data-test="name" />
-          <label
-            :text="coin.priceChangePercentage24h"
-            data-test="change-percentage"
+          <label :text="coin.name" class="name" data-test="name" />
+          <ChangePercentageLabel
+            :value="coin.priceChangePercentage24h"
+            class="change-percentage"
           />
-          <label :text="coin.currentPrice" data-test="current-price" />
+          <label
+            :text="coin.currentPrice"
+            class="value"
+            data-test="current-price"
+          />
         </FlexboxLayout>
       </v-template>
     </ListView>
@@ -18,8 +23,11 @@
 
 <script>
 import { fetchMarket } from '@/http.js'
+import ChangePercentageLabel from '@/components/ChangePercentageLabel'
+
 export default {
   name: 'MarketPage',
+  components: { ChangePercentageLabel },
   props: {
     currency: {
       type: String,
@@ -60,6 +68,25 @@ export default {
     height: 60;
     align-items: center;
     padding: 10;
+
+    .index {
+      width: 5%;
+    }
+
+    .image {
+      width: 15%;
+    }
+
+    .name {
+      width: 30%;
+      text-align: left;
+    }
+
+    .change-percentage,
+    .value {
+      width: 25%;
+      text-align: right;
+    }
   }
 }
 

@@ -5,12 +5,7 @@
 
       <template v-else>
         <Label :text="`${currencySymbol}${walletsValue}`" />
-        <Label
-          :text="
-            `${displayValueWithSign(walletsPriceChange24)}${currencySymbol}`
-          "
-          :class="changeClass(walletsPriceChange24)"
-        />
+        <ChangePercentageLabel :value="walletsPriceChange24" />
       </template>
     </FlexboxLayout>
 
@@ -33,13 +28,8 @@
                   <Label
                     :text="`${currencySymbol}${wallet.coin.currentPrice}`"
                   />
-                  <Label
-                    :text="
-                      `${displayValueWithSign(
-                        wallet.coin.priceChangePercentage24h
-                      )}%`
-                    "
-                    :class="changeClass(wallet.coin.priceChangePercentage24h)"
+                  <ChangePercentageLabel
+                    :value="wallet.coin.priceChangePercentage24h"
                   />
                 </FlexboxLayout>
                 <Label
@@ -68,12 +58,14 @@ import {
   fetchEOSWallet,
   fetchNEOWallet,
   fetchWalletsMarket
-} from "@/http.js"
+} from '@/http.js'
 
-import { ETH, XRP, EOS, NEO } from "@/constants.js"
+import { ETH, XRP, EOS, NEO, USD } from '@/constants.js'
+import ChangePercentageLabel from '@/components/ChangePercentageLabel'
 
 export default {
-  name: "WalletsPage",
+  name: 'WalletsPage',
+  components: { ChangePercentageLabel },
   props: {
     currency: {
       type: String,
@@ -86,11 +78,11 @@ export default {
       addresses: [
         {
           coinName: ETH,
-          publicKey: "0x70Fe19189628d1050cb0e14aa7A1BBc246A48183"
+          publicKey: '0x70Fe19189628d1050cb0e14aa7A1BBc246A48183'
         },
-        { coinName: XRP, publicKey: "rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR" },
-        { coinName: EOS, accountName: "gi3tmnzsgqge" },
-        { coinName: NEO, publicKey: "ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf" }
+        { coinName: XRP, publicKey: 'rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR' },
+        { coinName: EOS, accountName: 'gi3tmnzsgqge' },
+        { coinName: NEO, publicKey: 'ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf' }
       ],
       intervalID: null,
       isLoading: true
@@ -98,7 +90,7 @@ export default {
   },
   computed: {
     currencySymbol() {
-      return this.currency === "usd" ? "$" : "€"
+      return this.currency === USD ? '$' : '€'
     },
     sortedWallets() {
       const wallets = this.wallets
@@ -165,19 +157,13 @@ export default {
 
       const wallets = await Promise.all(pWallets)
       this.wallets = await fetchWalletsMarket(wallets, this.currency)
-    },
-    changeClass(price) {
-      return Math.sign(price) ? "positive-change" : "negative-change"
-    },
-    displayValueWithSign(value) {
-      return Math.sign(value) ? `+${value}` : value
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import "../styles.scss";
+@import '../styles.scss';
 
 .HomePage {
   .wallets-overview {
@@ -236,14 +222,6 @@ export default {
       width: 100%;
       font-weight: bold;
     }
-  }
-
-  .positive-change {
-    color: $success-color;
-  }
-
-  .negative-change {
-    color: $error-color;
   }
 }
 </style>
