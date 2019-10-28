@@ -3,10 +3,13 @@
     <ListView v-for="coin in coins">
       <v-template>
         <FlexboxLayout class="coin">
-          <Image :src="coin.image" class="logo" />
+          <Image :src="coin.image" class="image" data-test="image" />
           <label :text="coin.name" data-test="name" />
-          <label :text="coin.priceChangePercentage24h" />
-          <label :text="coin.currentPrice" />
+          <label
+            :text="coin.priceChangePercentage24h"
+            data-test="change-percentage"
+          />
+          <label :text="coin.currentPrice" data-test="current-price" />
         </FlexboxLayout>
       </v-template>
     </ListView>
@@ -14,9 +17,9 @@
 </template>
 
 <script>
-import { fetchMarket } from "@/http.js"
+import { fetchMarket } from '@/http.js'
 export default {
-  name: "MarketPage",
+  name: 'MarketPage',
   props: {
     currency: {
       type: String,
@@ -45,7 +48,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../styles.scss";
+@import '../styles.scss';
 
 .markets {
   flex-direction: column;
@@ -60,7 +63,7 @@ export default {
   }
 }
 
-.logo {
+.image {
   height: 20;
   width: 20;
 }
