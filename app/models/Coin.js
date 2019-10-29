@@ -9,11 +9,10 @@ export class Coin {
   ) {
     this._id = id
     this._name = name
-    this._currentPrice = parseFloat(currentPrice).toFixed(2)
+    this._currentPrice = currentPrice
     this._priceChangePercentage24h = priceChangePercentage24h
-    this._priceChange24 = parseFloat(priceChange24).toFixed(2)
+    this._priceChange24 = priceChange24
     this._image = image
-    this._errored = false
   }
 
   get id() {
@@ -37,7 +36,7 @@ export class Coin {
   }
 
   set currentPrice(value) {
-    this._currentPrice = parseFloat(value).toFixed(2)
+    this._currentPrice = value
   }
 
   get priceChangePercentage24h() {
@@ -53,7 +52,7 @@ export class Coin {
   }
 
   set priceChange24(value) {
-    this._priceChange24 = parseFloat(value).toFixed(2)
+    this._priceChange24 = value
   }
 
   get image() {
@@ -62,13 +61,5 @@ export class Coin {
 
   set image(value) {
     this._image = value
-  }
-
-  get errored() {
-    return this._errored
-  }
-
-  set errored(value) {
-    this._errored = value
   }
 }
