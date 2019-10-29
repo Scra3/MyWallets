@@ -1,4 +1,4 @@
-import { Coin } from "@/models/Coin.js"
+import { Coin } from '@/models/Coin.js'
 
 export class Wallet {
   constructor(coin, balance) {
@@ -32,24 +32,24 @@ export class Wallet {
 
 export class XRPWallet extends Wallet {
   constructor(balance) {
-    super(new Coin("ripple"), balance)
+    super(new Coin('ripple'), balance)
   }
 }
 
 export class EOSWallet extends Wallet {
   constructor(balance) {
-    super(new Coin("eos"), balance)
+    super(new Coin('eos'), balance)
   }
 }
 
 export class ETHWallet extends Wallet {
   constructor(balance) {
-    super(new Coin("ethereum"), balance)
+    super(new Coin('ethereum'), balance)
   }
 }
 
 export class NEOWallet extends Wallet {
   constructor(balance) {
-    super(new Coin("neo"), balance)
+    super(new Coin('neo'), balance)
   }
 }
