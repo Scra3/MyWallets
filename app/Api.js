@@ -1,6 +1,6 @@
-import * as httpModule from "tns-core-modules/http"
-import { XRPWallet, EOSWallet, ETHWallet, NEOWallet } from "@/models/Wallet.js"
-import { Coin } from "@/models/Coin.js"
+import * as httpModule from 'tns-core-modules/http'
+import { XRPWallet, EOSWallet, ETHWallet, NEOWallet } from '@/models/Wallet.js'
+import { Coin } from '@/models/Coin.js'
 
 /*
  {
@@ -36,22 +36,21 @@ const fetchMarket = async currency => {
     `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=100&page=1&sparkline=false`
   )
 
-  return coinsMarket.map(c => {
-    const coin = new Coin(
-      c.id,
-      c.name,
-      c.current_price,
-      c.price_change_percentage_24h,
-      c.price_change_24h,
-      c.image
-    )
-
-    return coin
-  })
+  return coinsMarket.map(
+    coin =>
+      new Coin(
+        coin.id,
+        coin.name,
+        coin.current_price,
+        coin.price_change_percentage_24h,
+        coin.price_change_24h,
+        coin.image
+      )
+  )
 }
 
 const fetchWalletsMarket = async (wallets, currency) => {
-  const ids = wallets.map(wallet => wallet.coin.id).join(",")
+  const ids = wallets.map(wallet => wallet.coin.id).join(',')
   const coinsMarket = await httpModule.getJSON(
     `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&ids=${ids}&order=market_cap_desc&per_page=100&page=1&sparkline=false`
   )
@@ -84,9 +83,9 @@ const fetchXRPWallet = async address => {
 const fetchEOSWallet = async accountName => {
   try {
     let wallet = await httpModule.request({
-      url: "https://eos.greymass.com/v1/chain/get_account",
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      url: 'https://eos.greymass.com/v1/chain/get_account',
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       content: JSON.stringify({ account_name: accountName })
     })
     wallet = wallet.content.toJSON()
