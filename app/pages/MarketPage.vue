@@ -13,10 +13,10 @@
               :value="coin.priceChangePercentage24h"
               class="change-percentage"
             />
-            <label
-              :text="coin.currentPrice"
-              class="value"
-              data-test="current-price"
+            <PriceLabel
+              :value="coin.currentPrice"
+              :currency="currency"
+              class="price"
             />
           </FlexboxLayout>
         </v-template>
@@ -28,10 +28,11 @@
 <script>
 import { fetchMarket } from '@/Api'
 import ChangePercentageLabel from '@/components/ChangePercentageLabel'
+import PriceLabel from '@/components//PriceLabel'
 
 export default {
   name: 'MarketPage',
-  components: { ChangePercentageLabel },
+  components: { PriceLabel, ChangePercentageLabel },
   props: {
     currency: {
       type: String,
@@ -88,10 +89,13 @@ export default {
 
     .index {
       width: 5%;
+      text-align: left;
     }
 
     .image {
+      height: 25;
       width: 15%;
+      text-align: left;
     }
 
     .name {
@@ -99,24 +103,13 @@ export default {
       text-align: left;
     }
 
-    .change-percentage,
-    .value {
+    .change-percentage {
       width: 25%;
-      text-align: right;
+    }
+
+    .price {
+      width: 25%;
     }
   }
-}
-
-.image {
-  height: 20;
-  width: 20;
-}
-
-.positive-change {
-  color: $success-color;
-}
-
-.negative-change {
-  color: $error-color;
 }
 </style>

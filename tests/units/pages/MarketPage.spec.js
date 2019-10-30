@@ -67,9 +67,9 @@ describe('MarketPage.vue', () => {
   })
 
   it('displays current price', () => {
-    expect(
-      wrapper.find("[data-test='current-price']").attributes().text
-    ).toEqual('9668.09')
+    expect(wrapper.find('PriceLabel-stub').attributes().value).toEqual(
+      '9668.09'
+    )
   })
 
   it('updates coins market when currency changes', () => {
