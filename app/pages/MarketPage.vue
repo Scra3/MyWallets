@@ -1,28 +1,32 @@
 <template>
   <flexboxLayout class="markets">
-    <ListView v-for="(coin, index) in coins">
-      <v-template>
-        <FlexboxLayout class="coin">
-          <label :text="index + 1" class="index" data-test="index" />
-          <Image :src="coin.image" class="image" data-test="image" />
-          <label :text="coin.name" class="name" data-test="name" />
-          <ChangePercentageLabel
-            :value="coin.priceChangePercentage24h"
-            class="change-percentage"
-          />
-          <label
-            :text="coin.currentPrice"
-            class="value"
-            data-test="current-price"
-          />
-        </FlexboxLayout>
-      </v-template>
-    </ListView>
+    <ActivityIndicator v-if="isLoading" :busy="isLoading" />
+
+    <PullToRefresh v-else @refresh="refresh">
+      <ListView v-for="(coin, index) in coins">
+        <v-template>
+          <FlexboxLayout class="coin" data-test="coin">
+            <label :text="index + 1" class="index" data-test="index" />
+            <Image :src="coin.image" class="image" data-test="image" />
+            <label :text="coin.name" class="name" data-test="name" />
+            <ChangePercentageLabel
+              :value="coin.priceChangePercentage24h"
+              class="change-percentage"
+            />
+            <label
+              :text="coin.currentPrice"
+              class="value"
+              data-test="current-price"
+            />
+          </FlexboxLayout>
+        </v-template>
+      </ListView>
+    </PullToRefresh>
   </flexboxLayout>
 </template>
 
 <script>
-import { fetchMarket } from '@/http.js'
+import { fetchMarket } from '@/Api'
 import ChangePercentageLabel from '@/components/ChangePercentageLabel'
 
 export default {
@@ -36,20 +40,33 @@ export default {
   },
   data() {
     return {
-      coins: null
+      coins: null,
+      isLoading: true
     }
   },
   watch: {
     currency() {
-      this.fetchMarket()
+      this.fetchCoinsMarket()
     }
   },
   mounted() {
-    this.fetchMarket()
+    this.fetchCoinsMarket()
   },
   methods: {
-    async fetchMarket() {
+    async refresh(event) {
+      const pullRefresh = event.object
       this.coins = await fetchMarket(this.currency)
+      pullRefresh.refreshing = false
+    },
+    async fetchCoinsMarket() {
+      this.isLoading = true
+      try {
+        this.coins = await fetchMarket(this.currency)
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.isLoading = false
+      }
     }
   }
 }
