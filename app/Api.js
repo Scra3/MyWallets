@@ -1,36 +1,7 @@
 import * as httpModule from 'tns-core-modules/http'
-import { XRPWallet, EOSWallet, ETHWallet, NEOWallet } from '@/models/Wallet.js'
-import { Coin } from '@/models/Coin.js'
+import { XRPWallet, EOSWallet, ETHWallet, NEOWallet } from '@/models/Wallet'
+import { Coin } from '@/models/Coin'
 
-/*
- {
-   "id": "eos",
-   "symbol": "eos",
-   "name": "EOS",
-   "image": "https://assets.coingecko.com/coins/images/738/large/eos-eos-logo.png?1547034481",
-   "current_price": 2.79,
-   "market_cap": 2872054092,
-   "market_cap_rank": 7,
-   "total_volume": 1411009423,
-   "high_24h": 2.87,
-   "low_24h": 2.77,
-   "price_change_24h": -0.0453254,
-   "price_change_percentage_24h": -1.59711,
-   "market_cap_change_24h": -46583115.64140131,
-   "market_cap_change_percentage_24h": -1.59606,
-   "circulating_supply": 1028457746.7103,
-   "total_supply": null,
-   "ath": 22.71,
-   "ath_change_percentage": -87.70379,
-   "ath_date": "2018-04-29T07:50:33.540Z",
-   "roi": {
-     "times": 1.8208647454663405,
-     "currency": "usd",
-     "percentage": 182.08647454663404
-   },
-   "last_updated": "2019-09-29T08:40:04.005Z"
- }
-*/
 const fetchMarket = async currency => {
   const coinsMarket = await httpModule.getJSON(
     `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=100&page=1&sparkline=false`

@@ -1,20 +1,12 @@
 import * as httpModule from 'tns-core-modules/http'
 import { fetchMarket } from '@/Api'
 import { Coin } from '@/models/Coin'
+import { USD } from '@/constants'
 
 describe('Api.js', () => {
   let coins
+
   beforeEach(async () => {
-    coins = [
-      new Coin(
-        'bitcoin',
-        'Bitcoin',
-        9668.09,
-        7.15542,
-        647.18,
-        'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579'
-      )
-    ]
     httpModule.getJSON.mockImplementationOnce(() =>
       Promise.resolve([
         {
@@ -45,7 +37,17 @@ describe('Api.js', () => {
     )
   })
 
-  it('returns an list of coins', () => {
-    expect(fetchMarket()).toEqual(coins)
+  it('returns an list of coins', async () => {
+    coins = [
+      new Coin(
+        'bitcoin',
+        'Bitcoin',
+        9668.09,
+        7.17426,
+        647.18,
+        'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579'
+      )
+    ]
+    expect(await fetchMarket(USD)).toEqual(coins)
   })
 })

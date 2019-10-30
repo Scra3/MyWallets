@@ -30,8 +30,4 @@ describe('Wallet.js', () => {
     wallet.balance = null
     expect(wallet.value()).toEqual(null)
   })
-
-  it('fixes change 24h price to 2 digits', () => {
-    expect(coin.priceChange24).toEqual('500.86')
-  })
 })

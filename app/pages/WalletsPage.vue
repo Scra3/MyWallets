@@ -5,13 +5,13 @@
 
       <template v-else>
         <Label :text="`${currencySymbol}${walletsValue}`" />
-        <ChangePercentageLabel :value="walletsPriceChange24" />
+        <ChangePercentageLabel :value="0" />
       </template>
     </FlexboxLayout>
 
     <StackLayout class="wallets">
       <PullToRefresh @refresh="refresh" color="#43ab92">
-        <ListView for="wallet in sortedWallets">
+        <ListView v-for="wallet in sortedWallets">
           <v-template>
             <FlexboxLayout class="wallet">
               <FlexboxLayout class="title">
@@ -58,7 +58,7 @@ import {
   fetchEOSWallet,
   fetchNEOWallet,
   fetchWalletsMarket
-} from '@/http.js'
+} from '@/Api'
 
 import { ETH, XRP, EOS, NEO, USD } from '@/constants.js'
 import ChangePercentageLabel from '@/components/ChangePercentageLabel'
