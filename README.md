@@ -8,6 +8,9 @@
 # Install dependencies
 npm install
 
+# Run units tests
+npm run test:unit
+
 # Preview on device
 tns preview
 
