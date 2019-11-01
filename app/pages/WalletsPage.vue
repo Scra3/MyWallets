@@ -4,7 +4,7 @@
       <ActivityIndicator v-if="isLoading" :busy="isLoading" />
 
       <template v-else>
-        <Label :text="`${currencySymbol}${walletsValue}`" />
+        <PriceLabel :value="walletsValue" :currency="currency" />
         <ChangePercentageLabel :value="0" />
       </template>
     </FlexboxLayout>
@@ -14,29 +14,27 @@
         <ListView v-for="wallet in sortedWallets">
           <v-template>
             <FlexboxLayout class="wallet">
-              <FlexboxLayout class="title">
-                <Image :src="wallet.coin.image" class="logo" />
-                <Label :text="wallet.coin.name" class="name" />
+              <Image :src="wallet.coin.image" class="image" />
+              <Label :text="wallet.coin.name" class="name" />
+              <Label
+                :text="`${wallet.balance} ${wallet.coin.symbol.toUpperCase()}`"
+                class="balance"
+              />
+              <FlexboxLayout class="current-price">
+                <PriceLabel
+                  :value="wallet.value()"
+                  :currency="wallet.coin.currentPrice"
+                />
+                <ChangePercentageLabel
+                  :value="wallet.coin.priceChangePercentage24h"
+                />
               </FlexboxLayout>
-              <template>
-                <Label
-                  :text="
-                    `${wallet.balance} ${wallet.coin.symbol.toUpperCase()}`
-                  "
-                />
-                <FlexboxLayout class="current-price">
-                  <Label
-                    :text="`${currencySymbol}${wallet.coin.currentPrice}`"
-                  />
-                  <ChangePercentageLabel
-                    :value="wallet.coin.priceChangePercentage24h"
-                  />
-                </FlexboxLayout>
-                <Label
-                  :text="`${currencySymbol}${wallet.value()}`"
-                  class="value"
-                />
-              </template>
+
+              <PriceLabel
+                :value="wallet.value()"
+                :currency="currency"
+                class="value"
+              />
             </FlexboxLayout>
           </v-template>
         </ListView>
@@ -60,12 +58,13 @@ import {
   fetchWalletsMarket
 } from '@/Api'
 
-import { ETH, XRP, EOS, NEO, USD } from '@/constants.js'
+import { ETH, XRP, EOS, NEO } from '@/constants.js'
 import ChangePercentageLabel from '@/components/ChangePercentageLabel'
+import PriceLabel from '@/components//PriceLabel'
 
 export default {
   name: 'WalletsPage',
-  components: { ChangePercentageLabel },
+  components: { ChangePercentageLabel, PriceLabel },
   props: {
     currency: {
       type: String,
@@ -89,9 +88,6 @@ export default {
     }
   },
   computed: {
-    currencySymbol() {
-      return this.currency === USD ? '$' : '€'
-    },
     sortedWallets() {
       const wallets = this.wallets
       const sortWallets = (walletA, walletB) =>
@@ -191,29 +187,31 @@ export default {
       align-items: center;
       color: $white;
 
-      .title {
-        justify-content: center;
-        align-items: center;
+      .image {
+        height: 25;
+        width: 10%;
+      }
 
-        .name {
-          font-size: 15;
-          margin-left: 20;
-        }
+      .name {
+        font-size: 15;
+        margin-left: 20;
+        width: 20%;
+      }
 
-        .logo {
-          height: 20;
-          width: 20;
-        }
+      .balance {
+        width: 25%;
       }
 
       .current-price {
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        width: 20%;
       }
 
       .value {
         font-weight: bold;
+        width: 20%;
       }
     }
 
