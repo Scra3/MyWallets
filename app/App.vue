@@ -12,7 +12,7 @@
     <TabView
       :selectedIndex="selectedIndex"
       @selectedIndexChange="indexChange"
-      androidTabsPosition="bottom"
+      android-tabs-position="bottom"
       class="tab-view"
     >
       <TabViewItem title="Wallets">
@@ -26,12 +26,12 @@
 </template>
 
 <script>
-import WalletsPage from "@/pages/WalletsPage"
-import MarketPage from "@/pages/MarketPage"
-import { USD, EUR } from "@/constants.js"
+import WalletsPage from '@/pages/WalletsPage'
+import MarketPage from '@/pages/MarketPage'
+import { USD, EUR } from '@/constants.js'
 
 export default {
-  name: "App",
+  name: 'App',
   components: { WalletsPage, MarketPage },
   data() {
     return {
@@ -51,7 +51,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "styles";
+@import 'styles';
 .app {
   background-color: $dark-grey;
   color: $white;
