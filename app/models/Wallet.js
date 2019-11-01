@@ -10,7 +10,9 @@ export class Wallet {
     if (!this._coin._currentPrice || !this._balance) {
       return null
     }
-    return parseFloat(this._coin._currentPrice * this._balance).toFixed(2)
+    return Number(
+      parseFloat(this._coin._currentPrice * this._balance).toFixed(2)
+    )
   }
 
   get coin() {

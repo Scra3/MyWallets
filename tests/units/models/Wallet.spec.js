@@ -18,7 +18,7 @@ describe('Wallet.js', () => {
   })
 
   it('returns value', () => {
-    expect(wallet.value()).toEqual('90006.00')
+    expect(wallet.value()).toEqual(90006.0)
   })
 
   it('returns null value when coin current price is null', () => {
