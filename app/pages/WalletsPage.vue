@@ -4,8 +4,16 @@
       <ActivityIndicator v-if="isLoading" :busy="isLoading" />
 
       <template v-else>
-        <PriceLabel :value="walletsValue" :currency="currency" />
-        <ChangePercentageLabel :value="0" />
+        <PriceLabel
+          :value="walletsValue"
+          :currency="currency"
+          data-test="wallets-value"
+        />
+        <PriceLabel
+          :value="walletsPriceChange24"
+          :currency="currency"
+          data-test="wallet-price-change"
+        />
       </template>
     </FlexboxLayout>
 
@@ -14,19 +22,22 @@
         <ListView v-for="wallet in sortedWallets">
           <v-template>
             <FlexboxLayout class="wallet">
-              <Image :src="wallet.coin.image" class="image" />
-              <Label :text="wallet.coin.name" class="name" />
+              <Image :src="wallet.coin.image" class="image" data-test="image" />
+              <Label :text="wallet.coin.name" class="name" data-test="name" />
               <Label
                 :text="`${wallet.balance} ${wallet.coin.symbol.toUpperCase()}`"
                 class="balance"
+                data-test="balance"
               />
               <FlexboxLayout class="current-price">
                 <PriceLabel
-                  :value="wallet.value()"
-                  :currency="wallet.coin.currentPrice"
+                  :value="wallet.coin.currentPrice"
+                  :currency="currency"
+                  data-test="current-price"
                 />
                 <ChangePercentageLabel
                   :value="wallet.coin.priceChangePercentage24h"
+                  data-test="change-percentage"
                 />
               </FlexboxLayout>
 
@@ -34,6 +45,7 @@
                 :value="wallet.value()"
                 :currency="currency"
                 class="value"
+                data-test="value"
               />
             </FlexboxLayout>
           </v-template>
@@ -100,7 +112,7 @@ export default {
       }
       const sum = (currentValue, wallet) =>
         currentValue + parseFloat(wallet.value())
-      return parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2)
+      return Number(parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2))
     },
     walletsPriceChange24() {
       if (this.wallets.length === 0) {
@@ -108,7 +120,7 @@ export default {
       }
       const sum = (currentValue, wallet) =>
         currentValue + parseFloat(wallet.coin.priceChange24)
-      return parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2)
+      return Number(parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2))
     }
   },
   watch: {
