@@ -5,7 +5,8 @@ export class Coin {
     currentPrice = null,
     priceChangePercentage24h = null,
     priceChange24 = null,
-    image = null
+    image = null,
+    symbol = null
   ) {
     this._id = id
     this._name = name
@@ -13,6 +14,7 @@ export class Coin {
     this._priceChangePercentage24h = priceChangePercentage24h
     this._priceChange24 = priceChange24
     this._image = image
+    this.symbol = symbol
   }
 
   get id() {
@@ -61,5 +63,13 @@ export class Coin {
 
   set image(value) {
     this._image = value
+  }
+
+  get symbol() {
+    return this._symbol
+  }
+
+  set symbol(value) {
+    this._symbol = value
   }
 }
