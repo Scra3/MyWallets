@@ -38,6 +38,7 @@ describe('MarketPage.vue', () => {
     })
 
     await flushPromises()
+    fetchMarket.mockClear()
   })
 
   it('displays index starting to 1', () => {
@@ -72,22 +73,27 @@ describe('MarketPage.vue', () => {
     )
   })
 
-  it('updates coins market when currency changes', () => {
-    wrapper.setMethods({ fetchCoinsMarket: jest.fn() })
+  it('fetches coins market when currency changes', () => {
     wrapper.setProps({ currency: EUR })
 
-    expect(wrapper.vm.fetchCoinsMarket).toHaveBeenCalled()
+    expect(fetchMarket).toHaveBeenCalled()
   })
 
   it('displays spinner when is fetching coins market', () => {
     wrapper.vm.fetchCoinsMarket()
 
     expect(wrapper.find('ActivityIndicator-stub').exists()).toBe(true)
+    expect(fetchMarket).toHaveBeenCalled()
   })
 
-  it('does not display spinner when is fetching coins market', async () => {
+  it('does not display spinner when fetching coins market is finished', async () => {
     await wrapper.vm.fetchCoinsMarket()
 
     expect(wrapper.find('ActivityIndicator-stub').exists()).toBe(false)
+  })
+
+  it('refreshes coins market when user pulls to refresh the list', () => {
+    wrapper.find('PullToRefresh-stub').vm.$emit('refresh', { object: {} })
+    expect(fetchMarket).toHaveBeenCalled()
   })
 })

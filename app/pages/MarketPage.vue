@@ -2,7 +2,7 @@
   <flexboxLayout class="markets">
     <ActivityIndicator v-if="isLoading" :busy="isLoading" />
 
-    <PullToRefresh v-else @refresh="refresh">
+    <PullToRefresh v-else @refresh="refreshCoinsMarket">
       <ListView v-for="(coin, index) in coins">
         <v-template>
           <FlexboxLayout class="coin" data-test="coin">
@@ -54,10 +54,15 @@ export default {
     this.fetchCoinsMarket()
   },
   methods: {
-    async refresh(event) {
+    async refreshCoinsMarket(event) {
       const pullRefresh = event.object
-      this.coins = await fetchMarket(this.currency)
-      pullRefresh.refreshing = false
+      try {
+        this.coins = await fetchMarket(this.currency)
+      } catch (e) {
+        console.log(e)
+      } finally {
+        pullRefresh.refreshing = false
+      }
     },
     async fetchCoinsMarket() {
       this.isLoading = true
