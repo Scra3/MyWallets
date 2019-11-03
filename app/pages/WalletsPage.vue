@@ -56,6 +56,7 @@
         v-if="wallets.length === 0 && !isLoading"
         text="No wallet added"
         class="message"
+        data-test="message"
       />
     </StackLayout>
   </StackLayout>
@@ -85,6 +86,7 @@ export default {
   },
   data() {
     return {
+      intervalDelay: 60000,
       wallets: [],
       addresses: [
         {
@@ -101,10 +103,9 @@ export default {
   },
   computed: {
     sortedWallets() {
-      const wallets = this.wallets
       const sortWallets = (walletA, walletB) =>
         walletB.value() - walletA.value()
-      return wallets.sort(sortWallets)
+      return [...this.wallets].sort(sortWallets)
     },
     walletsValue() {
       if (this.wallets.length === 0) {
@@ -125,17 +126,12 @@ export default {
   },
   watch: {
     async currency() {
-      this.isLoading = true
       await this.fetchWallets()
-      this.isLoading = false
     }
   },
   async mounted() {
-    // Loader must be display only for the first request
-    this.isLoading = true
     await this.fetchWallets()
-    this.intervalID = setInterval(this.fetchWallets, 60000)
-    this.isLoading = false
+    this.intervalID = setInterval(this.fetchWallets, this.delay)
   },
   beforeDestroy() {
     clearInterval(this.intervalID)
@@ -143,28 +139,32 @@ export default {
   methods: {
     async refresh(event) {
       const pullRefresh = event.object
-      this.isLoading = true
-
       await this.fetchWallets()
-
-      this.isLoading = false
       pullRefresh.refreshing = false
     },
     async fetchWallets() {
-      const pWallets = this.addresses.map(async address => {
-        if (address.coinName === XRP) {
-          return fetchXRPWallet(address.publicKey)
-        } else if (address.coinName === ETH) {
-          return fetchETHWallet(address.publicKey)
-        } else if (address.coinName === EOS) {
-          return fetchEOSWallet(address.accountName)
-        } else if (address.coinName === NEO) {
-          return fetchNEOWallet(address.publicKey)
-        }
-      })
+      this.isLoading = true
 
-      const wallets = await Promise.all(pWallets)
-      this.wallets = await fetchWalletsMarket(wallets, this.currency)
+      try {
+        const pWallets = this.addresses.map(async address => {
+          if (address.coinName === XRP) {
+            return fetchXRPWallet(address.publicKey)
+          } else if (address.coinName === ETH) {
+            return fetchETHWallet(address.publicKey)
+          } else if (address.coinName === EOS) {
+            return fetchEOSWallet(address.accountName)
+          } else if (address.coinName === NEO) {
+            return fetchNEOWallet(address.publicKey)
+          }
+        })
+
+        const wallets = await Promise.all(pWallets)
+        this.wallets = await fetchWalletsMarket(wallets, this.currency)
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.isLoading = false
+      }
     }
   }
 }

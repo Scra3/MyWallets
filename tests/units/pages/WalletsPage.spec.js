@@ -6,7 +6,7 @@ import { Wallet } from '@/models/Wallet'
 import flushPromises from 'flush-promises'
 
 jest.mock('@/Api')
-import { fetchXRPWallet, fetchWalletsMarket } from '@/Api'
+import { fetchWalletsMarket } from '@/Api'
 
 let wrapper
 
@@ -21,11 +21,8 @@ describe('WalletsPage.vue', () => {
       'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579',
       'xrp'
     )
-    fetchXRPWallet.mockImplementation(() =>
-      Promise.resolve(new Wallet(coin, 10))
-    )
     fetchWalletsMarket.mockImplementation(() =>
-      Promise.resolve([new Wallet(coin, 10), new Wallet(coin, 10)])
+      Promise.resolve([new Wallet(coin, 10), new Wallet(coin, 11)])
     )
 
     wrapper = shallowMount(WalletsPage, {
@@ -39,7 +36,7 @@ describe('WalletsPage.vue', () => {
 
   it('displays wallets value in header', () => {
     expect(wrapper.find("[data-test='wallets-value']").props().value).toEqual(
-      1920
+      2016
     )
   })
 
@@ -57,7 +54,7 @@ describe('WalletsPage.vue', () => {
       'Ripple'
     )
     expect(wrapper.find("[data-test='balance']").attributes().text).toEqual(
-      '10 XRP'
+      '11 XRP'
     )
     expect(wrapper.find("[data-test='current-price']").props().value).toEqual(
       96
@@ -65,6 +62,26 @@ describe('WalletsPage.vue', () => {
     expect(
       wrapper.find("[data-test='change-percentage']").props().value
     ).toEqual(7.17426)
-    expect(wrapper.find("[data-test='value']").props().value).toEqual(960)
+    expect(wrapper.find("[data-test='value']").props().value).toEqual(1056)
+  })
+
+  it('sorts wallets by value', () => {
+    expect(
+      wrapper
+        .findAll("[data-test='value']")
+        .at(0)
+        .props().value
+    ).toEqual(1056)
+    expect(
+      wrapper
+        .findAll("[data-test='value']")
+        .at(1)
+        .props().value
+    ).toEqual(960)
+  })
+
+  it('displays message when there is no wallets and is no loading', () => {
+    wrapper.setData({ wallets: [] })
+    expect(wrapper.find("[data-test='message']").exists()).toBe(true)
   })
 })
