@@ -15,6 +15,6 @@ module.exports = {
   transformIgnorePatterns: [],
   collectCoverage: true,
   collectCoverageFrom: ["app/**/*.{js,vue}"],
-  coverageReporters: ["text-summary", "html"],
+  coverageReporters: ["text", "html"],
   setupFiles: ["<rootDir>/jest/nativescript-vue-stubs.js"]
 };
