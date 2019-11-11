@@ -10,7 +10,7 @@
             <Image :src="coin.image" class="image" data-test="image" />
             <label :text="coin.name" class="name" data-test="name" />
             <ChangePercentageLabel
-              :value="coin.priceChangePercentage24h"
+              :value="coin.priceChangePercentage24H"
               class="change-percentage"
             />
             <PriceLabel

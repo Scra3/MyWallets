@@ -1,8 +1,8 @@
 import * as httpModule from 'tns-core-modules/http'
 import { fetchMarket, fetchWalletsMarket } from '@/Api'
 import { Coin } from '@/models/Coin'
-import { USD } from '@/constants'
-import { XRPWallet } from '@/models/Wallet'
+import { USD, XRP } from '@/constants'
+import { Wallet } from '@/models/Wallet'
 
 describe('Api.js', () => {
   let coins
@@ -47,7 +47,8 @@ describe('Api.js', () => {
           9668.09,
           7.17426,
           647.18,
-          'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579'
+          'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579',
+          'btc'
         )
       ]
       expect(await fetchMarket(USD)).toEqual(coins)
@@ -87,11 +88,14 @@ describe('Api.js', () => {
     })
 
     it('returns an list of hydrated wallets', async () => {
-      const wallet = (await fetchWalletsMarket([new XRPWallet(10)], USD))[0]
+      const wallet = (await fetchWalletsMarket(
+        [new Wallet(new Coin(XRP), 10)],
+        USD
+      ))[0]
       expect(wallet.coin.symbol).toEqual('XRP')
-      expect(wallet.coin.priceChangePercentage24h).toEqual(7.17426)
+      expect(wallet.coin.priceChangePercentage24H).toEqual(7.17426)
       expect(wallet.coin.currentPrice).toEqual(9.09)
-      expect(wallet.coin.priceChange24).toEqual(647.18)
+      expect(wallet.coin.priceChange24H).toEqual(647.18)
       expect(wallet.coin.name).toEqual('Ripple')
       expect(wallet.coin.image).toEqual(
         'https://assets.coingecko.com/coins/images/1/large/ripple.png?1547033579'

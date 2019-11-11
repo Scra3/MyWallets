@@ -1,80 +1,54 @@
+import camelCase from 'lodash.camelcase'
+
 export class Coin {
   constructor(
     id,
     name = null,
     currentPrice = null,
-    priceChangePercentage24h = null,
-    priceChange24 = null,
+    priceChangePercentage24H = null,
+    priceChange24H = null,
     image = null,
     symbol = null
   ) {
-    this._id = id
-    this._name = name
-    this._currentPrice = currentPrice
-    this._priceChangePercentage24h = priceChangePercentage24h
-    this._priceChange24 = priceChange24
-    this._image = image
+    this.id = id
+    this.name = name
+    this.currentPrice = currentPrice
+    this.priceChangePercentage24H = priceChangePercentage24H
+    this.priceChange24H = priceChange24H
+    this.image = image
     this.symbol = symbol
   }
 
   deserialize(input) {
-    Object.assign(this, input)
+    Object.assign(this, this.keysToCamel(input))
     return this
   }
 
-  get id() {
-    return this._id
-  }
+  keysToCamel(o) {
+    const isArray = a => {
+      return Array.isArray(a)
+    }
 
-  set id(value) {
-    this._id = value
-  }
+    const isObject = o => {
+      return o === Object(o) && !isArray(o) && typeof o !== 'function'
+    }
 
-  get name() {
-    return this._name
-  }
+    if (isObject(o)) {
+      const n = {}
 
-  set name(value) {
-    this._name = value
-  }
+      Object.keys(o).forEach(k => {
+        if (Object.keys(this).includes(camelCase(k))) {
+          n[camelCase(k)] = this.keysToCamel(o[k])
+        }
+      })
 
-  get currentPrice() {
-    return this._currentPrice
-  }
+      return n
+    } else if (isArray(o)) {
+      return o.map(i => {
+        return this.keysToCamel(i)
+      })
+    }
 
-  set currentPrice(value) {
-    this._currentPrice = value
-  }
-
-  get priceChangePercentage24h() {
-    return this._priceChangePercentage24h
-  }
-
-  set priceChangePercentage24h(value) {
-    this._priceChangePercentage24h = value
-  }
-
-  get priceChange24() {
-    return this._priceChange24
-  }
-
-  set priceChange24(value) {
-    this._priceChange24 = value
-  }
-
-  get image() {
-    return this._image
-  }
-
-  set image(value) {
-    this._image = value
-  }
-
-  get symbol() {
-    return this._symbol
-  }
-
-  set symbol(value) {
-    this._symbol = value
+    return o
   }
 }

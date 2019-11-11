@@ -1,7 +1,7 @@
-const ETH = 'ETH'
-const XRP = 'XRP'
-const EOS = 'EOS'
-const NEO = 'NEO'
+const ETH = 'ethereum'
+const XRP = 'ripple'
+const EOS = 'eos'
+const NEO = 'neo'
 
 const USD = 'usd'
 const EUR = 'eur'

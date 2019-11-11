@@ -36,7 +36,7 @@
                   data-test="current-price"
                 />
                 <ChangePercentageLabel
-                  :value="wallet.coin.priceChangePercentage24h"
+                  :value="wallet.coin.priceChangePercentage24H"
                   data-test="change-percentage"
                 />
               </FlexboxLayout>
@@ -90,12 +90,12 @@ export default {
       wallets: [],
       addresses: [
         {
-          coinName: ETH,
+          coinID: ETH,
           publicKey: '0x70Fe19189628d1050cb0e14aa7A1BBc246A48183'
         },
-        { coinName: XRP, publicKey: 'rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR' },
-        { coinName: EOS, accountName: 'gi3tmnzsgqge' },
-        { coinName: NEO, publicKey: 'ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf' }
+        { coinID: XRP, publicKey: 'rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR' },
+        { coinID: EOS, accountName: 'gi3tmnzsgqge' },
+        { coinID: NEO, publicKey: 'ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf' }
       ],
       intervalID: null,
       isLoading: true
@@ -120,7 +120,7 @@ export default {
         return 0
       }
       const sum = (currentValue, wallet) =>
-        currentValue + parseFloat(wallet.coin.priceChange24)
+        currentValue + parseFloat(wallet.coin.priceChange24H)
       return Number(parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2))
     }
   },
@@ -147,13 +147,13 @@ export default {
 
       try {
         const pWallets = this.addresses.map(async address => {
-          if (address.coinName === XRP) {
+          if (address.coinID === XRP) {
             return fetchXRPWallet(address.publicKey)
-          } else if (address.coinName === ETH) {
+          } else if (address.coinID === ETH) {
             return fetchETHWallet(address.publicKey)
-          } else if (address.coinName === EOS) {
+          } else if (address.coinID === EOS) {
             return fetchEOSWallet(address.accountName)
-          } else if (address.coinName === NEO) {
+          } else if (address.coinID === NEO) {
             return fetchNEOWallet(address.publicKey)
           }
         })

@@ -1,5 +1,6 @@
 import * as httpModule from 'tns-core-modules/http'
-import { XRPWallet, EOSWallet, ETHWallet, NEOWallet } from '@/models/Wallet'
+import { Wallet } from '@/models/Wallet'
+import { ETH, XRP, EOS, NEO } from '@/constants.js'
 import { Coin } from '@/models/Coin'
 
 const fetchMarket = async currency => {
@@ -7,17 +8,7 @@ const fetchMarket = async currency => {
     `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=100&page=1&sparkline=false`
   )
 
-  return coinsMarket.map(
-    coin =>
-      new Coin(
-        coin.id,
-        coin.name,
-        coin.current_price,
-        coin.price_change_percentage_24h,
-        coin.price_change_24h,
-        coin.image
-      )
-  )
+  return coinsMarket.map(coin => new Coin().deserialize(coin))
 }
 
 const fetchWalletsMarket = async (wallets, currency) => {
@@ -28,13 +19,7 @@ const fetchWalletsMarket = async (wallets, currency) => {
 
   return wallets.map(wallet => {
     const coin = coinsMarket.find(w => w.id === wallet.coin.id)
-
-    wallet.coin.priceChangePercentage24h = coin.price_change_percentage_24h
-    wallet.coin.currentPrice = coin.current_price
-    wallet.coin.priceChange24 = coin.price_change_24h
-    wallet.coin.image = coin.image
-    wallet.coin.name = coin.name
-    wallet.coin.symbol = coin.symbol
+    wallet.coin = new Coin().deserialize(coin)
     return wallet
   })
 }
@@ -44,7 +29,7 @@ const fetchXRPWallet = async address => {
     `https://data.ripple.com/v2/accounts/${address}/balance_changes?descending=true&limit=1)`
   )
 
-  return new XRPWallet(wallet.balance_changes[0].final_balance)
+  return new Wallet(new Coin(XRP), wallet.balance_changes[0].final_balance)
 }
 
 const fetchEOSWallet = async accountName => {
@@ -61,21 +46,24 @@ const fetchEOSWallet = async accountName => {
   const available = parseFloat(removeEOSUnit(wallet.core_liquid_balance))
   const cpuStaked = parseFloat(removeEOSUnit(wallet.total_resources.cpu_weight))
 
-  return new EOSWallet(available + cpuStaked * 2)
+  return new Wallet(new Coin(EOS), available + cpuStaked * 2)
 }
 
 const fetchETHWallet = async address => {
   const wallet = await httpModule.getJSON(
     `https://api.etherscan.io/api?module=account&action=balance&address=${address}&tag=latest&apikey=R9D635X3ZRAJHHWH7E4TVJ4IE8N7GBE8QF`
   )
-  return new ETHWallet(parseFloat(wallet.result) / 1000000000000000000)
+  return new Wallet(
+    new Coin(ETH),
+    parseFloat(wallet.result) / 1000000000000000000
+  )
 }
 
 const fetchNEOWallet = async address => {
   const wallet = await httpModule.getJSON(
     `https://api.neoscan.io/api/main_net/v1/get_balance/${address}`
   )
-  return new NEOWallet(wallet.balance[0].amount)
+  return new Wallet(new Coin(NEO), wallet.balance[0].amount)
 }
 
 export {
