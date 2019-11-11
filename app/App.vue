@@ -11,8 +11,8 @@
 
     <TabView
       :selectedIndex="selectedIndex"
-      @selectedIndexChange="indexChange"
-      android-tabs-position="bottom"
+      @selectedIndexChange="selectIndex"
+      android:androidTabsPosition="bottom"
       class="tab-view"
     >
       <TabViewItem title="Wallets">
@@ -43,7 +43,7 @@ export default {
     toggleCurrency() {
       this.selectedCurrency = this.selectedCurrency === USD ? EUR : USD
     },
-    indexChange: function(args) {
+    selectIndex(args) {
       this.selectedIndex = args.value
     }
   }

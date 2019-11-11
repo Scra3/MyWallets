@@ -1,7 +1,7 @@
 <template>
   <FlexboxLayout class="price">
     <label :text="currencySymbol" data-test="currency" />
-    <label :text="value" data-test="current-price" />
+    <label :text="parseFloat(value).toFixed(2)" data-test="current-price" />
   </FlexboxLayout>
 </template>
 <script>

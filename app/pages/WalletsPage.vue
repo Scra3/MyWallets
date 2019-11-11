@@ -9,11 +9,7 @@
           :currency="currency"
           data-test="wallets-value"
         />
-        <PriceLabel
-          :value="walletsPriceChange24"
-          :currency="currency"
-          data-test="wallet-price-change"
-        />
+        <label :text="walletsPriceChange24H" data-test="wallet-price-change" />
       </template>
     </FlexboxLayout>
 
@@ -25,7 +21,11 @@
               <Image :src="wallet.coin.image" class="image" data-test="image" />
               <Label :text="wallet.coin.name" class="name" data-test="name" />
               <Label
-                :text="`${wallet.balance} ${wallet.coin.symbol.toUpperCase()}`"
+                :text="
+                  `${parseFloat(wallet.balance).toFixed(
+                    2
+                  )} ${wallet.coin.symbol.toUpperCase()}`
+                "
                 class="balance"
                 data-test="balance"
               />
@@ -115,7 +115,7 @@ export default {
         currentValue + parseFloat(wallet.value())
       return Number(parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2))
     },
-    walletsPriceChange24() {
+    walletsPriceChange24H() {
       if (this.wallets.length === 0) {
         return 0
       }
@@ -131,7 +131,7 @@ export default {
   },
   async mounted() {
     await this.fetchWallets()
-    this.intervalID = setInterval(await this.fetchWallets, this.delay)
+    this.intervalID = setInterval(await this.fetchWallets, this.intervalDelay)
   },
   beforeDestroy() {
     clearInterval(this.intervalID)
