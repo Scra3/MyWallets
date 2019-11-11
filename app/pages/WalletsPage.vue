@@ -131,7 +131,7 @@ export default {
   },
   async mounted() {
     await this.fetchWallets()
-    this.intervalID = setInterval(this.fetchWallets, this.delay)
+    this.intervalID = setInterval(await this.fetchWallets, this.delay)
   },
   beforeDestroy() {
     clearInterval(this.intervalID)

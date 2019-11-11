@@ -9,18 +9,18 @@ jest.mock('@/Api')
 import { fetchWalletsMarket } from '@/Api'
 
 let wrapper
+const coin = new Coin(
+  'xrp',
+  'Ripple',
+  96,
+  7.17426,
+  6,
+  'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579',
+  'xrp'
+)
 
 describe('WalletsPage.vue', () => {
   beforeEach(async () => {
-    const coin = new Coin(
-      'xrp',
-      'Ripple',
-      96,
-      7.17426,
-      6,
-      'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579',
-      'xrp'
-    )
     fetchWalletsMarket.mockImplementation(() =>
       Promise.resolve([new Wallet(coin, 10), new Wallet(coin, 11)])
     )
@@ -83,5 +83,19 @@ describe('WalletsPage.vue', () => {
   it('displays message when there is no wallets and is no loading', () => {
     wrapper.setData({ wallets: [] })
     expect(wrapper.find("[data-test='message']").exists()).toBe(true)
+  })
+
+  it('displays spinner when fetching wallets', () => {
+    wrapper.vm.fetchWallets()
+
+    expect(wrapper.find('ActivityIndicator-stub').exists()).toBe(true)
+    expect(wrapper.vm.isLoading).toBe(true)
+  })
+
+  it('does not display spinner when fetching wallets is finished', async () => {
+    await wrapper.vm.fetchWallets()
+
+    expect(wrapper.find('ActivityIndicator-stub').exists()).toBe(false)
+    expect(wrapper.vm.isLoading).toBe(false)
   })
 })

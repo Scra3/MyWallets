@@ -40,61 +40,42 @@ const fetchWalletsMarket = async (wallets, currency) => {
 }
 
 const fetchXRPWallet = async address => {
-  try {
-    const wallet = await httpModule.getJSON(
-      `https://data.ripple.com/v2/accounts/${address}/balance_changes?descending=true&limit=1)`
-    )
+  const wallet = await httpModule.getJSON(
+    `https://data.ripple.com/v2/accounts/${address}/balance_changes?descending=true&limit=1)`
+  )
 
-    return new XRPWallet(wallet.balance_changes[0].final_balance)
-  } catch (error) {
-    console.log(error)
-  }
+  return new XRPWallet(wallet.balance_changes[0].final_balance)
 }
 
 const fetchEOSWallet = async accountName => {
-  try {
-    let wallet = await httpModule.request({
-      url: 'https://eos.greymass.com/v1/chain/get_account',
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      content: JSON.stringify({ account_name: accountName })
-    })
-    wallet = wallet.content.toJSON()
+  let wallet = await httpModule.request({
+    url: 'https://eos.greymass.com/v1/chain/get_account',
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    content: JSON.stringify({ account_name: accountName })
+  })
+  wallet = wallet.content.toJSON()
 
-    const removeEOSUnit = value => value.slice(0, -4)
+  const removeEOSUnit = value => value.slice(0, -4)
 
-    const available = parseFloat(removeEOSUnit(wallet.core_liquid_balance))
-    const cpuStaked = parseFloat(
-      removeEOSUnit(wallet.total_resources.cpu_weight)
-    )
+  const available = parseFloat(removeEOSUnit(wallet.core_liquid_balance))
+  const cpuStaked = parseFloat(removeEOSUnit(wallet.total_resources.cpu_weight))
 
-    return new EOSWallet(available + cpuStaked * 2)
-  } catch (error) {
-    console.log(error)
-  }
+  return new EOSWallet(available + cpuStaked * 2)
 }
 
 const fetchETHWallet = async address => {
-  try {
-    const wallet = await httpModule.getJSON(
-      `https://api.etherscan.io/api?module=account&action=balance&address=${address}&tag=latest&apikey=R9D635X3ZRAJHHWH7E4TVJ4IE8N7GBE8QF`
-    )
-    return new ETHWallet(parseFloat(wallet.result) / 1000000000000000000)
-  } catch (error) {
-    console.log(error)
-  }
+  const wallet = await httpModule.getJSON(
+    `https://api.etherscan.io/api?module=account&action=balance&address=${address}&tag=latest&apikey=R9D635X3ZRAJHHWH7E4TVJ4IE8N7GBE8QF`
+  )
+  return new ETHWallet(parseFloat(wallet.result) / 1000000000000000000)
 }
 
 const fetchNEOWallet = async address => {
-  try {
-    const wallet = await httpModule.getJSON(
-      `https://api.neoscan.io/api/main_net/v1/get_balance/${address}`
-    )
-
-    return new NEOWallet(wallet.balance[0].amount)
-  } catch (error) {
-    console.log(error)
-  }
+  const wallet = await httpModule.getJSON(
+    `https://api.neoscan.io/api/main_net/v1/get_balance/${address}`
+  )
+  return new NEOWallet(wallet.balance[0].amount)
 }
 
 export {

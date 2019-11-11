@@ -17,6 +17,11 @@ export class Coin {
     this.symbol = symbol
   }
 
+  deserialize(input) {
+    Object.assign(this, input)
+    return this
+  }
+
   get id() {
     return this._id
   }
