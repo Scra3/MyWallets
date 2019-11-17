@@ -46,6 +46,7 @@
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-vue": "^5.2.3",
     "flush-promises": "^1.0.2",
+    "husky": "^3.0.9",
     "jest": "^24.9.0",
     "nativescript-dev-webpack": "^1.0.0",
     "nativescript-vue-template-compiler": "^2.0.0",
@@ -60,5 +61,10 @@
     "vue-jest": "^3.0.5",
     "vue-loader": "^15.4.0",
     "vue-template-compiler": "^2.6.10"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint:fix"
+    }
   }
 }

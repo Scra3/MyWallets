@@ -43,7 +43,7 @@ describe('WalletsPage.vue', () => {
   it('displays wallet price change in 24h in header', () => {
     expect(
       wrapper.find("[data-test='wallet-price-change']").attributes().text
-    ).toEqual("12")
+    ).toEqual('12')
   })
 
   it('displays each wallet infos', () => {
