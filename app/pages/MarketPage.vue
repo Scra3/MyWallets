@@ -93,7 +93,7 @@ export default {
     padding: 10;
 
     .index {
-      width: 5%;
+      width: 10%;
       text-align: left;
     }
 
@@ -104,12 +104,12 @@ export default {
     }
 
     .name {
-      width: 30%;
+      width: 35%;
       text-align: left;
     }
 
     .change-percentage {
-      width: 25%;
+      width: 15%;
     }
 
     .price {
