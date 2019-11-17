@@ -54,7 +54,7 @@ describe('WalletsPage.vue', () => {
       'Ripple'
     )
     expect(wrapper.find("[data-test='balance']").attributes().text).toEqual(
-      '11 XRP'
+      '11.00 XRP'
     )
     expect(wrapper.find("[data-test='current-price']").props().value).toEqual(
       96
