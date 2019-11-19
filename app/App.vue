@@ -35,7 +35,7 @@ export default {
   components: { WalletsPage, MarketPage },
   data() {
     return {
-      selectedCurrency: USD,
+      selectedCurrency: EUR,
       selectedIndex: 0
     }
   },
