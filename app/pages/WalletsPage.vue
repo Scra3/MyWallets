@@ -3,7 +3,7 @@
     <FlexboxLayout :class="{ loading: isLoading }" class="wallets-overview">
       <ActivityIndicator v-if="isLoading" :busy="isLoading" />
 
-      <template v-else>
+      <template v-else-if="wallets.length > 0">
         <FlexboxLayout class="main-infos">
           <PriceLabel
             :value="investment"
@@ -31,6 +31,9 @@
             class="price"
           />
         </StackLayout>
+      </template>
+      <template v-else>
+        <label text="Please add wallets" />
       </template>
     </FlexboxLayout>
 
