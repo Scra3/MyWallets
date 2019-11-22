@@ -3,7 +3,7 @@
     <ActionBar title="My Wallets" class="action-bar">
       <ActionItem
         @tap="toggleCurrency"
-        :text="selectedCurrency"
+        :text="selectedCurrency.acronym"
         class="currency"
         android.position="right"
       />

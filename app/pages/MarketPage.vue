@@ -9,8 +9,9 @@
             <label :text="index + 1" class="index" data-test="index" />
             <Image :src="coin.image" class="image" data-test="image" />
             <label :text="coin.name" class="name" data-test="name" />
-            <ChangePercentageLabel
+            <ChangeLabel
               :value="coin.priceChangePercentage24H"
+              unit="%"
               class="change-percentage"
             />
             <PriceLabel
@@ -27,15 +28,15 @@
 
 <script>
 import { fetchMarket } from '@/Api'
-import ChangePercentageLabel from '@/components/ChangePercentageLabel'
+import ChangeLabel from '@/components/ChangeLabel'
 import PriceLabel from '@/components//PriceLabel'
 
 export default {
   name: 'MarketPage',
-  components: { PriceLabel, ChangePercentageLabel },
+  components: { PriceLabel, ChangeLabel },
   props: {
     currency: {
-      type: String,
+      type: Object,
       required: true
     }
   },

@@ -1,12 +1,10 @@
 <template>
   <FlexboxLayout class="price">
-    <label :text="currencySymbol" data-test="currency" />
+    <label :text="currency.symbol" data-test="currency" />
     <label :text="parseFloat(value).toFixed(2)" data-test="current-price" />
   </FlexboxLayout>
 </template>
 <script>
-import { USD } from '@/constants.js'
-
 export default {
   name: 'PriceLabel',
   props: {
@@ -15,13 +13,8 @@ export default {
       required: true
     },
     currency: {
-      type: String,
+      type: Object,
       required: true
-    }
-  },
-  computed: {
-    currencySymbol() {
-      return this.currency === USD ? '$' : '€'
     }
   }
 }

@@ -56,9 +56,8 @@ describe('MarketPage.vue', () => {
   })
 
   it('displays price change percentage of 24h', () => {
-    expect(wrapper.find('ChangePercentageLabel-stub').props().value).toEqual(
-      7.17426
-    )
+    expect(wrapper.find('ChangeLabel-stub').props().value).toEqual(7.17426)
+    expect(wrapper.find('ChangeLabel-stub').props().unit).toEqual('%')
   })
 
   it('displays image', () => {

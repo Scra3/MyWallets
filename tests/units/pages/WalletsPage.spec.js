@@ -18,11 +18,13 @@ const coin = new Coin(
   'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579',
   'xrp'
 )
+const walletA = new Wallet(coin, 10)
+const walletB = new Wallet(coin, 11)
 
 describe('WalletsPage.vue', () => {
   beforeEach(async () => {
     fetchWalletsMarket.mockImplementation(() =>
-      Promise.resolve([new Wallet(coin, 10), new Wallet(coin, 11)])
+      Promise.resolve([walletA, walletB])
     )
 
     wrapper = shallowMount(WalletsPage, {
@@ -31,6 +33,7 @@ describe('WalletsPage.vue', () => {
       }
     })
 
+    wrapper.setData({ investment: 10 })
     await flushPromises()
   })
 
@@ -40,10 +43,24 @@ describe('WalletsPage.vue', () => {
     )
   })
 
-  it('displays wallet price change in 24h in header', () => {
+  it('displays wallets price change in 24h in header', () => {
     expect(
-      wrapper.find("[data-test='wallet-price-change']").attributes().text
-    ).toEqual('12')
+      wrapper.find("[data-test='wallets-price-change']").props().value
+    ).toEqual(10 * 6 + 11 * 6)
+    expect(
+      wrapper.find("[data-test='wallets-price-change']").props().unit
+    ).toEqual('$ (24h)')
+  })
+
+  it('displays wallets ratio', () => {
+    expect(wrapper.find("[data-test='wallets-ratio']").props().value).toEqual(
+      Number(
+        (((walletA.value() + walletB.value()) / 10) * 100 - 100).toFixed(2)
+      )
+    )
+    expect(wrapper.find("[data-test='wallets-ratio']").props().unit).toEqual(
+      '%'
+    )
   })
 
   it('displays each wallet infos', () => {

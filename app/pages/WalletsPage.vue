@@ -4,12 +4,33 @@
       <ActivityIndicator v-if="isLoading" :busy="isLoading" />
 
       <template v-else>
-        <PriceLabel
-          :value="walletsValue"
-          :currency="currency"
-          data-test="wallets-value"
-        />
-        <label :text="walletsPriceChange24H" data-test="wallet-price-change" />
+        <FlexboxLayout class="main-infos">
+          <PriceLabel
+            :value="investment"
+            :currency="investmentCurrency"
+            class="price"
+          />
+          <PriceLabel
+            :value="walletsValue"
+            :currency="currency"
+            class="wallets-value"
+            data-test="wallets-value"
+          />
+          <ChangeLabel
+            :value="ratio"
+            unit="%"
+            data-test="wallets-ratio"
+            class="price"
+          />
+        </FlexboxLayout>
+        <StackLayout orientation="horizontal">
+          <ChangeLabel
+            :value="walletsPriceChange24H"
+            :unit="`${currency.symbol} (24h)`"
+            data-test="wallets-price-change"
+            class="price"
+          />
+        </StackLayout>
       </template>
     </FlexboxLayout>
 
@@ -35,8 +56,9 @@
                   :currency="currency"
                   data-test="current-price"
                 />
-                <ChangePercentageLabel
+                <ChangeLabel
                   :value="wallet.coin.priceChangePercentage24H"
+                  unit="%"
                   data-test="change-percentage"
                 />
               </FlexboxLayout>
@@ -68,19 +90,20 @@ import {
   fetchETHWallet,
   fetchEOSWallet,
   fetchNEOWallet,
+  fetchBTCWallet,
   fetchWalletsMarket
 } from '@/Api'
 
-import { ETH, XRP, EOS, NEO } from '@/constants.js'
-import ChangePercentageLabel from '@/components/ChangePercentageLabel'
+import { ETH, XRP, EOS, NEO, EUR, BTC } from '@/constants.js'
+import ChangeLabel from '@/components/ChangeLabel'
 import PriceLabel from '@/components//PriceLabel'
 
 export default {
   name: 'WalletsPage',
-  components: { ChangePercentageLabel, PriceLabel },
+  components: { ChangeLabel, PriceLabel },
   props: {
     currency: {
-      type: String,
+      type: Object,
       required: true
     }
   },
@@ -88,6 +111,8 @@ export default {
     return {
       intervalDelay: 60000,
       wallets: [],
+      investmentCurrency: EUR,
+      investment: 1050,
       addresses: [
         {
           coinID: ETH,
@@ -95,7 +120,8 @@ export default {
         },
         { coinID: XRP, publicKey: 'rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR' },
         { coinID: EOS, accountName: 'gi3tmnzsgqge' },
-        { coinID: NEO, publicKey: 'ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf' }
+        { coinID: NEO, publicKey: 'ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf' },
+        { coinID: BTC, publicKey: 'ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf' }
       ],
       intervalID: null,
       isLoading: true
@@ -108,20 +134,22 @@ export default {
       return [...this.wallets].sort(sortWallets)
     },
     walletsValue() {
-      if (this.wallets.length === 0) {
-        return 0
-      }
       const sum = (currentValue, wallet) =>
         currentValue + parseFloat(wallet.value())
       return Number(parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2))
     },
     walletsPriceChange24H() {
-      if (this.wallets.length === 0) {
-        return 0
-      }
-      const sum = (currentValue, wallet) =>
-        currentValue + parseFloat(wallet.coin.priceChange24H)
-      return Number(parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2))
+      const priceChange = (currentValue, wallet) =>
+        currentValue + parseFloat(wallet.coin.priceChange24H) * wallet.balance
+      return Number(
+        parseFloat(this.wallets.reduce(priceChange, 0.0)).toFixed(2)
+      )
+    },
+    ratio() {
+      const ratio = Number(
+        parseFloat((this.walletsValue / this.investment) * 100 - 100).toFixed(2)
+      )
+      return ratio
     }
   },
   watch: {
@@ -155,6 +183,8 @@ export default {
             return fetchEOSWallet(address.accountName)
           } else if (address.coinID === NEO) {
             return fetchNEOWallet(address.publicKey)
+          } else if (address.coinID === BTC) {
+            return fetchBTCWallet(address.publicKey)
           }
         })
 
@@ -176,18 +206,34 @@ export default {
 .HomePage {
   .wallets-overview {
     justify-content: space-between;
+    flex-direction: column;
     align-items: center;
     padding: 10;
     border-radius: 10;
     height: 120;
     font-size: 25;
-    font-weight: bold;
+    font-weight: normal;
     width: 100%;
     background-color: $grey;
 
     &.loading {
       color: $blue;
       justify-content: center;
+    }
+
+    .price {
+      font-weight: normal;
+    }
+
+    .main-infos {
+      justify-content: space-around;
+      align-items: center;
+      width: 100%;
+
+      .wallets-value {
+        font-weight: bold;
+        color: $blue;
+      }
     }
   }
 

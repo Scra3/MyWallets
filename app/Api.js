@@ -1,11 +1,13 @@
 import * as httpModule from 'tns-core-modules/http'
 import { Wallet } from '@/models/Wallet'
-import { ETH, XRP, EOS, NEO } from '@/constants.js'
+import { ETH, XRP, EOS, NEO, BTC } from '@/constants.js'
 import { Coin } from '@/models/Coin'
 
 const fetchMarket = async currency => {
   const coinsMarket = await httpModule.getJSON(
-    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=100&page=1&sparkline=false`
+    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${
+      currency.acronym
+    }&order=market_cap_desc&per_page=100&page=1&sparkline=false`
   )
 
   return coinsMarket.map(coin => new Coin().deserialize(coin))
@@ -14,7 +16,9 @@ const fetchMarket = async currency => {
 const fetchWalletsMarket = async (wallets, currency) => {
   const ids = wallets.map(wallet => wallet.coin.id).join(',')
   const coinsMarket = await httpModule.getJSON(
-    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&ids=${ids}&order=market_cap_desc&per_page=100&page=1&sparkline=false`
+    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${
+      currency.acronym
+    }&ids=${ids}&order=market_cap_desc&per_page=100&page=1&sparkline=false`
   )
 
   return wallets.map(wallet => {
@@ -66,11 +70,16 @@ const fetchNEOWallet = async address => {
   return new Wallet(new Coin(NEO), wallet.balance[0].amount)
 }
 
+const fetchBTCWallet = async () => {
+  return Promise.resolve(new Wallet(new Coin(BTC), 0.041))
+}
+
 export {
   fetchXRPWallet,
   fetchETHWallet,
   fetchEOSWallet,
   fetchNEOWallet,
+  fetchBTCWallet,
   fetchWalletsMarket,
   fetchMarket
 }
