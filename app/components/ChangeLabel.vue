@@ -1,17 +1,24 @@
 <template>
   <label
-    :text="value >= 0 ? `+${value.toFixed(2)}%` : `${value.toFixed(2)}%`"
+    :text="
+      value >= 0 ? `+${value.toFixed(2)}${unit}` : `${value.toFixed(2)}${unit}`
+    "
     :class="[value >= 0 ? 'positive-change' : 'negative-change']"
-    data-test="change-percentage"
+    data-test="change-label"
   />
 </template>
 <script>
 export default {
-  name: 'ChangePercentageLabel',
+  name: 'ChangeLabel',
   props: {
     value: {
       type: Number,
       required: true
+    },
+    unit: {
+      type: String,
+      required: false,
+      default: ''
     }
   }
 }
