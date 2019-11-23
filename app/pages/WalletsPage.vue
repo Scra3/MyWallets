@@ -3,7 +3,7 @@
     <FlexboxLayout :class="{ loading: isLoading }" class="wallets-overview">
       <ActivityIndicator v-if="isLoading" :busy="isLoading" />
       <Label
-        v-if="isFailedToLoad"
+        v-else-if="isFailedToLoad"
         text="Unable to connect to the server"
         class="message"
         data-test="error-message"
@@ -174,6 +174,7 @@ export default {
     },
     async fetchWallets() {
       this.isLoading = true
+      this.isFailedToLoad = false
 
       try {
         const pWallets = this.addresses.map(async address => {

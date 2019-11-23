@@ -96,11 +96,13 @@ describe('WalletsPage.vue', () => {
     ).toEqual(960)
   })
 
-  it('displays spinner when fetching wallets', () => {
+  it('displays spinner and reset states when fetching wallets', () => {
+    wrapper.setData({ isLoading: false, isFailedToLoad: true })
     wrapper.vm.fetchWallets()
 
     expect(wrapper.find('ActivityIndicator-stub').exists()).toBe(true)
     expect(wrapper.vm.isLoading).toBe(true)
+    expect(wrapper.vm.isFailedToLoad).toBe(false)
   })
 
   it('does not display spinner when fetching wallets is finished', async () => {
@@ -122,5 +124,14 @@ describe('WalletsPage.vue', () => {
     await wrapper.vm.fetchWallets()
 
     expect(wrapper.find("[data-test='error-message']").exists()).toBe(true)
+  })
+
+  it('stops refreshing list when fetching wallet has error', async () => {
+    fetchWalletsMarket.mockImplementation(() => Promise.reject('fail'))
+
+    const event = { object: { refreshing: true } }
+    await wrapper.vm.refresh(event)
+
+    expect(event.object.refreshing).toEqual(false)
   })
 })
