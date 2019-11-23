@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import App from '@/App'
 import { EUR, USD } from '@/constants.js'
 
@@ -6,7 +6,7 @@ describe('App.vue', () => {
   let wrapper
 
   beforeEach(async () => {
-    wrapper = mount(App)
+    wrapper = shallowMount(App)
   })
 
   it('displays EUR currency by default', () => {
