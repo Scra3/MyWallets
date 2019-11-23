@@ -32,8 +32,9 @@
           />
         </StackLayout>
       </template>
+
       <template v-else>
-        <label text="Please add wallets" />
+        <label text="Please add wallets" data-test="information-message" />
       </template>
     </FlexboxLayout>
 

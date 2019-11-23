@@ -115,4 +115,10 @@ describe('WalletsPage.vue', () => {
     expect(wrapper.find('ActivityIndicator-stub').exists()).toBe(false)
     expect(wrapper.vm.isLoading).toBe(false)
   })
+
+  it('displays information message when there is no added wallets', () => {
+    wrapper.setData({ wallets: [] })
+
+    expect(wrapper.find("[data-test='information-message'").exists()).toBe(true)
+  })
 })
