@@ -7,7 +7,7 @@
     "lint": "eslint --ext .js,.vue app",
     "stylelint": "stylelint \"app/**/*.vue\" \"app/**/*.scss\"",
     "lint:fix": "eslint --fix ./app --ext .js,.vue app",
-    "test:unit": "jest"
+    "test:unit": "jest --coverage"
   },
   "license": "MIT",
   "nativescript": {
