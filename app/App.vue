@@ -6,19 +6,20 @@
         :text="selectedCurrency.acronym"
         class="currency"
         android.position="right"
+        data-test="action-item-currency"
       />
     </ActionBar>
 
     <TabView
       :selectedIndex="selectedIndex"
-      @selectedIndexChange="selectIndex"
+      @selectedIndexChange="args => selectIndex(args.value)"
       android:androidTabsPosition="bottom"
       class="tab-view"
     >
-      <TabViewItem title="Wallets">
+      <TabViewItem title="Wallets" data-test="wallets-tab">
         <WalletsPage :currency="selectedCurrency" />
       </TabViewItem>
-      <TabViewItem title="Market">
+      <TabViewItem title="Market" data-test="market-tab">
         <MarketPage :currency="selectedCurrency" />
       </TabViewItem>
     </TabView>
@@ -43,8 +44,8 @@ export default {
     toggleCurrency() {
       this.selectedCurrency = this.selectedCurrency === USD ? EUR : USD
     },
-    selectIndex(args) {
-      this.selectedIndex = args.value
+    selectIndex(index) {
+      this.selectedIndex = index
     }
   }
 }
