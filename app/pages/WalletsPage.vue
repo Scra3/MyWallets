@@ -2,7 +2,12 @@
   <StackLayout class="HomePage">
     <FlexboxLayout :class="{ loading: isLoading }" class="wallets-overview">
       <ActivityIndicator v-if="isLoading" :busy="isLoading" />
-
+      <Label
+        v-if="isFailedToLoad"
+        text="Unable to connect to the server"
+        class="message"
+        data-test="error-message"
+      />
       <template v-else-if="wallets.length > 0">
         <FlexboxLayout class="main-infos">
           <PriceLabel
@@ -77,13 +82,6 @@
           </v-template>
         </ListView>
       </PullToRefresh>
-
-      <Label
-        v-if="wallets.length === 0 && !isLoading"
-        text="No wallet added"
-        class="message"
-        data-test="message"
-      />
     </StackLayout>
   </StackLayout>
 </template>
@@ -128,7 +126,8 @@ export default {
         { coinID: BTC, publicKey: 'ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf' }
       ],
       intervalID: null,
-      isLoading: true
+      isLoading: true,
+      isFailedToLoad: false
     }
   },
   computed: {
@@ -150,10 +149,9 @@ export default {
       )
     },
     ratio() {
-      const ratio = Number(
+      return Number(
         parseFloat((this.walletsValue / this.investment) * 100 - 100).toFixed(2)
       )
-      return ratio
     }
   },
   watch: {
@@ -195,7 +193,7 @@ export default {
         const wallets = await Promise.all(pWallets)
         this.wallets = await fetchWalletsMarket(wallets, this.currency)
       } catch (e) {
-        console.log(e)
+        this.isFailedToLoad = true
       } finally {
         this.isLoading = false
       }

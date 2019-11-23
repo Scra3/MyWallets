@@ -4,7 +4,6 @@ import { USD } from '@/constants.js'
 import { Coin } from '@/models/Coin'
 import { Wallet } from '@/models/Wallet'
 import flushPromises from 'flush-promises'
-
 jest.mock('@/Api')
 import { fetchWalletsMarket } from '@/Api'
 
@@ -32,8 +31,8 @@ describe('WalletsPage.vue', () => {
         currency: USD
       }
     })
-
     wrapper.setData({ investment: 10 })
+
     await flushPromises()
   })
 
@@ -97,11 +96,6 @@ describe('WalletsPage.vue', () => {
     ).toEqual(960)
   })
 
-  it('displays message when there is no wallets and is no loading', () => {
-    wrapper.setData({ wallets: [] })
-    expect(wrapper.find("[data-test='message']").exists()).toBe(true)
-  })
-
   it('displays spinner when fetching wallets', () => {
     wrapper.vm.fetchWallets()
 
@@ -120,5 +114,13 @@ describe('WalletsPage.vue', () => {
     wrapper.setData({ wallets: [] })
 
     expect(wrapper.find("[data-test='information-message'").exists()).toBe(true)
+  })
+
+  it('displays error message when fetching wallet or market has a problem', async () => {
+    fetchWalletsMarket.mockImplementation(() => Promise.reject('fail'))
+
+    await wrapper.vm.fetchWallets()
+
+    expect(wrapper.find("[data-test='error-message']").exists()).toBe(true)
   })
 })
