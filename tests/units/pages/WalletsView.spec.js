@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import WalletsPage from '@/pages/WalletsPage'
+import WalletsView from '@/pages/WalletsView'
 import { USD } from '@/constants.js'
 import { Coin } from '@/models/Coin'
 import { Wallet } from '@/models/Wallet'
@@ -20,13 +20,13 @@ const coin = new Coin(
 const walletA = new Wallet(coin, 10)
 const walletB = new Wallet(coin, 11)
 
-describe('WalletsPage.vue', () => {
+describe('WalletsView.vue', () => {
   beforeEach(async () => {
     fetchWalletsMarket.mockImplementation(() =>
       Promise.resolve([walletA, walletB])
     )
 
-    wrapper = shallowMount(WalletsPage, {
+    wrapper = shallowMount(WalletsView, {
       propsData: {
         currency: USD
       }

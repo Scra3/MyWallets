@@ -17,23 +17,23 @@
       class="tab-view"
     >
       <TabViewItem title="Wallets" data-test="wallets-tab">
-        <WalletsPage :currency="selectedCurrency" />
+        <WalletsView :currency="selectedCurrency" />
       </TabViewItem>
       <TabViewItem title="Market" data-test="market-tab">
-        <MarketPage :currency="selectedCurrency" />
+        <MarketView :currency="selectedCurrency" />
       </TabViewItem>
     </TabView>
   </Page>
 </template>
 
 <script>
-import WalletsPage from '@/pages/WalletsPage'
-import MarketPage from '@/pages/MarketPage'
+import WalletsView from '@/pages/WalletsView'
+import MarketView from '@/pages/MarketView'
 import { USD, EUR } from '@/constants.js'
 
 export default {
   name: 'App',
-  components: { WalletsPage, MarketPage },
+  components: { WalletsView, MarketView },
   data() {
     return {
       selectedCurrency: EUR,

@@ -1,5 +1,5 @@
 <template>
-  <flexboxLayout class="markets">
+  <flexboxLayout class="MarketView">
     <ActivityIndicator v-if="isLoading" :busy="isLoading" />
 
     <PullToRefresh v-else @refresh="refreshCoinsMarket">
@@ -32,7 +32,7 @@ import ChangeLabel from '@/components/ChangeLabel'
 import PriceLabel from '@/components//PriceLabel'
 
 export default {
-  name: 'MarketPage',
+  name: 'MarketView',
   components: { PriceLabel, ChangeLabel },
   props: {
     currency: {
@@ -82,7 +82,7 @@ export default {
 <style lang="scss" scoped>
 @import '../styles.scss';
 
-.markets {
+.MarketView {
   flex-direction: column;
   flex-grow: 1;
 

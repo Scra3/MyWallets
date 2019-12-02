@@ -1,5 +1,5 @@
 <template>
-  <StackLayout class="HomePage">
+  <StackLayout class="WalletsView">
     <FlexboxLayout :class="{ loading: isLoading }" class="wallets-overview">
       <ActivityIndicator v-if="isLoading" :busy="isLoading" />
       <Label
@@ -47,7 +47,10 @@
       <PullToRefresh @refresh="refresh" color="#43ab92">
         <ListView v-for="wallet in sortedWallets">
           <v-template>
-            <FlexboxLayout class="wallet">
+            <FlexboxLayout
+              @tap="$navigateTo(walletPage, { props: { wallet } })"
+              class="wallet"
+            >
               <Image :src="wallet.coin.image" class="image" data-test="image" />
               <Label :text="wallet.coin.name" class="name" data-test="name" />
               <Label
@@ -98,10 +101,11 @@ import {
 
 import { ETH, XRP, EOS, NEO, EUR, BTC } from '@/constants.js'
 import ChangeLabel from '@/components/ChangeLabel'
-import PriceLabel from '@/components//PriceLabel'
+import PriceLabel from '@/components/PriceLabel'
+import Wallet from '@/pages/WalletPage'
 
 export default {
-  name: 'WalletsPage',
+  name: 'WalletsView',
   components: { ChangeLabel, PriceLabel },
   props: {
     currency: {
@@ -111,6 +115,7 @@ export default {
   },
   data() {
     return {
+      walletPage: Wallet,
       intervalDelay: 60000,
       wallets: [],
       investmentCurrency: EUR,
@@ -206,7 +211,7 @@ export default {
 <style lang="scss" scoped>
 @import '../styles.scss';
 
-.HomePage {
+.WalletsView {
   .wallets-overview {
     justify-content: space-between;
     flex-direction: column;

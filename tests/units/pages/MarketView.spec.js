@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import MarketPage from '@/pages/MarketPage'
+import MarketView from '@/pages/MarketView'
 import { USD, EUR } from '@/constants.js'
 import { Coin } from '@/models/Coin'
 import flushPromises from 'flush-promises'
@@ -7,7 +7,7 @@ import flushPromises from 'flush-promises'
 jest.mock('@/Api')
 import { fetchMarket } from '@/Api'
 
-describe('MarketPage.vue', () => {
+describe('MarketView.vue', () => {
   let wrapper
   beforeEach(async () => {
     fetchMarket.mockImplementation(() =>
@@ -31,7 +31,7 @@ describe('MarketPage.vue', () => {
       ])
     )
 
-    wrapper = shallowMount(MarketPage, {
+    wrapper = shallowMount(MarketView, {
       propsData: {
         currency: USD
       }
