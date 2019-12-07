@@ -33,7 +33,11 @@ const fetchXRPWallet = async address => {
     `https://data.ripple.com/v2/accounts/${address}/balance_changes?descending=true&limit=1)`
   )
 
-  return new Wallet(new Coin(XRP), wallet.balance_changes[0].final_balance)
+  return new Wallet(
+    new Coin(XRP),
+    wallet.balance_changes[0].final_balance,
+    address
+  )
 }
 
 const fetchEOSWallet = async accountName => {
@@ -50,7 +54,7 @@ const fetchEOSWallet = async accountName => {
   const available = parseFloat(removeEOSUnit(wallet.core_liquid_balance))
   const cpuStaked = parseFloat(removeEOSUnit(wallet.total_resources.cpu_weight))
 
-  return new Wallet(new Coin(EOS), available + cpuStaked * 2)
+  return new Wallet(new Coin(EOS), available + cpuStaked * 2, accountName)
 }
 
 const fetchETHWallet = async address => {
@@ -59,7 +63,8 @@ const fetchETHWallet = async address => {
   )
   return new Wallet(
     new Coin(ETH),
-    parseFloat(wallet.result) / 1000000000000000000
+    parseFloat(wallet.result) / 1000000000000000000,
+    address
   )
 }
 
@@ -67,11 +72,11 @@ const fetchNEOWallet = async address => {
   const wallet = await httpModule.getJSON(
     `https://api.neoscan.io/api/main_net/v1/get_balance/${address}`
   )
-  return new Wallet(new Coin(NEO), wallet.balance[0].amount)
+  return new Wallet(new Coin(NEO), wallet.balance[0].amount, address)
 }
 
-const fetchBTCWallet = async () => {
-  return Promise.resolve(new Wallet(new Coin(BTC), 0.041))
+const fetchBTCWallet = async address => {
+  return Promise.resolve(new Wallet(new Coin(BTC), 0.041, address))
 }
 
 export {

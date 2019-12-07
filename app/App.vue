@@ -1,5 +1,5 @@
 <template>
-  <Page class="app">
+  <Page class="App">
     <ActionBar title="My Wallets" class="action-bar">
       <ActionItem
         @tap="toggleCurrency"
@@ -53,7 +53,7 @@ export default {
 
 <style lang="scss">
 @import 'styles';
-.app {
+.App {
   background-color: $dark-grey;
   color: $white;
 

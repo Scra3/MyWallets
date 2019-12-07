@@ -15,7 +15,7 @@ describe('Wallet.js', () => {
       'http://fake.url.com',
       'btc'
     )
-    wallet = new Wallet(coin, 10)
+    wallet = new Wallet(coin, 10, 'fakeAddress')
   })
 
   it('returns value', () => {

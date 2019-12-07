@@ -1,7 +1,8 @@
 export class Wallet {
-  constructor(coin, balance) {
+  constructor(coin, balance, address) {
     this.coin = coin
     this.balance = balance
+    this.address = address
   }
 
   value() {

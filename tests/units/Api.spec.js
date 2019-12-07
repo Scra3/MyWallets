@@ -89,7 +89,7 @@ describe('Api.js', () => {
 
     it('returns an list of hydrated wallets', async () => {
       const wallet = (await fetchWalletsMarket(
-        [new Wallet(new Coin(XRP), 10)],
+        [new Wallet(new Coin(XRP), 10, 'fakeAddress')],
         USD
       ))[0]
       expect(wallet.coin.symbol).toEqual('XRP')

@@ -17,8 +17,8 @@ const coin = new Coin(
   'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579',
   'xrp'
 )
-const walletA = new Wallet(coin, 10)
-const walletB = new Wallet(coin, 11)
+const walletA = new Wallet(coin, 10, 'fakeAddressA')
+const walletB = new Wallet(coin, 11, 'fakeAddressB')
 
 describe('WalletsView.vue', () => {
   beforeEach(async () => {
