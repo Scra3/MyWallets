@@ -1,8 +1,15 @@
 <template>
-  <flexboxLayout class="MarketView">
-    <ActivityIndicator v-if="isLoading" :busy="isLoading" />
+  <StackLayout class="MarketView">
+    <FlexboxLayout class="header">
+      <Label text="#" class="index" />
+      <Label text="Name" class="name" />
+      <Label text="24h" class="change-percentage" />
+      <Label text="Price" class="price" />
+    </FlexboxLayout>
 
-    <PullToRefresh v-else @refresh="refreshCoinsMarket">
+    <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
+
+    <PullToRefresh v-else @refresh="refreshCoinsMarket" class="spinner">
       <ListView v-for="(coin, index) in coins">
         <v-template>
           <FlexboxLayout class="coin" data-test="coin">
@@ -23,7 +30,7 @@
         </v-template>
       </ListView>
     </PullToRefresh>
-  </flexboxLayout>
+  </StackLayout>
 </template>
 
 <script>
@@ -83,39 +90,49 @@ export default {
 @import '../styles.scss';
 
 .MarketView {
-  flex-direction: column;
-  flex-grow: 1;
-
-  .coin {
-    justify-content: space-between;
+  .coin,
+  .header {
     flex-direction: row;
     height: 60;
     align-items: center;
     padding: 10;
+  }
 
-    .index {
-      width: 10%;
-      text-align: left;
-    }
-
-    .image {
-      height: 25;
-      width: 15%;
-      text-align: left;
-    }
+  .header {
+    height: 40;
+    font-weight: bold;
+    color: $blue;
 
     .name {
-      width: 35%;
+      width: 50%;
+      padding-left: 20;
       text-align: left;
     }
+  }
 
-    .change-percentage {
-      width: 15%;
-    }
+  .index {
+    width: 10%;
+    text-align: left;
+  }
 
-    .price {
-      width: 25%;
-    }
+  .image {
+    height: 25;
+    width: 15%;
+    text-align: left;
+  }
+
+  .name {
+    width: 35%;
+    text-align: left;
+  }
+
+  .change-percentage {
+    width: 15%;
+  }
+
+  .price {
+    width: 25%;
+    text-align: right;
   }
 }
 </style>

@@ -8,3 +8,11 @@ $blue: #00adb5;
 $white: #eee;
 $error-color: #c70d3a;
 $success-color: #43ab92;
+
+.spinner {
+  color: $blue;
+
+  ListView {
+    color: $white
+  }
+}

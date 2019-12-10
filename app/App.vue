@@ -19,6 +19,7 @@
       <TabViewItem title="Wallets" data-test="wallets-tab">
         <WalletsView :currency="selectedCurrency" />
       </TabViewItem>
+
       <TabViewItem title="Market" data-test="market-tab">
         <MarketView :currency="selectedCurrency" />
       </TabViewItem>
@@ -71,6 +72,7 @@ export default {
     selected-tab-text-color: $blue;
     tab-background-color: $dark-grey;
     tab-text-color: $white;
+    tab-text-font-size: 15;
   }
 }
 </style>

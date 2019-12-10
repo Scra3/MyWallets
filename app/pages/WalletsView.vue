@@ -44,13 +44,13 @@
     </FlexboxLayout>
 
     <StackLayout class="wallets">
-      <PullToRefresh @refresh="refresh" color="#43ab92">
-        <ListView v-for="wallet in sortedWallets">
+      <PullToRefresh @refresh="refresh" class="spinner">
+        <ListView
+          v-for="wallet in sortedWallets"
+          @itemTap="navigateToWalletPage"
+        >
           <v-template>
-            <FlexboxLayout
-              @tap="$navigateTo(walletPage, { props: { wallet } })"
-              class="wallet"
-            >
+            <FlexboxLayout class="wallet">
               <Image :src="wallet.coin.image" class="image" data-test="image" />
               <Label :text="wallet.coin.name" class="name" data-test="name" />
               <Label
@@ -102,7 +102,7 @@ import {
 import { ETH, XRP, EOS, NEO, EUR, BTC } from '@/constants.js'
 import ChangeLabel from '@/components/ChangeLabel'
 import PriceLabel from '@/components/PriceLabel'
-import Wallet from '@/pages/WalletPage'
+import WalletPage from '@/pages/WalletPage'
 
 export default {
   name: 'WalletsView',
@@ -115,7 +115,6 @@ export default {
   },
   data() {
     return {
-      walletPage: Wallet,
       intervalDelay: 60000,
       wallets: [],
       investmentCurrency: EUR,
@@ -172,6 +171,12 @@ export default {
     clearInterval(this.intervalID)
   },
   methods: {
+    navigateToWalletPage(event) {
+      // wallet in listview is undefined that why we use index of arg.
+      this.$navigateTo(WalletPage, {
+        props: { wallet: this.sortedWallets[event.index] }
+      })
+    },
     async refresh(event) {
       const pullRefresh = event.object
       await this.fetchWallets()
@@ -251,7 +256,6 @@ export default {
       padding: 10;
       justify-content: space-between;
       align-items: center;
-      color: $white;
 
       .image {
         height: 25;
