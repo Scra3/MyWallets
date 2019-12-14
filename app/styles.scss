@@ -14,6 +14,10 @@ $separation-content: 10;
 $large-font-size: 25;
 $normal-font-size: 15;
 
+.darkMode {
+  background-color: $dark-grey;
+}
+
 .spinner {
   color: $blue;
 

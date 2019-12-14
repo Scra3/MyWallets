@@ -1,5 +1,5 @@
 <template>
-  <Page class="WalletPage">
+  <Page class="WalletPage darkMode">
     <ActionBar title="Edit Wallet" class="action-bar">
       <NavigationButton
         @tap="$navigateBack"
@@ -152,7 +152,6 @@ export default {
 @import '../styles.scss';
 
 .WalletPage {
-  background-color: $dark-grey;
   color: $white;
 
   .action-bar {

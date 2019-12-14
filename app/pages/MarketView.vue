@@ -1,5 +1,5 @@
 <template>
-  <StackLayout class="MarketView">
+  <StackLayout class="MarketView darkMode">
     <FlexboxLayout class="header">
       <Label text="#" class="index" />
       <Label text="Name" class="name" />

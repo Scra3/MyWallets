@@ -1,5 +1,5 @@
 <template>
-  <StackLayout class="WalletsView">
+  <StackLayout class="WalletsView darkMode">
     <FlexboxLayout :class="{ loading: isLoading }" class="wallets-overview">
       <ActivityIndicator v-if="isLoading" :busy="isLoading" />
       <ErrorMessage
