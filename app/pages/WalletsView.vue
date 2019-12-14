@@ -2,10 +2,9 @@
   <StackLayout class="WalletsView">
     <FlexboxLayout :class="{ loading: isLoading }" class="wallets-overview">
       <ActivityIndicator v-if="isLoading" :busy="isLoading" />
-      <Label
+      <ErrorMessage
         v-else-if="isFailedToLoad"
-        text="Unable to connect to the server"
-        class="message"
+        :is-failed-to-load="isFailedToLoad"
         data-test="error-message"
       />
       <template v-else-if="wallets.length > 0">
@@ -91,22 +90,23 @@
 
 <script>
 import {
-  fetchXRPWallet,
-  fetchETHWallet,
-  fetchEOSWallet,
-  fetchNEOWallet,
   fetchBTCWallet,
-  fetchWalletsMarket
+  fetchEOSWallet,
+  fetchETHWallet,
+  fetchNEOWallet,
+  fetchWalletsMarket,
+  fetchXRPWallet
 } from '@/Api'
 
-import { ETH, XRP, EOS, NEO, EUR, BTC } from '@/constants.js'
+import { BTC, EOS, ETH, EUR, NEO, XRP } from '@/constants.js'
 import ChangeLabel from '@/components/ChangeLabel'
 import PriceLabel from '@/components/PriceLabel'
 import WalletPage from '@/pages/WalletPage'
+import ErrorMessage from '@/components/ErrorMessage'
 
 export default {
   name: 'WalletsView',
-  components: { ChangeLabel, PriceLabel },
+  components: { ErrorMessage, ChangeLabel, PriceLabel },
   props: {
     currency: {
       type: Object,
@@ -130,7 +130,7 @@ export default {
         { coinID: BTC, publicKey: 'ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf' }
       ],
       intervalID: null,
-      isLoading: true,
+      isLoading: false,
       isFailedToLoad: false
     }
   },
@@ -218,16 +218,14 @@ export default {
 
 .WalletsView {
   .wallets-overview {
-    justify-content: space-between;
+    justify-content: center;
     flex-direction: column;
-    align-items: center;
-    padding: 10;
+    padding: $separation-content;
     border-radius: 10;
     height: 120;
-    font-size: 25;
-    font-weight: normal;
-    width: 100%;
+    font-size: $large-font-size;
     background-color: $grey;
+    margin: $separation-content;
 
     &.loading {
       color: $blue;
@@ -263,7 +261,7 @@ export default {
       }
 
       .name {
-        font-size: 15;
+        font-size: $normal-font-size;
         margin-left: 20;
         width: 20%;
       }
@@ -283,12 +281,6 @@ export default {
         font-weight: bold;
         width: 20%;
       }
-    }
-
-    .message {
-      text-align: center;
-      width: 100%;
-      font-weight: bold;
     }
   }
 }

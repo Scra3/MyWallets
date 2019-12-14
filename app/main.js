@@ -12,6 +12,10 @@ if (TNS_ENV !== 'production') {
 Vue.config.silent = TNS_ENV === 'production'
 
 Vue.registerElement(
+  'BarcodeScanner',
+  () => require('nativescript-barcodescanner').BarcodeScannerView
+)
+Vue.registerElement(
   'PullToRefresh',
   () => require('@nstudio/nativescript-pulltorefresh').PullToRefresh
 )

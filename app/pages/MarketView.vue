@@ -8,7 +8,7 @@
     </FlexboxLayout>
 
     <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
-
+    <ErrorMessage v-else-if="isFailedToLoad" />
     <PullToRefresh v-else @refresh="refreshCoinsMarket" class="spinner">
       <ListView v-for="(coin, index) in coins">
         <v-template>
@@ -37,10 +37,11 @@
 import { fetchMarket } from '@/Api'
 import ChangeLabel from '@/components/ChangeLabel'
 import PriceLabel from '@/components//PriceLabel'
+import ErrorMessage from '@/components/ErrorMessage'
 
 export default {
   name: 'MarketView',
-  components: { PriceLabel, ChangeLabel },
+  components: { ErrorMessage, PriceLabel, ChangeLabel },
   props: {
     currency: {
       type: Object,
@@ -50,7 +51,8 @@ export default {
   data() {
     return {
       coins: null,
-      isLoading: true
+      isLoading: false,
+      isFailedToLoad: false
     }
   },
   watch: {
@@ -64,20 +66,23 @@ export default {
   methods: {
     async refreshCoinsMarket(event) {
       const pullRefresh = event.object
+      this.isFailedToLoad = false
       try {
         this.coins = await fetchMarket(this.currency)
       } catch (e) {
-        console.log(e)
+        this.isFailedToLoad = true
       } finally {
         pullRefresh.refreshing = false
       }
     },
     async fetchCoinsMarket() {
       this.isLoading = true
+      this.isFailedToLoad = false
+
       try {
         this.coins = await fetchMarket(this.currency)
       } catch (e) {
-        console.log(e)
+        this.isFailedToLoad = true
       } finally {
         this.isLoading = false
       }
