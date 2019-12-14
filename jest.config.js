@@ -12,9 +12,11 @@ module.exports = {
     '^.+\\.js$': '<rootDir>/node_modules/babel-jest',
     '.*\\.(vue)$': 'vue-jest'
   },
-  transformIgnorePatterns: [],
   collectCoverage: true,
   collectCoverageFrom: ['app/**/*.{js,vue}', '!app/main.js', '!app/store.js'],
   coverageReporters: ['text', 'html'],
-  setupFiles: ['<rootDir>/jest/nativescript-vue-stubs.js']
+  setupFiles: [
+    '<rootDir>/jest/nativescript-vue-stubs.js',
+    '<rootDir>/jest/nativescript-vue-mock-libs.js'
+  ]
 }
