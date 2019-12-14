@@ -72,7 +72,7 @@ export default {
     selected-tab-text-color: $blue;
     tab-background-color: $dark-grey;
     tab-text-color: $white;
-    tab-text-font-size: 15;
+    tab-text-font-size: $normal-font-size;
   }
 }
 </style>

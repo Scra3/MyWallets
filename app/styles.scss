@@ -9,6 +9,11 @@ $white: #eee;
 $error-color: #c70d3a;
 $success-color: #43ab92;
 
+$separation-content: 10;
+
+$large-font-size: 25;
+$normal-font-size: 15;
+
 .spinner {
   color: $blue;
 
@@ -16,3 +21,4 @@ $success-color: #43ab92;
     color: $white
   }
 }
+
