@@ -21,34 +21,36 @@
     }
   },
   "dependencies": {
-    "@nstudio/nativescript-pulltorefresh": "^1.0.1",
-    "@vue/devtools": "^5.0.6",
+    "@nstudio/nativescript-pulltorefresh": "^1.1.1",
+    "@vue/devtools": "^5.3.3",
     "lodash.camelcase": "^4.3.0",
+    "nativescript-barcodescanner": "^3.4.1",
+    "nativescript-camera": "^4.5.0",
     "nativescript-socketio": "^3.2.1",
     "nativescript-toasty": "^1.3.0",
     "nativescript-unit-test-runner": "^0.7.0",
     "nativescript-vue": "^2.4.0",
     "nativescript-vue-devtools": "^1.2.0",
-    "tns-core-modules": "^6.0.0",
-    "vuex": "^3.1.1"
+    "tns-core-modules": "^6.2.3",
+    "vuex": "^3.1.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0",
-    "@babel/preset-env": "^7.6.3",
-    "@vue/test-utils": "^1.0.0-beta.29",
+    "@babel/core": "^7.7.5",
+    "@babel/preset-env": "^7.7.6",
+    "@vue/test-utils": "^1.0.0-beta.30",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.3",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.2",
-    "eslint": "^6.6.0",
-    "eslint-config-prettier": "^6.2.0",
-    "eslint-loader": "^3.0.0",
-    "eslint-plugin-prettier": "^3.1.0",
+    "eslint": "^6.7.2",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-loader": "^3.0.3",
+    "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-vue": "^5.2.3",
     "flush-promises": "^1.0.2",
-    "husky": "^3.0.9",
+    "husky": "^3.1.0",
     "jest": "^24.9.0",
-    "nativescript-dev-webpack": "^1.0.0",
+    "nativescript-dev-webpack": "^1.3.0",
     "nativescript-vue-template-compiler": "^2.0.0",
     "nativescript-worker-loader": "~0.9.0",
     "node-sass": "4.12.0",
@@ -56,15 +58,15 @@
     "stylelint-config-standard": "^18.3.0",
     "stylelint-processor-html": "^1.0.0",
     "stylelint-webpack-plugin": "^0.10.5",
-    "vue": "^2.6.10",
-    "vue-eslint-parser": "^6.0.4",
+    "vue": "^2.6.11",
+    "vue-eslint-parser": "^6.0.5",
     "vue-jest": "^3.0.5",
-    "vue-loader": "^15.4.0",
-    "vue-template-compiler": "^2.6.10"
+    "vue-loader": "^15.7.2",
+    "vue-template-compiler": "^2.6.11"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint:fix && npm run test:unit"
+      "pre-push": "npm run lint:fix && npm run test:unit"
     }
   }
 }

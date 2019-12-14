@@ -1,7 +1,7 @@
 import Vue from 'nativescript-vue'
 import App from './App'
-import VueDevtools from 'nativescript-vue-devtools'
 import store from './store'
+import VueDevtools from 'nativescript-vue-devtools'
 
 /* global TNS_ENV */
 if (TNS_ENV !== 'production') {
