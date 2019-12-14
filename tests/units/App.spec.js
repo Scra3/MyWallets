@@ -22,4 +22,27 @@ describe('App.vue', () => {
       wrapper.find("[data-test='action-item-currency']").attributes().text
     ).toEqual(USD.acronym)
   })
+
+  it('displays EUR currency when USD currency is tapped', () => {
+    wrapper.find("[data-test='action-item-currency']").vm.$emit('tap')
+    wrapper.find("[data-test='action-item-currency']").vm.$emit('tap')
+
+    expect(
+      wrapper.find("[data-test='action-item-currency']").attributes().text
+    ).toEqual(EUR.acronym)
+  })
+
+  it('renders MarketView when his tab is clicked', () => {
+    wrapper.find('TabView-stub').vm.$emit('selectedIndexChange', { value: 1 })
+
+    // tabView selectedIndex props is undefined... that why whe test selectedIndex data
+    expect(wrapper.vm.selectedIndex).toBe(1)
+  })
+
+  it('renders WalletView when his tab is clicked', () => {
+    wrapper.find('TabView-stub').vm.$emit('selectedIndexChange', { value: 0 })
+
+    // tabView selectedIndex props is undefined... that why whe test selectedIndex data
+    expect(wrapper.vm.selectedIndex).toBe(0)
+  })
 })

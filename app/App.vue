@@ -12,15 +12,15 @@
 
     <TabView
       :selectedIndex="selectedIndex"
-      @selectedIndexChange="args => selectIndex(args.value)"
+      @selectedIndexChange="selectIndex"
       android:androidTabsPosition="bottom"
       class="tab-view"
     >
-      <TabViewItem title="Wallets" data-test="wallets-tab">
+      <TabViewItem title="Wallets">
         <WalletsView :currency="selectedCurrency" />
       </TabViewItem>
 
-      <TabViewItem title="Market" data-test="market-tab">
+      <TabViewItem title="Market">
         <MarketView :currency="selectedCurrency" />
       </TabViewItem>
     </TabView>
@@ -45,8 +45,8 @@ export default {
     toggleCurrency() {
       this.selectedCurrency = this.selectedCurrency === USD ? EUR : USD
     },
-    selectIndex(index) {
-      this.selectedIndex = index
+    selectIndex(args) {
+      this.selectedIndex = args.value
     }
   }
 }
