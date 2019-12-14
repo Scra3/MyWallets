@@ -16,7 +16,9 @@ const NSElements = [
   'ListView',
   'v-template',
   'ActivityIndicator',
-  'PullToRefresh'
+  'PullToRefresh',
+  'Button',
+  'NavigationButton'
 ]
 
 NSElements.forEach(ele => {

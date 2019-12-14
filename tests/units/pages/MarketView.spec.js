@@ -85,6 +85,14 @@ describe('MarketView.vue', () => {
     expect(fetchMarket).toHaveBeenCalled()
   })
 
+  it('displays error message when fetching wallet has a problem', async () => {
+    fetchMarket.mockImplementation(() => Promise.reject('fail'))
+
+    await wrapper.vm.fetchCoinsMarket()
+
+    expect(wrapper.find("[data-test='error-message']").isVisible()).toBe(true)
+  })
+
   it('does not display spinner when fetching coins market is finished', async () => {
     await wrapper.vm.fetchCoinsMarket()
 

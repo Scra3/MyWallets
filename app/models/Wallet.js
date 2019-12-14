@@ -1,5 +1,5 @@
 export class Wallet {
-  constructor(coin, balance, address) {
+  constructor(coin, balance, address = null) {
     this.coin = coin
     this.balance = balance
     this.address = address

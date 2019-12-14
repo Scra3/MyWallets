@@ -8,7 +8,7 @@
     </FlexboxLayout>
 
     <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
-    <ErrorMessage v-else-if="isFailedToLoad" />
+    <ErrorMessage v-else-if="isFailedToLoad" data-test="error-message" />
     <PullToRefresh v-else @refresh="refreshCoinsMarket" class="spinner">
       <ListView v-for="(coin, index) in coins">
         <v-template>

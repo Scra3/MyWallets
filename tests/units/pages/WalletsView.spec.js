@@ -123,7 +123,7 @@ describe('WalletsView.vue', () => {
 
     await wrapper.vm.fetchWallets()
 
-    expect(wrapper.find("[data-test='error-message']").exists()).toBe(true)
+    expect(wrapper.find("[data-test='error-message']").isVisible()).toBe(true)
   })
 
   it('stops refreshing list when fetching wallet has error', async () => {
