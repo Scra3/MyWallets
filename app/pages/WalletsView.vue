@@ -27,14 +27,12 @@
             class="price"
           />
         </FlexboxLayout>
-        <StackLayout orientation="horizontal">
-          <ChangeLabel
-            :value="walletsPriceChange24H"
-            :unit="`${currency.symbol} (24h)`"
-            data-test="wallets-price-change"
-            class="price"
-          />
-        </StackLayout>
+        <ChangeLabel
+          :value="walletsPriceChange24H"
+          :unit="`${currency.symbol} (24h)`"
+          data-test="wallets-price-change"
+          class="price"
+        />
       </template>
 
       <template v-else>
@@ -218,6 +216,7 @@ export default {
   .wallets-overview {
     justify-content: center;
     flex-direction: column;
+    align-items: center;
     padding: $separation-content;
     border-radius: 10;
     height: 120;
