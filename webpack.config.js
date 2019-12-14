@@ -247,7 +247,12 @@ module.exports = env => {
             'nativescript-dev-webpack/style-hot-loader',
             'nativescript-dev-webpack/apply-css-loader.js',
             { loader: 'css-loader', options: { url: false } },
-            'sass-loader'
+            {
+              loader: 'sass-loader',
+              options: {
+                prependData: '@import "@/styles.scss";'
+              }
+            }
           ]
         },
         {

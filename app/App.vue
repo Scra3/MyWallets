@@ -53,7 +53,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import 'styles';
 .App {
   background-color: $dark-grey;
   color: $white;

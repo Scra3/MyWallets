@@ -214,8 +214,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles.scss';
-
 .WalletsView {
   .wallets-overview {
     justify-content: center;
