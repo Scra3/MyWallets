@@ -42,15 +42,15 @@ describe('MarketView.vue', () => {
   })
 
   it('displays index starting to 1', () => {
-    expect(wrapper.find("[data-test='index']").attributes().text).toEqual('1')
+    expect(wrapper.findDataTest('index').attributes().text).toEqual('1')
   })
 
   it('displays all coins', () => {
-    expect(wrapper.findAll("[data-test='coin']").length).toEqual(2)
+    expect(wrapper.findAllDataTests('coin').length).toEqual(2)
   })
 
   it('displays coins name', () => {
-    expect(wrapper.find("[data-test='name']").attributes().text).toEqual(
+    expect(wrapper.findDataTest('name').attributes().text).toEqual(
       'Bitcoin'
     )
   })
@@ -61,7 +61,7 @@ describe('MarketView.vue', () => {
   })
 
   it('displays image', () => {
-    expect(wrapper.find("[data-test='image']").attributes().src).toEqual(
+    expect(wrapper.findDataTest('image').attributes().src).toEqual(
       'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579'
     )
   })
@@ -90,7 +90,7 @@ describe('MarketView.vue', () => {
 
     await wrapper.vm.fetchCoinsMarket()
 
-    expect(wrapper.find("[data-test='error-message']").isVisible()).toBe(true)
+    expect(wrapper.findDataTest('error-message').isVisible()).toBe(true)
   })
 
   it('does not display spinner when fetching coins market is finished', async () => {

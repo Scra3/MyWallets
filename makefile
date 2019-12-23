@@ -1,7 +1,7 @@
 .PHONY: help, test-unit, lint, run, debug
 .DEFAULT_GOAL := help
 
-test-unit: ## Run unit tests
+test: ## Run unit tests
 	npm run test:unit
 
 lint: ## Run eslint and stylelint

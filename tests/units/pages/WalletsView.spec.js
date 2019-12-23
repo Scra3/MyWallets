@@ -37,60 +37,60 @@ describe('WalletsView.vue', () => {
   })
 
   it('displays wallets value in header', () => {
-    expect(wrapper.find("[data-test='wallets-value']").props().value).toEqual(
+    expect(wrapper.findDataTest('wallets-value').props().value).toEqual(
       2016
     )
   })
 
   it('displays wallets price change in 24h in header', () => {
     expect(
-      wrapper.find("[data-test='wallets-price-change']").props().value
+      wrapper.findDataTest('wallets-price-change').props().value
     ).toEqual(10 * 6 + 11 * 6)
     expect(
-      wrapper.find("[data-test='wallets-price-change']").props().unit
+      wrapper.findDataTest('wallets-price-change').props().unit
     ).toEqual('$ (24h)')
   })
 
   it('displays wallets ratio', () => {
-    expect(wrapper.find("[data-test='wallets-ratio']").props().value).toEqual(
+    expect(wrapper.findDataTest('wallets-ratio').props().value).toEqual(
       Number(
         (((walletA.value() + walletB.value()) / 10) * 100 - 100).toFixed(2)
       )
     )
-    expect(wrapper.find("[data-test='wallets-ratio']").props().unit).toEqual(
+    expect(wrapper.findDataTest('wallets-ratio').props().unit).toEqual(
       '%'
     )
   })
 
   it('displays each wallet infos', () => {
-    expect(wrapper.find("[data-test='image']").attributes().src).toEqual(
+    expect(wrapper.findDataTest('image').attributes().src).toEqual(
       'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579'
     )
-    expect(wrapper.find("[data-test='name']").attributes().text).toEqual(
+    expect(wrapper.findDataTest('name').attributes().text).toEqual(
       'Ripple'
     )
-    expect(wrapper.find("[data-test='balance']").attributes().text).toEqual(
+    expect(wrapper.findDataTest('balance').attributes().text).toEqual(
       '11.00 XRP'
     )
-    expect(wrapper.find("[data-test='current-price']").props().value).toEqual(
+    expect(wrapper.findDataTest('current-price').props().value).toEqual(
       96
     )
     expect(
-      wrapper.find("[data-test='change-percentage']").props().value
+      wrapper.findDataTest('change-percentage').props().value
     ).toEqual(7.17426)
-    expect(wrapper.find("[data-test='value']").props().value).toEqual(1056)
+    expect(wrapper.findDataTest('value').props().value).toEqual(1056)
   })
 
   it('sorts wallets by value', () => {
     expect(
       wrapper
-        .findAll("[data-test='value']")
+        .findAllDataTests('value')
         .at(0)
         .props().value
     ).toEqual(1056)
     expect(
       wrapper
-        .findAll("[data-test='value']")
+        .findAllDataTests('value')
         .at(1)
         .props().value
     ).toEqual(960)
@@ -115,7 +115,7 @@ describe('WalletsView.vue', () => {
   it('displays information message when there is no added wallets', () => {
     wrapper.setData({ wallets: [] })
 
-    expect(wrapper.find("[data-test='information-message'").exists()).toBe(true)
+    expect(wrapper.findDataTest('information-message').exists()).toBe(true)
   })
 
   it('displays error message when fetching wallet or market has a problem', async () => {
@@ -123,7 +123,7 @@ describe('WalletsView.vue', () => {
 
     await wrapper.vm.fetchWallets()
 
-    expect(wrapper.find("[data-test='error-message']").isVisible()).toBe(true)
+    expect(wrapper.findDataTest('error-message').isVisible()).toBe(true)
   })
 
   it('stops refreshing list when fetching wallet has error', async () => {

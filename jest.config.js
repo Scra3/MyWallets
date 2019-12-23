@@ -17,6 +17,7 @@ module.exports = {
   coverageReporters: ['text', 'html'],
   setupFiles: [
     '<rootDir>/jest/nativescript-vue-stubs.js',
-    '<rootDir>/jest/nativescript-vue-mock-libs.js'
+    '<rootDir>/jest/nativescript-vue-mock-libs.js',
+    '<rootDir>/jest/extends-vue-test-utils.js'
   ]
 }

@@ -11,24 +11,24 @@ describe('App.vue', () => {
 
   it('displays EUR currency by default', () => {
     expect(
-      wrapper.find("[data-test='action-item-currency']").attributes().text
+      wrapper.findDataTest('action-item-currency').attributes().text
     ).toEqual(EUR.acronym)
   })
 
   it('displays USD currency when EUR currency is tapped', () => {
-    wrapper.find("[data-test='action-item-currency']").vm.$emit('tap')
+    wrapper.findDataTest('action-item-currency').vm.$emit('tap')
 
     expect(
-      wrapper.find("[data-test='action-item-currency']").attributes().text
+      wrapper.findDataTest('action-item-currency').attributes().text
     ).toEqual(USD.acronym)
   })
 
   it('displays EUR currency when USD currency is tapped', () => {
-    wrapper.find("[data-test='action-item-currency']").vm.$emit('tap')
-    wrapper.find("[data-test='action-item-currency']").vm.$emit('tap')
+    wrapper.findDataTest('action-item-currency').vm.$emit('tap')
+    wrapper.findDataTest('action-item-currency').vm.$emit('tap')
 
     expect(
-      wrapper.find("[data-test='action-item-currency']").attributes().text
+      wrapper.findDataTest('action-item-currency').attributes().text
     ).toEqual(EUR.acronym)
   })
 
