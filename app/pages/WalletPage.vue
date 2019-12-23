@@ -58,25 +58,19 @@
         />
         <Label horizontalAlignment="center" text="OR" />
         <Button
-          @tap="doScanWithFrontCamera()"
+          @tap="scanQrCode()"
           class="scanner-button"
           text="Scan QR code"
           data-test="scanner-button"
         />
       </StackLayout>
 
-      <GridLayout columns="*" rows="auto, auto, auto, auto">
-        <BarcodeScanner
-          @scanResult="onScanResult"
-          v-if="false"
-          row="1"
-          height="300"
-          formats="QR_CODE"
-          beep-on-scan="true"
-          report-duplicates="true"
-          prefer-front-camera="false"
-        />
-      </GridLayout>
+      <BarcodeScanner
+        v-if="isScanning"
+        @scanResult="onScanResult"
+        height="300"
+        formats="QR_CODE"
+      />
 
       <Button
         @tap="$navigateBack()"
@@ -104,7 +98,8 @@ export default {
   },
   data() {
     return {
-      isManualBalanceMode: false
+      isManualBalanceMode: false,
+      isScanning: false
     }
   },
   methods: {
@@ -118,47 +113,25 @@ export default {
     onScanResult(result) {
       this.wallet.address = result.text
     },
-    doScanWithFrontCamera() {
-      camera.requestPermissions().then(
-        function success() {
-          this.scan()
-        },
-        function failure() {}
-      )
+    async scanQrCode() {
+      try {
+        this.isScanning = true
+        await camera.requestPermissions()
+        this.scan()
+      } catch (e) {
+        this.isScanning = false
+      }
     },
-    scan() {
-      new BarcodeScanner()
-        .scan({
-          cancelLabel: 'EXIT. Also, try the volume buttons!', // iOS only, default 'Close'
-          cancelLabelBackgroundColor: '#333333', // iOS only, default '#000000' (black)
-          message: 'Use the volume buttons for extra light', // Android only, default is 'Place a barcode inside t
-          preferFrontCamera: false, // Android only, default false
-          showFlipCameraButton: true, // default false
-          torchOn: false, // launch with the flashlight on (default false)
-          resultDisplayDuration: 500, // Android only, default 1500 (ms), set to 0 to disable echoing the scanned
-          beepOnScan: true, // Play or Suppress beep on scan (default true)
-          closeCallback: () => {
-            console.log('Scanner closed @ ' + new Date().getTime())
-          }
-        })
-        .then(
-          function(result) {
-            console.log('ok')
-            // Note that this Promise is never invoked when a 'continuousScanCallback' function is provided
-            setTimeout(function() {
-              // if this alert doesn't show up please upgrade to {N} 2.4.0+
-              alert({
-                title: 'Scan result',
-                message:
-                  'Format: ' + result.format + ',\nValue: ' + result.text,
-                okButtonText: 'OK'
-              })
-            }, 500)
-          },
-          function(errorMessage) {
-            console.log('No scan. ' + errorMessage)
-          }
-        )
+    async scan() {
+      try {
+        const result = await new BarcodeScanner().scan()
+        this.isScanning = false
+        this.wallet.address = result.text
+      } catch (errorMessage) {
+        console.log('No scan. ' + errorMessage)
+      } finally {
+        this.isScanning = false
+      }
     }
   }
 }

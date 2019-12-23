@@ -5,6 +5,11 @@ import { Coin } from '@/models/Coin'
 import { Wallet } from '@/models/Wallet'
 import flushPromises from 'flush-promises'
 jest.mock('@/Api')
+jest.mock('nativescript-barcodescanner', () => '')
+jest.mock('nativescript-camera', () => {
+  return { requestPermissions: jest.fn() }
+})
+
 import { fetchWalletsMarket } from '@/Api'
 
 let wrapper
@@ -37,18 +42,16 @@ describe('WalletsView.vue', () => {
   })
 
   it('displays wallets value in header', () => {
-    expect(wrapper.findDataTest('wallets-value').props().value).toEqual(
-      2016
-    )
+    expect(wrapper.findDataTest('wallets-value').props().value).toEqual(2016)
   })
 
   it('displays wallets price change in 24h in header', () => {
-    expect(
-      wrapper.findDataTest('wallets-price-change').props().value
-    ).toEqual(10 * 6 + 11 * 6)
-    expect(
-      wrapper.findDataTest('wallets-price-change').props().unit
-    ).toEqual('$ (24h)')
+    expect(wrapper.findDataTest('wallets-price-change').props().value).toEqual(
+      10 * 6 + 11 * 6
+    )
+    expect(wrapper.findDataTest('wallets-price-change').props().unit).toEqual(
+      '$ (24h)'
+    )
   })
 
   it('displays wallets ratio', () => {
@@ -57,27 +60,21 @@ describe('WalletsView.vue', () => {
         (((walletA.value() + walletB.value()) / 10) * 100 - 100).toFixed(2)
       )
     )
-    expect(wrapper.findDataTest('wallets-ratio').props().unit).toEqual(
-      '%'
-    )
+    expect(wrapper.findDataTest('wallets-ratio').props().unit).toEqual('%')
   })
 
   it('displays each wallet infos', () => {
     expect(wrapper.findDataTest('image').attributes().src).toEqual(
       'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579'
     )
-    expect(wrapper.findDataTest('name').attributes().text).toEqual(
-      'Ripple'
-    )
+    expect(wrapper.findDataTest('name').attributes().text).toEqual('Ripple')
     expect(wrapper.findDataTest('balance').attributes().text).toEqual(
       '11.00 XRP'
     )
-    expect(wrapper.findDataTest('current-price').props().value).toEqual(
-      96
+    expect(wrapper.findDataTest('current-price').props().value).toEqual(96)
+    expect(wrapper.findDataTest('change-percentage').props().value).toEqual(
+      7.17426
     )
-    expect(
-      wrapper.findDataTest('change-percentage').props().value
-    ).toEqual(7.17426)
     expect(wrapper.findDataTest('value').props().value).toEqual(1056)
   })
 

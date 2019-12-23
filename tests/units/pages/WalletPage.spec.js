@@ -2,6 +2,13 @@ import { shallowMount } from '@vue/test-utils'
 import WalletPage from '@/pages/WalletPage'
 import { Coin } from '@/models/Coin'
 import { Wallet } from '@/models/Wallet'
+import flushPromises from 'flush-promises'
+import * as camera from 'nativescript-camera'
+
+jest.mock('nativescript-barcodescanner', () => '')
+jest.mock('nativescript-camera', () => {
+  return { requestPermissions: jest.fn(() => Promise.resolve()) }
+})
 
 describe('WalletPage.vue', () => {
   let wrapper
@@ -18,6 +25,7 @@ describe('WalletPage.vue', () => {
       'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579'
     )
     wallet = new Wallet(10, coin, 'fakeAddress')
+
     wrapper = shallowMount(WalletPage, {
       propsData: { wallet },
       mocks: { $navigateBack: jest.fn() }
@@ -48,7 +56,7 @@ describe('WalletPage.vue', () => {
     expect(wrapper.vm.$navigateBack).toHaveBeenCalled()
   })
 
-  describe('when is in synchronized mode', () => {
+  describe('when it is in synchronized mode', () => {
     beforeEach(() => {
       wrapper.findDataTest('synchronized-mode-switch').vm.$emit('tap')
     })
@@ -64,20 +72,24 @@ describe('WalletPage.vue', () => {
     })
 
     it('displays scanner button', () => {
-      expect(wrapper.findDataTest('scanner-button').isVisible()).toBe(
-        true
-      )
+      expect(wrapper.findDataTest('scanner-button').isVisible()).toBe(true)
     })
 
     it('displays scanner when scanner button is clicked', () => {
-      wrapper.vm.doScanWithFrontCamera = jest.fn()
       wrapper.findDataTest('scanner-button').vm.$emit('tap')
 
-      expect(wrapper.vm.doScanWithFrontCamera).toHaveBeenCalled()
+      expect(wrapper.find('BarcodeScanner-stub').isVisible()).toBe(true)
+    })
+
+    it('requests permission when scanner button is clicked', async () => {
+      wrapper.findDataTest('scanner-button').vm.$emit('tap')
+      await flushPromises()
+
+      expect(camera.requestPermissions).toHaveBeenCalled()
     })
   })
 
-  describe('when is in manual balance mode', () => {
+  describe('when it is in manual balance mode', () => {
     beforeEach(() => {
       wrapper.findDataTest('manual-balance-mode-switch').vm.$emit('tap')
     })

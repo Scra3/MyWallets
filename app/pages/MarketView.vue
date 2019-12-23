@@ -60,7 +60,7 @@ export default {
       this.fetchCoinsMarket()
     }
   },
-  mounted() {
+  beforeMount() {
     this.fetchCoinsMarket()
   },
   methods: {

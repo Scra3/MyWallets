@@ -2,6 +2,11 @@ import { shallowMount } from '@vue/test-utils'
 import App from '@/App'
 import { EUR, USD } from '@/constants.js'
 
+jest.mock('nativescript-barcodescanner', () => '')
+jest.mock('nativescript-camera', () => {
+  return { requestPermissions: jest.fn() }
+})
+
 describe('App.vue', () => {
   let wrapper
 

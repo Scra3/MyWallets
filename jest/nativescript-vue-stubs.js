@@ -18,7 +18,8 @@ const NSElements = [
   'ActivityIndicator',
   'PullToRefresh',
   'Button',
-  'NavigationButton'
+  'NavigationButton',
+  'BarcodeScanner'
 ]
 
 NSElements.forEach(ele => {
