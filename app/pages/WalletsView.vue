@@ -40,49 +40,58 @@
       </template>
     </FlexboxLayout>
 
-    <StackLayout class="wallets">
-      <PullToRefresh @refresh="refresh" class="spinner">
-        <ListView
-          v-for="wallet in sortedWallets"
-          @itemTap="navigateToWalletPage"
-        >
-          <v-template>
-            <FlexboxLayout class="wallet">
-              <Image :src="wallet.coin.image" class="image" data-test="image" />
-              <Label :text="wallet.coin.name" class="name" data-test="name" />
-              <Label
-                :text="
-                  `${parseFloat(wallet.balance).toFixed(
-                    2
-                  )} ${wallet.coin.symbol.toUpperCase()}`
-                "
-                class="balance"
-                data-test="balance"
-              />
-              <FlexboxLayout class="current-price">
-                <PriceLabel
-                  :value="wallet.coin.currentPrice"
-                  :currency="currency"
-                  data-test="current-price"
+    <grid-layout rows="auto, *">
+      <StackLayout row="1" class="wallets">
+        <PullToRefresh @refresh="refresh" class="spinner">
+          <ListView
+            v-for="wallet in sortedWallets"
+            @itemTap="navigateToWalletPage"
+          >
+            <v-template>
+              <FlexboxLayout class="wallet">
+                <Image
+                  :src="wallet.coin.image"
+                  class="image"
+                  data-test="image"
                 />
-                <ChangeLabel
-                  :value="wallet.coin.priceChangePercentage24H"
-                  unit="%"
-                  data-test="change-percentage"
+                <Label :text="wallet.coin.name" class="name" data-test="name" />
+                <Label
+                  :text="
+                    `${parseFloat(wallet.balance).toFixed(
+                      2
+                    )} ${wallet.coin.symbol.toUpperCase()}`
+                  "
+                  class="balance"
+                  data-test="balance"
+                />
+                <FlexboxLayout class="current-price">
+                  <PriceLabel
+                    :value="wallet.coin.currentPrice"
+                    :currency="currency"
+                    data-test="current-price"
+                  />
+                  <ChangeLabel
+                    :value="wallet.coin.priceChangePercentage24H"
+                    unit="%"
+                    data-test="change-percentage"
+                  />
+                </FlexboxLayout>
+
+                <PriceLabel
+                  :value="wallet.value()"
+                  :currency="currency"
+                  class="value"
+                  data-test="value"
                 />
               </FlexboxLayout>
-
-              <PriceLabel
-                :value="wallet.value()"
-                :currency="currency"
-                class="value"
-                data-test="value"
-              />
-            </FlexboxLayout>
-          </v-template>
-        </ListView>
-      </PullToRefresh>
-    </StackLayout>
+            </v-template>
+          </ListView>
+        </PullToRefresh>
+      </StackLayout>
+      <Fab @tap="navigateToCoinsPage" row="1" class="fab-button">
+        +
+      </Fab>
+    </grid-layout>
   </StackLayout>
 </template>
 
@@ -100,6 +109,7 @@ import { BTC, EOS, ETH, EUR, NEO, XRP } from '@/constants.js'
 import ChangeLabel from '@/components/ChangeLabel'
 import PriceLabel from '@/components/PriceLabel'
 import WalletPage from '@/pages/WalletPage'
+import CoinsPage from '@/pages/CoinsPage'
 import ErrorMessage from '@/components/ErrorMessage'
 
 export default {
@@ -172,8 +182,14 @@ export default {
     navigateToWalletPage(event) {
       // wallet in listview is undefined that why we use index of arg.
       this.$navigateTo(WalletPage, {
-        props: { wallet: this.sortedWallets[event.index] }
+        props: {
+          wallet: this.sortedWallets[event.index],
+          currency: this.currency
+        }
       })
+    },
+    navigateToCoinsPage() {
+      this.$navigateTo(CoinsPage)
     },
     async refresh(event) {
       const pullRefresh = event.object
@@ -279,6 +295,16 @@ export default {
         width: 20%;
       }
     }
+  }
+
+  .fab-button {
+    height: 60;
+    width: 50;
+    margin: 15;
+    background-color: $white;
+    horizontal-align: right;
+    vertical-align: bottom;
+    color: $blue;
   }
 }
 </style>

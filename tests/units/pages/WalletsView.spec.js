@@ -3,6 +3,9 @@ import WalletsView from '@/pages/WalletsView'
 import { USD } from '@/constants.js'
 import { Coin } from '@/models/Coin'
 import { Wallet } from '@/models/Wallet'
+import CoinsPage from '@/pages/CoinsPage'
+import WalletPage from '@/pages/WalletPage'
+
 import flushPromises from 'flush-promises'
 jest.mock('@/Api')
 jest.mock('nativescript-barcodescanner', () => '')
@@ -11,7 +14,6 @@ jest.mock('nativescript-camera', () => {
 })
 
 import { fetchWalletsMarket } from '@/Api'
-
 let wrapper
 const coin = new Coin(
   'xrp',
@@ -130,5 +132,21 @@ describe('WalletsView.vue', () => {
     await wrapper.vm.refresh(event)
 
     expect(event.object.refreshing).toEqual(false)
+  })
+
+  it('navigates to coins page when Fab button is tapped', () => {
+    wrapper.vm.$navigateTo = jest.fn()
+    wrapper.find('Fab-stub').vm.$emit('tap')
+
+    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(CoinsPage)
+  })
+
+  it('navigates to wallet page when wallet is tapped', () => {
+    wrapper.vm.$navigateTo = jest.fn()
+    wrapper.find('ListView-stub').vm.$emit('itemTap', { index: 1 })
+
+    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(WalletPage, {
+      props: { wallet: walletA, currency: USD }
+    })
   })
 })
