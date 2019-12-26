@@ -72,6 +72,11 @@ describe('MarketView.vue', () => {
     )
   })
 
+  it('displays pull to refresh even though is failing to load', () => {
+    wrapper.setData({ isFailedToLoad: true })
+    expect(wrapper.find('PullToRefresh-stub').isVisible()).toBe(true)
+  })
+
   it('fetches coins market when currency changes', () => {
     wrapper.setProps({ currency: EUR })
 
