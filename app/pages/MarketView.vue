@@ -10,11 +10,11 @@
     <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
     <ErrorMessage v-else-if="isFailedToLoad" data-test="error-message" />
     <PullToRefresh @refresh="refreshCoinsMarket" class="spinner">
-      <ListView v-for="(coin, index) in coins">
+      <ListView v-if="coins" v-for="(coin, index) in coins">
         <v-template>
           <FlexboxLayout class="coin" data-test="coin">
             <label :text="index + 1" class="index" data-test="index" />
-            <Image :src="coin.image" class="image" data-test="image" />
+            <Image :src="coin.image" class="image coinIcon" data-test="image" />
             <label :text="coin.name" class="name" data-test="name" />
             <ChangeLabel
               :value="coin.priceChangePercentage24H"
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { fetchMarket } from '@/Api'
+import { fetchCoinsMarket } from '@/Api'
 import ChangeLabel from '@/components/ChangeLabel'
 import PriceLabel from '@/components//PriceLabel'
 import ErrorMessage from '@/components/ErrorMessage'
@@ -60,7 +60,7 @@ export default {
       this.fetchCoinsMarket()
     }
   },
-  beforeMount() {
+  mounted() {
     this.fetchCoinsMarket()
   },
   methods: {
@@ -68,7 +68,7 @@ export default {
       const pullRefresh = event.object
       this.isFailedToLoad = false
       try {
-        this.coins = await fetchMarket(this.currency)
+        this.coins = await fetchCoinsMarket(this.currency)
       } catch (e) {
         this.isFailedToLoad = true
       } finally {
@@ -80,7 +80,7 @@ export default {
       this.isFailedToLoad = false
 
       try {
-        this.coins = await fetchMarket(this.currency)
+        this.coins = await fetchCoinsMarket(this.currency)
       } catch (e) {
         this.isFailedToLoad = true
       } finally {
@@ -120,7 +120,6 @@ export default {
   }
 
   .image {
-    height: 25;
     width: 15%;
     text-align: left;
   }

@@ -3,7 +3,7 @@ import { Wallet } from '@/models/Wallet'
 import { ETH, XRP, EOS, NEO, BTC } from '@/constants.js'
 import { Coin } from '@/models/Coin'
 
-const fetchMarket = async currency => {
+const fetchCoinsMarket = async currency => {
   const coinsMarket = await httpModule.getJSON(
     `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency.acronym}&order=market_cap_desc&per_page=100&page=1&sparkline=false`
   )
@@ -82,5 +82,5 @@ export {
   fetchNEOWallet,
   fetchBTCWallet,
   fetchWalletsMarket,
-  fetchMarket
+  fetchCoinsMarket
 }

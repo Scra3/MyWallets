@@ -19,7 +19,9 @@ const NSElements = [
   'PullToRefresh',
   'Button',
   'NavigationButton',
-  'BarcodeScanner'
+  'BarcodeScanner',
+  'Fab',
+  'SearchBar'
 ]
 
 NSElements.forEach(ele => {

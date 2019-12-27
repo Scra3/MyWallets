@@ -69,7 +69,7 @@ export default {
 
   .tab-view {
     selected-tab-text-color: $blue;
-    tab-background-color: $dark-grey;
+    tab-background-color: $grey;
     tab-text-color: $white;
     tab-text-font-size: $normal-font-size;
   }

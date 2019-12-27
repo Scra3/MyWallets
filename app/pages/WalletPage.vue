@@ -2,17 +2,17 @@
   <Page class="WalletPage darkMode">
     <ActionBar title="Edit Wallet" class="action-bar">
       <NavigationButton
-        @tap="deleteWallet()"
+        @tap="$navigateBack()"
         text="Go Back"
         android.systemIcon="ic_menu_back"
-        data-test="delete-wallet"
+        data-test="back-button"
       />
 
       <ActionItem
-        @tap="$navigateBack()"
+        @tap="deleteWallet()"
         text="Delete"
         android.position="popup"
-        data-test="back-button"
+        data-test="delete-wallet"
       />
     </ActionBar>
     <FlexboxLayout class="container">
@@ -34,9 +34,14 @@
         />
       </FlexboxLayout>
 
-      <FlexboxLayout class="title">
-        <Image :src="wallet.coin.image" class="image" />
+      <FlexboxLayout class="title" data-test="title">
+        <Image :src="wallet.coin.image" class="icon coinIcon" />
         <Label :text="wallet.coin.name" />
+        <PriceLabel
+          :value="wallet.value()"
+          :currency="currency"
+          class="price"
+        />
       </FlexboxLayout>
 
       <StackLayout v-if="isManualBalanceMode" class="input">
@@ -68,7 +73,6 @@
       <BarcodeScanner
         v-if="isScanning"
         @scanResult="onScanResult"
-        height="300"
         formats="QR_CODE"
       />
 
@@ -86,13 +90,18 @@
 import { Wallet } from '@/models/Wallet'
 import { BarcodeScanner } from 'nativescript-barcodescanner'
 import * as camera from 'nativescript-camera'
+import PriceLabel from '@/components/PriceLabel'
 
 export default {
   name: 'WalletPage',
-  components: { BarcodeScanner },
+  components: { PriceLabel, BarcodeScanner },
   props: {
     wallet: {
       type: Wallet,
+      required: true
+    },
+    currency: {
+      type: Object,
       required: true
     }
   },
@@ -104,7 +113,6 @@ export default {
   },
   methods: {
     deleteWallet() {
-      this.$emit('delete-wallet-did-click')
       this.$navigateBack()
     },
     setManualBalanceMode(isManualBalanceMode) {
@@ -191,9 +199,13 @@ export default {
       border-width: 1;
       padding: 5;
 
-      .image {
-        height: 30;
+      .icon {
         margin-right: $separation-content;
+      }
+
+      .price {
+        flex-grow: 1;
+        justify-content: flex-end;
       }
     }
 

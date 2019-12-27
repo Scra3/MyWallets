@@ -36,7 +36,8 @@ describe('WalletsView.vue', () => {
     wrapper = shallowMount(WalletsView, {
       propsData: {
         currency: USD
-      }
+      },
+      mocks: { $navigateTo: jest.fn() }
     })
     wrapper.setData({ investment: 10 })
 
@@ -135,14 +136,14 @@ describe('WalletsView.vue', () => {
   })
 
   it('navigates to coins page when Fab button is tapped', () => {
-    wrapper.vm.$navigateTo = jest.fn()
     wrapper.find('Fab-stub').vm.$emit('tap')
 
-    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(CoinsPage)
+    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(CoinsPage, {
+      props: { currency: USD }
+    })
   })
 
   it('navigates to wallet page when wallet is tapped', () => {
-    wrapper.vm.$navigateTo = jest.fn()
     wrapper.find('ListView-stub').vm.$emit('itemTap', { index: 1 })
 
     expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(WalletPage, {

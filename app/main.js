@@ -19,6 +19,10 @@ Vue.registerElement(
   'PullToRefresh',
   () => require('@nstudio/nativescript-pulltorefresh').PullToRefresh
 )
+Vue.registerElement(
+  'Fab',
+  () => require('@nstudio/nativescript-floatingactionbutton').Fab
+)
 
 new Vue({
   store,

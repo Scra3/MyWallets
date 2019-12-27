@@ -5,12 +5,12 @@ import { Coin } from '@/models/Coin'
 import flushPromises from 'flush-promises'
 
 jest.mock('@/Api')
-import { fetchMarket } from '@/Api'
+import { fetchCoinsMarket } from '@/Api'
 
 describe('MarketView.vue', () => {
   let wrapper
   beforeEach(async () => {
-    fetchMarket.mockImplementation(() =>
+    fetchCoinsMarket.mockImplementation(() =>
       Promise.resolve([
         new Coin(
           'bitcoin',
@@ -38,7 +38,7 @@ describe('MarketView.vue', () => {
     })
 
     await flushPromises()
-    fetchMarket.mockClear()
+    fetchCoinsMarket.mockClear()
   })
 
   it('displays index starting to 1', () => {
@@ -80,22 +80,22 @@ describe('MarketView.vue', () => {
   it('fetches coins market when currency changes', () => {
     wrapper.setProps({ currency: EUR })
 
-    expect(fetchMarket).toHaveBeenCalled()
+    expect(fetchCoinsMarket).toHaveBeenCalled()
   })
 
   it('displays spinner when is fetching coins market', () => {
     wrapper.vm.fetchCoinsMarket()
 
     expect(wrapper.find('ActivityIndicator-stub').exists()).toBe(true)
-    expect(fetchMarket).toHaveBeenCalled()
+    expect(fetchCoinsMarket).toHaveBeenCalled()
   })
 
   it('displays error message when fetching wallet has a problem', async () => {
-    fetchMarket.mockImplementation(() => Promise.reject('fail'))
+    fetchCoinsMarket.mockImplementation(() => Promise.reject('fail'))
 
     await wrapper.vm.fetchCoinsMarket()
 
-    expect(wrapper.findDataTest('error-message').isVisible()).toBe(true)
+    expect(wrapper.find('ErrorMessage-stub').isVisible()).toBe(true)
   })
 
   it('does not display spinner when fetching coins market is finished', async () => {
@@ -106,6 +106,6 @@ describe('MarketView.vue', () => {
 
   it('refreshes coins market when user pulls to refresh the list', () => {
     wrapper.find('PullToRefresh-stub').vm.$emit('refresh', { object: {} })
-    expect(fetchMarket).toHaveBeenCalled()
+    expect(fetchCoinsMarket).toHaveBeenCalled()
   })
 })

@@ -4,6 +4,7 @@ import { Coin } from '@/models/Coin'
 import { Wallet } from '@/models/Wallet'
 import flushPromises from 'flush-promises'
 import * as camera from 'nativescript-camera'
+import { USD } from '@/constants.js'
 
 jest.mock('nativescript-barcodescanner', () => '')
 jest.mock('nativescript-camera', () => {
@@ -24,10 +25,10 @@ describe('WalletPage.vue', () => {
       647.18,
       'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579'
     )
-    wallet = new Wallet(10, coin, 'fakeAddress')
+    wallet = new Wallet(coin, 10, 'fakeAddress')
 
     wrapper = shallowMount(WalletPage, {
-      propsData: { wallet },
+      propsData: { wallet, currency: USD },
       mocks: { $navigateBack: jest.fn() }
     })
   })
@@ -42,12 +43,6 @@ describe('WalletPage.vue', () => {
     wrapper.findDataTest('back-button').vm.$emit('tap')
 
     expect(wrapper.vm.$navigateBack).toHaveBeenCalled()
-  })
-
-  it('emits delete event page when delete button is clicked', () => {
-    wrapper.findDataTest('delete-wallet').vm.$emit('tap')
-
-    expect(wrapper.emitted('delete-wallet-did-click')).toBeTruthy()
   })
 
   it('goes to back page when delete button is clicked', () => {

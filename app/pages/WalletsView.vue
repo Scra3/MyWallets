@@ -1,13 +1,13 @@
 <template>
   <StackLayout class="WalletsView darkMode">
     <FlexboxLayout :class="{ loading: isLoading }" class="wallets-overview">
-      <ActivityIndicator v-if="isLoading" :busy="isLoading" />
+      <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
       <ErrorMessage
         v-else-if="isFailedToLoad"
         :is-failed-to-load="isFailedToLoad"
         data-test="error-message"
       />
-      <template v-else-if="wallets.length > 0">
+      <template v-else-if="wallets && wallets.length > 0">
         <FlexboxLayout class="main-infos">
           <PriceLabel
             :value="investment"
@@ -42,7 +42,7 @@
 
     <grid-layout rows="auto, *">
       <StackLayout row="1" class="wallets">
-        <PullToRefresh @refresh="refresh" class="spinner">
+        <PullToRefresh v-if="wallets" @refresh="refresh" class="spinner">
           <ListView
             v-for="wallet in sortedWallets"
             @itemTap="navigateToWalletPage"
@@ -51,7 +51,7 @@
               <FlexboxLayout class="wallet">
                 <Image
                   :src="wallet.coin.image"
-                  class="image"
+                  class="icon coinIcon"
                   data-test="image"
                 />
                 <Label :text="wallet.coin.name" class="name" data-test="name" />
@@ -124,7 +124,7 @@ export default {
   data() {
     return {
       intervalDelay: 60000,
-      wallets: [],
+      wallets: null,
       investmentCurrency: EUR,
       investment: 1050,
       addresses: [
@@ -167,20 +167,20 @@ export default {
     }
   },
   watch: {
-    async currency() {
-      await this.fetchWallets()
+    currency() {
+      this.fetchWallets()
     }
   },
-  async mounted() {
-    await this.fetchWallets()
-    this.intervalID = setInterval(await this.fetchWallets, this.intervalDelay)
+  mounted() {
+    this.fetchWallets()
+    this.intervalID = setInterval(this.fetchWallets, this.intervalDelay)
   },
   beforeDestroy() {
     clearInterval(this.intervalID)
   },
   methods: {
     navigateToWalletPage(event) {
-      // wallet in listview is undefined that why we use index of arg.
+      // wallet in listview is undefined that why we use event.
       this.$navigateTo(WalletPage, {
         props: {
           wallet: this.sortedWallets[event.index],
@@ -189,11 +189,15 @@ export default {
       })
     },
     navigateToCoinsPage() {
-      this.$navigateTo(CoinsPage)
+      this.$navigateTo(CoinsPage, {
+        props: {
+          currency: this.currency
+        }
+      })
     },
-    async refresh(event) {
+    refresh(event) {
       const pullRefresh = event.object
-      await this.fetchWallets()
+      this.fetchWallets()
       pullRefresh.refreshing = false
     },
     async fetchWallets() {
@@ -241,7 +245,6 @@ export default {
     margin: $separation-content;
 
     &.loading {
-      color: $blue;
       justify-content: center;
     }
 
@@ -268,8 +271,7 @@ export default {
       justify-content: space-between;
       align-items: center;
 
-      .image {
-        height: 25;
+      .icon {
         width: 10%;
       }
 

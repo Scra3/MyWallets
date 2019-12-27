@@ -1,5 +1,5 @@
 import * as httpModule from 'tns-core-modules/http'
-import { fetchMarket, fetchWalletsMarket } from '@/Api'
+import { fetchCoinsMarket, fetchWalletsMarket } from '@/Api'
 import { Coin } from '@/models/Coin'
 import { USD, XRP } from '@/constants'
 import { Wallet } from '@/models/Wallet'
@@ -7,7 +7,7 @@ import { Wallet } from '@/models/Wallet'
 describe('Api.js', () => {
   let coins
 
-  describe('fetchMarket function', () => {
+  describe('fetchCoinsMarket function', () => {
     beforeEach(async () => {
       httpModule.getJSON.mockImplementationOnce(() =>
         Promise.resolve([
@@ -51,7 +51,7 @@ describe('Api.js', () => {
           'btc'
         )
       ]
-      expect(await fetchMarket(USD)).toEqual(coins)
+      expect(await fetchCoinsMarket(USD)).toEqual(coins)
     })
   })
 
@@ -88,10 +88,12 @@ describe('Api.js', () => {
     })
 
     it('returns an list of hydrated wallets', async () => {
-      const wallet = (await fetchWalletsMarket(
-        [new Wallet(new Coin(XRP), 10, 'fakeAddress')],
-        USD
-      ))[0]
+      const wallet = (
+        await fetchWalletsMarket(
+          [new Wallet(new Coin(XRP), 10, 'fakeAddress')],
+          USD
+        )
+      )[0]
       expect(wallet.coin.symbol).toEqual('XRP')
       expect(wallet.coin.priceChangePercentage24H).toEqual(7.17426)
       expect(wallet.coin.currentPrice).toEqual(9.09)

@@ -22,13 +22,19 @@ describe('Wallet.js', () => {
     expect(wallet.value()).toEqual(90006.0)
   })
 
-  it('returns null value when coin current price is null', () => {
+  it('throws error when coin current price is null', () => {
     coin.currentPrice = null
-    expect(wallet.value()).toEqual(null)
+
+    expect(() => wallet.value()).toThrow(
+      'balance or current price is not defined'
+    )
   })
 
-  it('returns null value when wallet balance is null', () => {
+  it('throws error when wallet balance is null', () => {
     wallet.balance = null
-    expect(wallet.value()).toEqual(null)
+
+    expect(() => wallet.value()).toThrow(
+      'balance or current price is not defined'
+    )
   })
 })
