@@ -20,10 +20,7 @@
           class="search-bar"
         />
 
-        <ListView
-          v-for="coin in filteredCoins"
-          @itemTap="navigateToWalletPage"
-        >
+        <ListView v-for="coin in filteredCoins" @itemTap="navigateToWalletPage">
           <v-template>
             <FlexboxLayout class="coin">
               <Image :src="coin.image" class="coinIcon" />
@@ -90,6 +87,7 @@ export default {
     },
     async fetchCoinsMarket() {
       try {
+        this.isFailedToLoad = false
         this.isLoading = true
         this.coins = await fetchCoinsMarket(this.currency)
       } catch (e) {

@@ -18,18 +18,20 @@
     <FlexboxLayout class="container">
       <FlexboxLayout class="setting-mode">
         <Button
-          :class="{ selected: !isManualBalanceMode }"
-          @tap="setManualBalanceMode(false)"
+          :class="{ selected: !wallet.isUsingBalanceSetting }"
+          @tap="useBalanceSetting(false)"
           class="switch-label"
           text="Synchronize wallet"
-          data-test="synchronized-mode-switch"
+          data-test="address-mode-label"
         />
-        <Switch v-model="isManualBalanceMode" class="switch" />
+
+        <Switch v-model="wallet.isUsingBalanceSetting" class="switch" />
+
         <Button
-          :class="{ selected: isManualBalanceMode }"
-          @tap="setManualBalanceMode(true)"
+          :class="{ selected: wallet.isUsingBalanceSetting }"
+          @tap="useBalanceSetting(true)"
           text="Set balance manually"
-          data-test="manual-balance-mode-switch"
+          data-test="manual-balance-mode-label"
           class="switch-label"
         />
       </FlexboxLayout>
@@ -44,7 +46,7 @@
         />
       </FlexboxLayout>
 
-      <StackLayout v-if="isManualBalanceMode" class="input">
+      <StackLayout v-if="wallet.isUsingBalanceSetting" class="input">
         <Label text="Balance" />
         <TextField
           v-model="wallet.balance"
@@ -77,7 +79,7 @@
       />
 
       <Button
-        @tap="$navigateBack()"
+        @tap="navigateToHomePage"
         class="save-button"
         text="Save Wallet"
         data-test="save-button"
@@ -91,6 +93,7 @@ import { Wallet } from '@/models/Wallet'
 import { BarcodeScanner } from 'nativescript-barcodescanner'
 import * as camera from 'nativescript-camera'
 import PriceLabel from '@/components/PriceLabel'
+import App from '@/App'
 
 export default {
   name: 'WalletPage',
@@ -107,16 +110,22 @@ export default {
   },
   data() {
     return {
-      isManualBalanceMode: false,
       isScanning: false
     }
   },
   methods: {
-    deleteWallet() {
-      this.$navigateBack()
+    navigateToHomePage() {
+      this.$navigateTo(App, {
+        props: {
+          currency: this.currency
+        }
+      })
     },
-    setManualBalanceMode(isManualBalanceMode) {
-      this.isManualBalanceMode = isManualBalanceMode
+    deleteWallet() {
+      this.navigateToHomePage()
+    },
+    useBalanceSetting(isUsingBalanceSetting) {
+      this.wallet.isUsingBalanceSetting = isUsingBalanceSetting
     },
     onScanResult(result) {
       this.wallet.address = result.text

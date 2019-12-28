@@ -1,8 +1,14 @@
 export class Wallet {
-  constructor(coin = null, balance = null, address = null) {
+  constructor(
+    coin = null,
+    balance = null,
+    address = null,
+    isUsingBalanceSetting = true
+  ) {
     this.coin = coin
     this.balance = balance
     this.address = address
+    this.isUsingBalanceSetting = isUsingBalanceSetting
   }
 
   value() {

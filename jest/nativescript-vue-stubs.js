@@ -21,7 +21,8 @@ const NSElements = [
   'NavigationButton',
   'BarcodeScanner',
   'Fab',
-  'SearchBar'
+  'SearchBar',
+  'Switch'
 ]
 
 NSElements.forEach(ele => {

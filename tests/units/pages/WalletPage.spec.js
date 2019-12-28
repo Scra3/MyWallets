@@ -5,6 +5,7 @@ import { Wallet } from '@/models/Wallet'
 import flushPromises from 'flush-promises'
 import * as camera from 'nativescript-camera'
 import { USD } from '@/constants.js'
+import App from '@/App'
 
 jest.mock('nativescript-barcodescanner', () => '')
 jest.mock('nativescript-camera', () => {
@@ -25,18 +26,20 @@ describe('WalletPage.vue', () => {
       647.18,
       'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579'
     )
-    wallet = new Wallet(coin, 10, 'fakeAddress')
+    wallet = new Wallet(coin, 10, 'fakeAddress', false)
 
     wrapper = shallowMount(WalletPage, {
       propsData: { wallet, currency: USD },
-      mocks: { $navigateBack: jest.fn() }
+      mocks: { $navigateBack: jest.fn(), $navigateTo: jest.fn() }
     })
   })
 
-  it('goes to back page when save button is clicked', () => {
+  it('goes to home page when save button is clicked', () => {
     wrapper.findDataTest('save-button').vm.$emit('tap')
 
-    expect(wrapper.vm.$navigateBack).toHaveBeenCalled()
+    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(App, {
+      props: { currency: USD }
+    })
   })
 
   it('goes to back page when back button is clicked', () => {
@@ -45,21 +48,23 @@ describe('WalletPage.vue', () => {
     expect(wrapper.vm.$navigateBack).toHaveBeenCalled()
   })
 
-  it('goes to back page when delete button is clicked', () => {
+  it('goes to home page when delete button is clicked', () => {
     wrapper.findDataTest('delete-wallet').vm.$emit('tap')
 
-    expect(wrapper.vm.$navigateBack).toHaveBeenCalled()
+    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(App, {
+      props: { currency: USD }
+    })
   })
 
   describe('when it is in synchronized mode', () => {
     beforeEach(() => {
-      wrapper.findDataTest('synchronized-mode-switch').vm.$emit('tap')
+      wrapper.findDataTest('address-mode-label').vm.$emit('tap')
     })
 
     it('displays synchronized mode by default', () => {
-      expect(
-        wrapper.findDataTest('synchronized-mode-switch').classes()
-      ).toContain('selected')
+      expect(wrapper.findDataTest('address-mode-label').classes()).toContain(
+        'selected'
+      )
     })
 
     it('displays address input', () => {
@@ -86,12 +91,12 @@ describe('WalletPage.vue', () => {
 
   describe('when it is in manual balance mode', () => {
     beforeEach(() => {
-      wrapper.findDataTest('manual-balance-mode-switch').vm.$emit('tap')
+      wrapper.findDataTest('manual-balance-mode-label').vm.$emit('tap')
     })
 
     it('highlights manual balance mode button', () => {
       expect(
-        wrapper.findDataTest('manual-balance-mode-switch').classes()
+        wrapper.findDataTest('manual-balance-mode-label').classes()
       ).toContain('selected')
     })
 
