@@ -14,5 +14,6 @@ export default {
   text-align: center;
   width: 100%;
   color: $error-color;
+  font-size: $normal-font-size;
 }
 </style>

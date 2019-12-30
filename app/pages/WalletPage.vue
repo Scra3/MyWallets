@@ -18,17 +18,21 @@
     <FlexboxLayout class="container">
       <FlexboxLayout class="setting-mode">
         <Button
-          :class="{ selected: !wallet.isUsingBalanceSetting }"
+          :class="{ selected: !currentWallet.isUsingBalanceSetting }"
           @tap="useBalanceSetting(false)"
           class="switch-label"
           text="Synchronize wallet"
           data-test="address-mode-label"
         />
 
-        <Switch v-model="wallet.isUsingBalanceSetting" class="switch" />
+        <Switch
+          v-model="currentWallet.isUsingBalanceSetting"
+          @checkedChange="handleCheckedChange"
+          class="switch"
+        />
 
         <Button
-          :class="{ selected: wallet.isUsingBalanceSetting }"
+          :class="{ selected: currentWallet.isUsingBalanceSetting }"
           @tap="useBalanceSetting(true)"
           text="Set balance manually"
           data-test="manual-balance-mode-label"
@@ -37,32 +41,76 @@
       </FlexboxLayout>
 
       <FlexboxLayout class="title" data-test="title">
-        <Image :src="wallet.coin.image" class="icon coinIcon" />
-        <Label :text="wallet.coin.name" />
-        <PriceLabel
-          :value="wallet.value()"
-          :currency="currency"
-          class="price"
-        />
+        <Image :src="currentWallet.coin.image" class="icon coinIcon" />
+        <Label :text="currentWallet.coin.name" />
+        <PriceLabel :value="walletPrice" :currency="currency" class="price" />
       </FlexboxLayout>
 
-      <StackLayout v-if="wallet.isUsingBalanceSetting" class="input">
+      <StackLayout v-if="currentWallet.isUsingBalanceSetting" class="input">
         <Label text="Balance" />
-        <TextField
-          v-model="wallet.balance"
-          class="text-field"
-          data-test="balance-input"
-          keyboardType="number"
+        <FlexboxLayout>
+          <TextField
+            v-model="currentWallet.balance"
+            @focus="isFocusingInput = true"
+            :class="{
+              error: isInputValidated === false,
+              focus: isFocusingInput
+            }"
+            class="text-field"
+            data-test="balance-input"
+            keyboardType="number"
+          />
+          <Label
+            v-if="isInputValidated === false"
+            text="X"
+            class="failedIcon"
+            data-test="failed-icon"
+          />
+        </FlexboxLayout>
+
+        <Label
+          v-if="isInputValidated === false"
+          text="Must be equal or greater than 0 and not be blank"
+          class="label-error"
+          data-test="label-error"
         />
       </StackLayout>
 
       <StackLayout v-else class="input">
         <Label text="Public wallet address" />
-        <TextField
-          key="address"
-          v-model="wallet.address"
-          data-test="address-input"
+        <FlexboxLayout>
+          <TextField
+            key="address"
+            :class="{
+              error: isInputValidated === false,
+              focus: isFocusingInput
+            }"
+            @focus="isFocusingInput = true"
+            v-model="currentWallet.address"
+            class="text-field"
+            data-test="address-input"
+          />
+
+          <ActivityIndicator
+            v-if="isCheckingAddress"
+            :busy="isCheckingAddress"
+            class="spinner"
+          />
+          <Label
+            v-if="isInputValidated === false"
+            text="X"
+            class="failedIcon"
+            data-test="failed-icon"
+          />
+        </FlexboxLayout>
+
+        <Label
+          v-if="isInputValidated === false"
+          text="Can't synchronize wallet, check your address entry"
+          class="label-error"
+          data-test="label-error"
         />
+
         <Label horizontalAlignment="center" text="OR" />
         <Button
           @tap="scanQrCode()"
@@ -79,7 +127,7 @@
       />
 
       <Button
-        @tap="navigateToHomePage"
+        @tap="checkInputAndBackToHomePage"
         class="save-button"
         text="Save Wallet"
         data-test="save-button"
@@ -110,10 +158,54 @@ export default {
   },
   data() {
     return {
-      isScanning: false
+      isScanning: false,
+      currentWallet: null,
+      isInputValidated: null,
+      isFocusingInput: false,
+      isCheckingAddress: false
     }
   },
+  computed: {
+    walletPrice() {
+      if (!this.currentWallet) {
+        return 0
+      }
+
+      if (this.currentWallet.isUsingBalanceSetting || this.isInputValidated) {
+        return this.currentWallet.value()
+      }
+
+      return 0
+    }
+  },
+  beforeMount() {
+    this.currentWallet = this.wallet
+  },
   methods: {
+    checkAddress() {
+      return Promise.resolve(true)
+    },
+    async checkInputAndBackToHomePage() {
+      this.isInputValidated = null
+      this.isCheckingAddress = true
+
+      try {
+        if (this.currentWallet.isUsingBalanceSetting) {
+          this.isInputValidated =
+            this.currentWallet.balance !== '' && this.currentWallet.balance >= 0
+        } else {
+          this.isInputValidated =
+            !!this.currentWallet.address && (await this.checkAddress())
+        }
+
+        if (this.isInputValidated) {
+          this.navigateToHomePage()
+        }
+      } catch (e) {
+      } finally {
+        this.isCheckingAddress = false
+      }
+    },
     navigateToHomePage() {
       this.$navigateTo(App, {
         props: {
@@ -124,11 +216,19 @@ export default {
     deleteWallet() {
       this.navigateToHomePage()
     },
+    handleCheckedChange() {
+      this.isFocusingInput = false
+      this.isInputValidated = null
+    },
     useBalanceSetting(isUsingBalanceSetting) {
-      this.wallet.isUsingBalanceSetting = isUsingBalanceSetting
+      if (this.currentWallet.isUsingBalanceSetting !== isUsingBalanceSetting) {
+        this.isFocusingInput = false
+        this.isInputValidated = null
+      }
+      this.currentWallet.isUsingBalanceSetting = isUsingBalanceSetting
     },
     onScanResult(result) {
-      this.wallet.address = result.text
+      this.currentWallet.address = result.text
     },
     async scanQrCode() {
       try {
@@ -143,7 +243,7 @@ export default {
       try {
         const result = await new BarcodeScanner().scan()
         this.isScanning = false
-        this.wallet.address = result.text
+        this.currentWallet.address = result.text
       } catch (errorMessage) {
         console.log('No scan. ' + errorMessage)
       } finally {
@@ -220,8 +320,31 @@ export default {
 
     .input {
       flex-grow: 1;
+
       .text-field {
-        border-bottom-color: $white;
+        width: 100%;
+
+        &.focus {
+          border-bottom-width: 1;
+          border-color: $blue;
+        }
+
+        &.error {
+          border-bottom-width: 1;
+          border-color: red;
+        }
+      }
+
+      .failedIcon {
+        color: $error-color;
+        width: 40;
+        align-self: center;
+      }
+
+      .label-error {
+        color: $error-color;
+        margin-left: $separation-content;
+        margin-bottom: $separation-content;
       }
     }
 
