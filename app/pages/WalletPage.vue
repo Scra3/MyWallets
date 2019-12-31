@@ -43,7 +43,13 @@
       <FlexboxLayout class="title" data-test="title">
         <Image :src="currentWallet.coin.image" class="icon coinIcon" />
         <Label :text="currentWallet.coin.name" />
-        <PriceLabel :value="walletPrice" :currency="currency" class="price" />
+        <PriceLabel
+          v-if="currentWallet.isUsingBalanceSetting"
+          :value="walletPrice"
+          :currency="currency"
+          class="price"
+          data-test="wallet-price"
+        />
       </FlexboxLayout>
 
       <StackLayout v-if="currentWallet.isUsingBalanceSetting" class="input">
@@ -53,7 +59,7 @@
             v-model="currentWallet.balance"
             @focus="isFocusingInput = true"
             :class="{
-              error: isInputValidated === false,
+              error: isAllowedInput === false,
               focus: isFocusingInput
             }"
             class="text-field"
@@ -61,7 +67,7 @@
             keyboardType="number"
           />
           <Label
-            v-if="isInputValidated === false"
+            v-if="isAllowedInput === false"
             text="X"
             class="failedIcon"
             data-test="failed-icon"
@@ -69,7 +75,7 @@
         </FlexboxLayout>
 
         <Label
-          v-if="isInputValidated === false"
+          v-if="isAllowedInput === false"
           text="Must be equal or greater than 0 and not be blank"
           class="label-error"
           data-test="label-error"
@@ -82,7 +88,7 @@
           <TextField
             key="address"
             :class="{
-              error: isInputValidated === false,
+              error: isAllowedInput === false,
               focus: isFocusingInput
             }"
             @focus="isFocusingInput = true"
@@ -97,7 +103,7 @@
             class="spinner"
           />
           <Label
-            v-if="isInputValidated === false"
+            v-if="isAllowedInput === false"
             text="X"
             class="failedIcon"
             data-test="failed-icon"
@@ -105,7 +111,7 @@
         </FlexboxLayout>
 
         <Label
-          v-if="isInputValidated === false"
+          v-if="isAllowedInput === false"
           text="Can't synchronize wallet, check your address entry"
           class="label-error"
           data-test="label-error"
@@ -160,7 +166,7 @@ export default {
     return {
       isScanning: false,
       currentWallet: null,
-      isInputValidated: null,
+      isAllowedInput: null,
       isFocusingInput: false,
       isCheckingAddress: false
     }
@@ -171,7 +177,7 @@ export default {
         return 0
       }
 
-      if (this.currentWallet.isUsingBalanceSetting || this.isInputValidated) {
+      if (this.currentWallet.isUsingBalanceSetting || this.isAllowedInput) {
         return this.currentWallet.value()
       }
 
@@ -186,19 +192,19 @@ export default {
       return Promise.resolve(true)
     },
     async checkInputAndBackToHomePage() {
-      this.isInputValidated = null
+      this.isAllowedInput = null
       this.isCheckingAddress = true
 
       try {
         if (this.currentWallet.isUsingBalanceSetting) {
-          this.isInputValidated =
+          this.isAllowedInput =
             this.currentWallet.balance !== '' && this.currentWallet.balance >= 0
         } else {
-          this.isInputValidated =
+          this.isAllowedInput =
             !!this.currentWallet.address && (await this.checkAddress())
         }
 
-        if (this.isInputValidated) {
+        if (this.isAllowedInput) {
           this.navigateToHomePage()
         }
       } catch (e) {
@@ -218,12 +224,12 @@ export default {
     },
     handleCheckedChange() {
       this.isFocusingInput = false
-      this.isInputValidated = null
+      this.isAllowedInput = null
     },
     useBalanceSetting(isUsingBalanceSetting) {
       if (this.currentWallet.isUsingBalanceSetting !== isUsingBalanceSetting) {
         this.isFocusingInput = false
-        this.isInputValidated = null
+        this.isAllowedInput = null
       }
       this.currentWallet.isUsingBalanceSetting = isUsingBalanceSetting
     },

@@ -53,6 +53,10 @@ describe('WalletPage.vue', () => {
       wrapper.findDataTest('address-mode-label').vm.$emit('tap')
     })
 
+    it('displays wallet price', () => {
+      expect(wrapper.findDataTest('wallet-price').exists()).toBe(false)
+    })
+
     it('does not add error class on input address', () => {
       expect(wrapper.findDataTest('address-input').classes()).not.toContain(
         'error'
@@ -168,6 +172,10 @@ describe('WalletPage.vue', () => {
   describe('when it is in manual balance mode', () => {
     beforeEach(() => {
       wrapper.findDataTest('manual-balance-mode-label').vm.$emit('tap')
+    })
+
+    it('displays wallet price', () => {
+      expect(wrapper.findDataTest('wallet-price').isVisible()).toBe(true)
     })
 
     it('does not focus input address', () => {
