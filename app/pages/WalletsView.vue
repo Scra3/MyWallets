@@ -96,14 +96,7 @@
 </template>
 
 <script>
-import {
-  fetchBTCWallet,
-  fetchEOSWallet,
-  fetchETHWallet,
-  fetchNEOWallet,
-  fetchWalletsMarket,
-  fetchXRPWallet
-} from '@/Api'
+import { fetchWalletsMarket } from '@/Api'
 
 import { BTC, EOS, ETH, EUR, NEO, XRP } from '@/constants.js'
 import ChangeLabel from '@/components/ChangeLabel'
@@ -111,10 +104,12 @@ import PriceLabel from '@/components/PriceLabel'
 import WalletPage from '@/pages/WalletPage'
 import CoinsPage from '@/pages/CoinsPage'
 import ErrorMessage from '@/components/ErrorMessage'
+import { WalletMixin } from '@/mixins/WalletMixin.js'
 
 export default {
   name: 'WalletsView',
   components: { ErrorMessage, ChangeLabel, PriceLabel },
+  mixins: [WalletMixin],
   props: {
     currency: {
       type: Object,
@@ -133,7 +128,7 @@ export default {
           publicKey: '0x70Fe19189628d1050cb0e14aa7A1BBc246A48183'
         },
         { coinID: XRP, publicKey: 'rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR' },
-        { coinID: EOS, accountName: 'gi3tmnzsgqge' },
+        { coinID: EOS, publicKey: 'gi3tmnzsgqge' },
         { coinID: NEO, publicKey: 'ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf' },
         { coinID: BTC, publicKey: 'ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf' }
       ],
@@ -195,9 +190,9 @@ export default {
         }
       })
     },
-    refresh(event) {
+    async refresh(event) {
       const pullRefresh = event.object
-      this.fetchWallets()
+      await this.fetchWallets()
       pullRefresh.refreshing = false
     },
     async fetchWallets() {
@@ -205,20 +200,9 @@ export default {
       this.isFailedToLoad = false
 
       try {
-        const pWallets = this.addresses.map(async address => {
-          if (address.coinID === XRP) {
-            return fetchXRPWallet(address.publicKey)
-          } else if (address.coinID === ETH) {
-            return fetchETHWallet(address.publicKey)
-          } else if (address.coinID === EOS) {
-            return fetchEOSWallet(address.accountName)
-          } else if (address.coinID === NEO) {
-            return fetchNEOWallet(address.publicKey)
-          } else if (address.coinID === BTC) {
-            return fetchBTCWallet(address.publicKey)
-          }
-        })
-
+        const pWallets = this.addresses.map(address =>
+          this.$_fetchWallet(address.publicKey, address.coinID)
+        )
         const wallets = await Promise.all(pWallets)
         this.wallets = await fetchWalletsMarket(wallets, this.currency)
       } catch (e) {
