@@ -10,25 +10,31 @@
     <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
     <ErrorMessage v-else-if="isFailedToLoad" data-test="error-message" />
     <PullToRefresh @refresh="refreshCoinsMarket" class="spinner">
-      <ListView v-if="coins" v-for="(coin, index) in coins">
-        <v-template>
-          <FlexboxLayout class="coin" data-test="coin">
-            <label :text="index + 1" class="index" data-test="index" />
-            <Image :src="coin.image" class="image coinIcon" data-test="image" />
-            <label :text="coin.name" class="name" data-test="name" />
-            <ChangeLabel
-              :value="coin.priceChangePercentage24H"
-              unit="%"
-              class="change-percentage"
-            />
-            <PriceLabel
-              :value="coin.currentPrice"
-              :currency="currency"
-              class="price"
-            />
-          </FlexboxLayout>
-        </v-template>
-      </ListView>
+      <template v-if="coins">
+        <ListView v-for="(coin, index) in coins">
+          <v-template>
+            <FlexboxLayout class="coin" data-test="coin">
+              <label :text="index + 1" class="index" data-test="index" />
+              <Image
+                :src="coin.image"
+                class="image coinIcon"
+                data-test="image"
+              />
+              <label :text="coin.name" class="name" data-test="name" />
+              <ChangeLabel
+                :value="coin.priceChangePercentage24H"
+                unit="%"
+                class="change-percentage"
+              />
+              <PriceLabel
+                :value="coin.currentPrice"
+                :currency="currency"
+                class="price"
+              />
+            </FlexboxLayout>
+          </v-template>
+        </ListView>
+      </template>
     </PullToRefresh>
   </StackLayout>
 </template>
@@ -67,6 +73,7 @@ export default {
     async refreshCoinsMarket(event) {
       const pullRefresh = event.object
       this.isFailedToLoad = false
+
       try {
         this.coins = await fetchCoinsMarket(this.currency)
       } catch (e) {
