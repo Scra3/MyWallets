@@ -6,7 +6,7 @@ jest.mock('nativescript-camera', () => {
 
 import { shallowMount } from '@vue/test-utils'
 import CoinsPage from '@/pages/CoinsPage'
-import { USD } from '@/constants.js'
+import { USD, BTC, XRP } from '@/constants.js'
 import { Coin } from '@/models/Coin'
 import flushPromises from 'flush-promises'
 import { fetchCoinsMarket } from '@/Api'
@@ -14,7 +14,7 @@ import { Wallet } from '@/models/Wallet'
 import WalletPage from '@/pages/WalletPage'
 
 const bitcoinCoin = new Coin(
-  'bitcoin',
+  BTC,
   'Bitcoin',
   9668.09,
   7.17426,
@@ -31,7 +31,7 @@ describe('CoinsPage.vue', () => {
       Promise.resolve([
         bitcoinCoin,
         new Coin(
-          'ripple',
+          XRP,
           'Ripple',
           1,
           7.17426,
@@ -93,7 +93,7 @@ describe('CoinsPage.vue', () => {
   })
 
   it('displays only bitcoin in the coin list when searching bitcoin', () => {
-    wrapper.find('SearchBar-stub').vm.$emit('input', 'bitcoin')
+    wrapper.find('SearchBar-stub').vm.$emit('input', BTC)
 
     expect(wrapper.findDataTest('name').attributes('text')).toEqual('Bitcoin')
     expect(wrapper.findAllDataTests('name').length).toEqual(1)
@@ -117,5 +117,25 @@ describe('CoinsPage.vue', () => {
     wrapper.find('SearchBar-stub').vm.$emit('input', 'btc')
 
     expect(wrapper.findDataTest('no-coins-message').exists()).toBe(false)
+  })
+
+  it('displays "trackable" info when it is a trackable coin adress', () => {
+    expect(wrapper.findDataTest('trackable').isVisible()).toBe(true)
+  })
+
+  it('displays "trackable" info when it is a trackable coin adress', () => {
+    wrapper.setData({
+      coins: [
+        new Coin(
+          'notTrackableId',
+          'NotTrackable',
+          1,
+          7.17426,
+          647.18,
+          'https://assets..com/coins/images/1/large/bitcoin.png?1547033579'
+        )
+      ]
+    })
+    expect(wrapper.findDataTest('trackable').exists()).toBe(false)
   })
 })

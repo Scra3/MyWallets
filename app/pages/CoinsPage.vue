@@ -25,6 +25,12 @@
             <FlexboxLayout class="coin">
               <Image :src="coin.image" class="coinIcon" />
               <Label :text="coin.name" class="name" data-test="name" />
+              <Label
+                v-if="$_canTrackAddress(coin.id)"
+                text="Trackable"
+                class="trackable"
+                data-test="trackable"
+              />
               <Label text=">" class="arrow" />
             </FlexboxLayout>
           </v-template>
@@ -46,10 +52,12 @@ import { fetchCoinsMarket } from '@/Api'
 import ErrorMessage from '@/components/ErrorMessage'
 import WalletPage from '@/pages/WalletPage'
 import { Wallet } from '@/models/Wallet'
+import { WalletMixin } from '@/mixins/WalletMixin'
 
 export default {
   name: 'CoinsPage',
   components: { ErrorMessage },
+  mixins: [WalletMixin],
   props: {
     currency: {
       type: Object,
@@ -73,8 +81,8 @@ export default {
       )
     }
   },
-  mounted() {
-    this.fetchCoinsMarket()
+  async mounted() {
+    await this.fetchCoinsMarket()
   },
   methods: {
     navigateToWalletPage(event) {
@@ -121,10 +129,15 @@ export default {
 
     .name {
       margin-left: 10;
+      flex-grow: 1;
+    }
+
+    .trackable {
+      color: $success-color;
+      margin-right: 30;
     }
 
     .arrow {
-      flex-grow: 1;
       text-align: right;
     }
   }

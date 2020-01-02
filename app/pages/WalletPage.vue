@@ -15,37 +15,20 @@
         data-test="delete-wallet"
       />
     </ActionBar>
+
     <FlexboxLayout class="container">
-      <FlexboxLayout class="setting-mode">
-        <Button
-          :class="{ selected: !currentWallet.isUsingBalanceSetting }"
-          @tap="useBalanceSetting(false)"
-          class="switch-label"
-          text="Synchronize wallet"
-          data-test="address-mode-label"
-        />
-
-        <Switch
-          v-model="currentWallet.isUsingBalanceSetting"
-          @checkedChange="handleCheckedChange"
-          class="switch"
-        />
-
-        <Button
-          :class="{ selected: currentWallet.isUsingBalanceSetting }"
-          @tap="useBalanceSetting(true)"
-          text="Set balance manually"
-          data-test="manual-balance-mode-label"
-          class="switch-label"
-        />
-      </FlexboxLayout>
+      <WalletSwitch
+        v-if="$_canTrackAddress(currentWallet.coin.id)"
+        :wallet="currentWallet"
+        @is-balance-mode-did-tap="useBalanceSetting"
+      />
 
       <FlexboxLayout class="title" data-test="title">
         <Image :src="currentWallet.coin.image" class="icon coinIcon" />
         <Label :text="currentWallet.coin.name" />
         <PriceLabel
           v-if="currentWallet.isUsingBalanceSetting"
-          :value="walletPrice"
+          :value="currentWallet.value()"
           :currency="currency"
           class="price"
           data-test="wallet-price"
@@ -112,7 +95,7 @@
 
         <Label
           v-if="isAllowedInput === false"
-          text="Can't synchronize wallet, check your address entry"
+          text="Can't track wallet, check your address entry"
           class="label-error"
           data-test="label-error"
         />
@@ -149,10 +132,11 @@ import * as camera from 'nativescript-camera'
 import PriceLabel from '@/components/PriceLabel'
 import App from '@/App'
 import { WalletMixin } from '@/mixins/WalletMixin'
+import WalletSwitch from '@/components/WalletSwitch'
 
 export default {
   name: 'WalletPage',
-  components: { PriceLabel, BarcodeScanner },
+  components: { WalletSwitch, PriceLabel, BarcodeScanner },
   mixins: [WalletMixin],
   props: {
     wallet: {
@@ -173,27 +157,22 @@ export default {
       isCheckingAddress: false
     }
   },
-  computed: {
-    walletPrice() {
-      if (!this.currentWallet) {
-        return 0
-      }
-
-      if (this.currentWallet.isUsingBalanceSetting || this.isAllowedInput) {
-        return this.currentWallet.value()
-      }
-
-      return 0
-    }
-  },
   beforeMount() {
     this.currentWallet = this.wallet
   },
   methods: {
-    checkAddress() {
-      return this.$_checkAddressValidity(
-        this.currentWallet.address,
-        this.currentWallet.coin.id
+    isBalanceInputAllowed() {
+      return (
+        this.currentWallet.balance !== '' && this.currentWallet.balance >= 0
+      )
+    },
+    async isAddressInputAllowed() {
+      return (
+        !!this.currentWallet.address &&
+        (await this.$_checkAddressValidity(
+          this.currentWallet.address,
+          this.currentWallet.coin.id
+        ))
       )
     },
     async checkInputAndBackToHomePage() {
@@ -202,18 +181,15 @@ export default {
 
       try {
         if (this.currentWallet.isUsingBalanceSetting) {
-          this.isAllowedInput =
-            this.currentWallet.balance !== '' && this.currentWallet.balance >= 0
+          this.isAllowedInput = this.isBalanceInputAllowed()
         } else {
-          this.isAllowedInput =
-            !!this.currentWallet.address && (await this.checkAddress())
+          this.isAllowedInput = await this.isAddressInputAllowed()
         }
 
         if (this.isAllowedInput) {
           this.navigateToHomePage()
         }
       } catch (e) {
-        console.log('okk')
         console.log(e)
       } finally {
         this.isCheckingAddress = false
@@ -229,15 +205,12 @@ export default {
     deleteWallet() {
       this.navigateToHomePage()
     },
-    handleCheckedChange() {
-      this.isFocusingInput = false
-      this.isAllowedInput = null
-    },
     useBalanceSetting(isUsingBalanceSetting) {
       if (this.currentWallet.isUsingBalanceSetting !== isUsingBalanceSetting) {
         this.isFocusingInput = false
         this.isAllowedInput = null
       }
+
       this.currentWallet.isUsingBalanceSetting = isUsingBalanceSetting
     },
     onScanResult(result) {
@@ -283,34 +256,6 @@ export default {
     color: $white;
     flex-direction: column;
     margin: 10;
-
-    .setting-mode {
-      align-items: center;
-      justify-content: flex-end;
-      margin-bottom: 30;
-
-      .switch {
-        margin-right: 10;
-        margin-left: 10;
-        background-color: $white;
-        color: $blue;
-      }
-
-      .switch-label {
-        background-color: transparent;
-        border-width: 0;
-        border-color: transparent;
-        z-index: 0;
-        margin: 0;
-        padding: 0;
-        font-size: $small-font-size;
-      }
-
-      .selected {
-        color: $success-color;
-        font-weight: bold;
-      }
-    }
 
     .title {
       align-items: center;

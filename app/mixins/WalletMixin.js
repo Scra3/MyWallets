@@ -18,8 +18,20 @@ export const WalletMixin = {
         return WAValidator.validate(addressOrAccountName, coinID)
       }
     },
-    $_fetchWallet(addressOrAccountName, coinId) {
-      switch (coinId) {
+    $_canTrackAddress(coinID) {
+      switch (coinID) {
+        case XRP:
+        case ETH:
+        case EOS:
+        case NEO:
+        case BTC:
+          return true
+        default:
+          return false
+      }
+    },
+    $_fetchWallet(addressOrAccountName, coinID) {
+      switch (coinID) {
         case XRP:
           return fetchXRPWallet(addressOrAccountName)
         case ETH:

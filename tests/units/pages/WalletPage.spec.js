@@ -6,6 +6,7 @@ import flushPromises from 'flush-promises'
 import * as camera from 'nativescript-camera'
 import { USD } from '@/constants.js'
 import App from '@/App'
+import { BTC } from '@/constants'
 
 jest.mock('nativescript-barcodescanner', () => '')
 jest.mock('nativescript-camera', () => {
@@ -19,7 +20,7 @@ describe('WalletPage.vue', () => {
 
   beforeEach(async () => {
     coin = new Coin(
-      'bitcoin',
+      BTC,
       'Bitcoin',
       9668.09,
       7.17426,
@@ -48,9 +49,11 @@ describe('WalletPage.vue', () => {
     })
   })
 
-  describe('when it is in synchronized mode', () => {
+  describe('when it is in tracked mode', () => {
     beforeEach(() => {
-      wrapper.findDataTest('address-mode-label').vm.$emit('tap')
+      wrapper
+        .find('WalletSwitch-stub')
+        .vm.$emit('is-balance-mode-did-tap', false)
     })
 
     it('displays wallet price', () => {
@@ -66,12 +69,6 @@ describe('WalletPage.vue', () => {
     it('does not add focus class on input address', () => {
       expect(wrapper.findDataTest('address-input').classes()).not.toContain(
         'focus'
-      )
-    })
-
-    it('displays address mode', () => {
-      expect(wrapper.findDataTest('address-mode-label').classes()).toContain(
-        'selected'
       )
     })
 
@@ -97,7 +94,7 @@ describe('WalletPage.vue', () => {
     })
 
     it('displays spinner when save button is tapped pending verify address', () => {
-      wrapper.vm.checkAddress = jest.fn()
+      wrapper.vm.$_checkAddressValidity = jest.fn()
 
       wrapper.findDataTest('save-button').vm.$emit('tap')
 
@@ -105,19 +102,48 @@ describe('WalletPage.vue', () => {
     })
 
     describe('when switching mode', () => {
-      it('resets error when there is error ', () => {
+      it('resets error when there is error', () => {
         wrapper.findDataTest('address-input').vm.$emit('input', '')
         wrapper.findDataTest('save-button').vm.$emit('tap')
 
-        wrapper.findDataTest('manual-balance-mode-label').vm.$emit('tap')
+        wrapper
+          .find('WalletSwitch-stub')
+          .vm.$emit('is-balance-mode-did-tap', true)
 
         expect(wrapper.findDataTest('failed-icon').exists()).toBe(false)
+      })
+
+      it('does not focus input', () => {
+        wrapper.findDataTest('address-input').vm.$emit('input', 'anAddress')
+
+        wrapper
+          .find('WalletSwitch-stub')
+          .vm.$emit('is-balance-mode-did-tap', true)
+
+        expect(wrapper.findDataTest('balance-input').classes()).not.toContain(
+          'focus'
+        )
+      })
+
+      it("does not display switch container when wallet can't be track", () => {
+        coin = new Coin(
+          'coinFake',
+          'CoinFake',
+          9668.09,
+          7.17426,
+          647.18,
+          'https://assets.coingecko.com/coins/images/1/large/coinFake.png?1547033579'
+        )
+        wallet = new Wallet(coin, 10, 'fakeAddress', true)
+        wrapper.setData({ currentWallet: wallet })
+
+        expect(wrapper.findDataTest('switch-container').exists()).toBe(false)
       })
     })
 
     describe('when is a valid address', () => {
       it('goes to home page when save button is clicked', async () => {
-        wrapper.vm.checkAddress = jest.fn(() => Promise.resolve(true))
+        wrapper.vm.$_checkAddressValidity = jest.fn(() => Promise.resolve(true))
 
         wrapper.findDataTest('address-input').vm.$emit('input', 'fakeAddress')
         wrapper.findDataTest('save-button').vm.$emit('tap')
@@ -131,7 +157,9 @@ describe('WalletPage.vue', () => {
 
     describe('when is not a valid address', () => {
       it('displays failed icon', async () => {
-        wrapper.vm.checkAddress = jest.fn(() => Promise.resolve(false))
+        wrapper.vm.$_checkAddressValidity = jest.fn(() =>
+          Promise.resolve(false)
+        )
 
         wrapper.findDataTest('save-button').vm.$emit('tap')
         await flushPromises()
@@ -140,7 +168,9 @@ describe('WalletPage.vue', () => {
       })
 
       it('displays label error', async () => {
-        wrapper.vm.checkAddress = jest.fn(() => Promise.resolve(false))
+        wrapper.vm.$_checkAddressValidity = jest.fn(() =>
+          Promise.resolve(false)
+        )
 
         wrapper.findDataTest('save-button').vm.$emit('tap')
         await flushPromises()
@@ -149,7 +179,9 @@ describe('WalletPage.vue', () => {
       })
 
       it('does not go to home page when address is not valid', async () => {
-        wrapper.vm.checkAddress = jest.fn(() => Promise.resolve(false))
+        wrapper.vm.$_checkAddressValidity = jest.fn(() =>
+          Promise.resolve(false)
+        )
 
         wrapper.findDataTest('save-button').vm.$emit('tap')
         await flushPromises()
@@ -158,7 +190,7 @@ describe('WalletPage.vue', () => {
       })
 
       it('does not go to home page when address is not defined', async () => {
-        wrapper.vm.checkAddress = jest.fn(() => Promise.resolve(true))
+        wrapper.vm.$_checkAddressValidity = jest.fn(() => Promise.resolve(true))
 
         wrapper.findDataTest('address-input').vm.$emit('input', '')
         wrapper.findDataTest('save-button').vm.$emit('tap')
@@ -171,7 +203,9 @@ describe('WalletPage.vue', () => {
 
   describe('when it is in manual balance mode', () => {
     beforeEach(() => {
-      wrapper.findDataTest('manual-balance-mode-label').vm.$emit('tap')
+      wrapper
+        .find('WalletSwitch-stub')
+        .vm.$emit('is-balance-mode-did-tap', true)
     })
 
     it('displays wallet price', () => {
@@ -182,12 +216,6 @@ describe('WalletPage.vue', () => {
       expect(wrapper.findDataTest('balance-input').classes()).not.toContain(
         'focus'
       )
-    })
-
-    it('highlights manual balance mode button', () => {
-      expect(
-        wrapper.findDataTest('manual-balance-mode-label').classes()
-      ).toContain('selected')
     })
 
     it('displays balance input', () => {

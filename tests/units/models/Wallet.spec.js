@@ -1,6 +1,6 @@
 import { Wallet } from '@/models/Wallet'
 import { Coin } from '@/models/Coin'
-import { ETH } from '@/constants'
+import { ETH, BTC } from '@/constants'
 
 describe('Wallet.js', () => {
   let coin
@@ -8,7 +8,7 @@ describe('Wallet.js', () => {
 
   beforeEach(() => {
     coin = new Coin(
-      'bitcoin',
+      BTC,
       'Bitcoin',
       9000.5999,
       7.5,

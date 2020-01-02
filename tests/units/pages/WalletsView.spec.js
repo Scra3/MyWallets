@@ -14,9 +14,10 @@ jest.mock('nativescript-camera', () => {
 })
 
 import { fetchWalletsMarket } from '@/Api'
+import { XRP } from '@/constants'
 let wrapper
 const coin = new Coin(
-  'xrp',
+  XRP,
   'Ripple',
   96,
   7.17426,

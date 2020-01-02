@@ -62,6 +62,20 @@ describe('WalletMixin', () => {
     })
   })
 
+  describe('$_canTrackAddress function', () => {
+    describe('when address can be tracked', () => {
+      const cases = [[ETH], [XRP], [BTC], [NEO]]
+
+      test.each(cases)('given %p as coinID', id => {
+        expect(wrapper.vm.$_canTrackAddress(id)).toBe(true)
+      })
+    })
+
+    it("returns false when address can't be tracked", () => {
+      expect(wrapper.vm.$_canTrackAddress('badId')).toBe(false)
+    })
+  })
+
   describe('$_fetchWallet function', () => {
     const cases = [
       ['xrpAddress', XRP, fetchXRPWallet],

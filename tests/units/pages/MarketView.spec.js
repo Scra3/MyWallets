@@ -1,6 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 import MarketView from '@/pages/MarketView'
-import { USD, EUR } from '@/constants.js'
+import { USD, EUR, BTC, XRP } from '@/constants.js'
 import { Coin } from '@/models/Coin'
 import flushPromises from 'flush-promises'
 
@@ -13,7 +13,7 @@ describe('MarketView.vue', () => {
     fetchCoinsMarket.mockImplementation(() =>
       Promise.resolve([
         new Coin(
-          'bitcoin',
+          BTC,
           'Bitcoin',
           9668.09,
           7.17426,
@@ -21,7 +21,7 @@ describe('MarketView.vue', () => {
           'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579'
         ),
         new Coin(
-          'ripple',
+          XRP,
           'Ripple',
           1,
           7.17426,
@@ -50,9 +50,7 @@ describe('MarketView.vue', () => {
   })
 
   it('displays coins name', () => {
-    expect(wrapper.findDataTest('name').attributes().text).toEqual(
-      'Bitcoin'
-    )
+    expect(wrapper.findDataTest('name').attributes().text).toEqual('Bitcoin')
   })
 
   it('displays price change percentage of 24h', () => {

@@ -5,7 +5,7 @@ import {
   checkEOSAccountValidity
 } from '@/Api'
 import { Coin } from '@/models/Coin'
-import { USD, XRP } from '@/constants'
+import { USD, XRP, BTC } from '@/constants'
 import { Wallet } from '@/models/Wallet'
 
 describe('Api.js', () => {
@@ -34,7 +34,7 @@ describe('Api.js', () => {
       httpModule.getJSON.mockImplementation(() =>
         Promise.resolve([
           {
-            id: 'bitcoin',
+            id: BTC,
             symbol: 'btc',
             name: 'Bitcoin',
             image:
@@ -64,7 +64,7 @@ describe('Api.js', () => {
     it('returns an list of coins', async () => {
       coins = [
         new Coin(
-          'bitcoin',
+          BTC,
           'Bitcoin',
           9668.09,
           7.17426,
@@ -82,7 +82,7 @@ describe('Api.js', () => {
       httpModule.getJSON.mockImplementation(() =>
         Promise.resolve([
           {
-            id: 'ripple',
+            id: XRP,
             symbol: 'XRP',
             name: 'Ripple',
             image:

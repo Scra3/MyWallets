@@ -17,9 +17,9 @@ describe('ChangeLabel.vue', () => {
       'positive-change'
     )
 
-    expect(
-      wrapper.findDataTest('change-label').attributes().text
-    ).toEqual('+7.50%')
+    expect(wrapper.findDataTest('change-label').attributes().text).toEqual(
+      '+7.50%'
+    )
   })
 
   it('displays change percentage with negative sign and color when value is negative', () => {
@@ -28,15 +28,15 @@ describe('ChangeLabel.vue', () => {
       'negative-change'
     )
 
-    expect(
-      wrapper.findDataTest('change-label').attributes().text
-    ).toEqual('-7.50%')
+    expect(wrapper.findDataTest('change-label').attributes().text).toEqual(
+      '-7.50%'
+    )
   })
 
   it('fixes float to 2 decimals', () => {
     wrapper.setProps({ value: -7.55555 })
-    expect(
-      wrapper.findDataTest('change-label').attributes().text
-    ).toEqual('-7.56%')
+    expect(wrapper.findDataTest('change-label').attributes().text).toEqual(
+      '-7.56%'
+    )
   })
 })

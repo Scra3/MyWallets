@@ -20,6 +20,24 @@ export class Wallet {
     return Number(parseFloat(this.coin.currentPrice * this.balance).toFixed(2))
   }
 
+  /* set isUsingBalanceSetting(value) {
+    if (value) {
+      this._isUsingBalanceSetting = true
+    } else {
+      switch (this.coin.id) {
+        case XRP:
+        case ETH:
+        case EOS:
+        case NEO:
+        case BTC:
+          this._isUsingBalanceSetting = false
+          break
+        default:
+          throw "address can't be tracked"
+      }
+    }
+  }*/
+
   static buildWalletFromPersistedWallet(persistedWallet) {
     return new Wallet(
       new Coin(persistedWallet.id),
