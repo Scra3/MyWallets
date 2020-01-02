@@ -105,6 +105,7 @@ import WalletPage from '@/pages/WalletPage'
 import CoinsPage from '@/pages/CoinsPage'
 import ErrorMessage from '@/components/ErrorMessage'
 import { WalletMixin } from '@/mixins/WalletMixin.js'
+import { Wallet } from '@/models/Wallet'
 
 export default {
   name: 'WalletsView',
@@ -122,15 +123,33 @@ export default {
       wallets: null,
       investmentCurrency: EUR,
       investment: 1050,
-      addresses: [
+      persistedWallets: [
         {
-          coinID: ETH,
-          publicKey: '0x70Fe19189628d1050cb0e14aa7A1BBc246A48183'
+          id: ETH,
+          address: '0x70Fe19189628d1050cb0e14aa7A1BBc246A48183',
+          isUsingBalanceSetting: false
         },
-        { coinID: XRP, publicKey: 'rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR' },
-        { coinID: EOS, publicKey: 'gi3tmnzsgqge' },
-        { coinID: NEO, publicKey: 'ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf' },
-        { coinID: BTC, publicKey: 'ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf' }
+        {
+          id: XRP,
+          address: 'rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR',
+          isUsingBalanceSetting: false
+        },
+        {
+          id: EOS,
+          address: 'gi3tmnzsgqge',
+          isUsingBalanceSetting: false
+        },
+        {
+          id: NEO,
+          address: 'ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf',
+          isUsingBalanceSetting: false
+        },
+        {
+          id: BTC,
+          balance: 0.041,
+          address: 'ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf',
+          isUsingBalanceSetting: true
+        }
       ],
       intervalID: null,
       isLoading: false,
@@ -200,9 +219,13 @@ export default {
       this.isFailedToLoad = false
 
       try {
-        const pWallets = this.addresses.map(address =>
-          this.$_fetchWallet(address.publicKey, address.coinID)
-        )
+        const pWallets = this.persistedWallets.map(wallet => {
+          if (wallet.isUsingBalanceSetting) {
+            return Wallet.buildWalletFromPersistedWallet(wallet)
+          } else {
+            return this.$_fetchWallet(wallet.address, wallet.id)
+          }
+        })
         const wallets = await Promise.all(pWallets)
         this.wallets = await fetchWalletsMarket(wallets, this.currency)
       } catch (e) {
