@@ -25,6 +25,7 @@
     "@nstudio/nativescript-pulltorefresh": "^1.1.1",
     "@vue/devtools": "^5.3.3",
     "lodash.camelcase": "^4.3.0",
+    "multicoin-address-validator": "^0.3.10",
     "nativescript-barcodescanner": "^3.4.1",
     "nativescript-camera": "^4.5.0",
     "nativescript-socketio": "^3.2.1",

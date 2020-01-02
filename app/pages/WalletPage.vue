@@ -53,7 +53,7 @@
       </FlexboxLayout>
 
       <StackLayout v-if="currentWallet.isUsingBalanceSetting" class="input">
-        <Label text="Balance" />
+        <Label text="Total Balance" />
         <FlexboxLayout>
           <TextField
             v-model="currentWallet.balance"
@@ -148,10 +148,12 @@ import { BarcodeScanner } from 'nativescript-barcodescanner'
 import * as camera from 'nativescript-camera'
 import PriceLabel from '@/components/PriceLabel'
 import App from '@/App'
+import { WalletMixin } from '@/mixins/WalletMixin'
 
 export default {
   name: 'WalletPage',
   components: { PriceLabel, BarcodeScanner },
+  mixins: [WalletMixin],
   props: {
     wallet: {
       type: Wallet,
@@ -189,7 +191,10 @@ export default {
   },
   methods: {
     checkAddress() {
-      return Promise.resolve(true)
+      return this.$_checkAddressValidity(
+        this.currentWallet.address,
+        this.currentWallet.coin.id
+      )
     },
     async checkInputAndBackToHomePage() {
       this.isAllowedInput = null
@@ -208,6 +213,8 @@ export default {
           this.navigateToHomePage()
         }
       } catch (e) {
+        console.log('okk')
+        console.log(e)
       } finally {
         this.isCheckingAddress = false
       }

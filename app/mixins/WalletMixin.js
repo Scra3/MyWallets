@@ -6,21 +6,30 @@ import {
   fetchNEOWallet,
   fetchBTCWallet
 } from '@/Api'
+import WAValidator from 'multicoin-address-validator'
+import { checkEOSAccountValidity } from '@/Api'
 
 export const WalletMixin = {
   methods: {
-    $_fetchWallet(address, id) {
-      switch (id) {
+    async $_checkAddressValidity(addressOrAccountName, coinID) {
+      if (coinID === EOS) {
+        return await checkEOSAccountValidity(addressOrAccountName)
+      } else {
+        return WAValidator.validate(addressOrAccountName, coinID)
+      }
+    },
+    $_fetchWallet(addressOrAccountName, coinId) {
+      switch (coinId) {
         case XRP:
-          return fetchXRPWallet(address)
+          return fetchXRPWallet(addressOrAccountName)
         case ETH:
-          return fetchETHWallet(address)
+          return fetchETHWallet(addressOrAccountName)
         case EOS:
-          return fetchEOSWallet(address)
+          return fetchEOSWallet(addressOrAccountName)
         case NEO:
-          return fetchNEOWallet(address)
+          return fetchNEOWallet(addressOrAccountName)
         case BTC:
-          return fetchBTCWallet(address)
+          return fetchBTCWallet(addressOrAccountName)
       }
     }
   }

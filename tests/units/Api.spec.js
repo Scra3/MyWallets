@@ -1,5 +1,9 @@
 import * as httpModule from 'tns-core-modules/http'
-import { fetchCoinsMarket, fetchWalletsMarket } from '@/Api'
+import {
+  fetchCoinsMarket,
+  fetchWalletsMarket,
+  checkEOSAccountValidity
+} from '@/Api'
 import { Coin } from '@/models/Coin'
 import { USD, XRP } from '@/constants'
 import { Wallet } from '@/models/Wallet'
@@ -7,9 +11,27 @@ import { Wallet } from '@/models/Wallet'
 describe('Api.js', () => {
   let coins
 
+  describe('checkEOSAccountValidity function', () => {
+    it('returns true when account name is valid', async () => {
+      httpModule.request.mockImplementation(() =>
+        Promise.resolve({ statusCode: 200 })
+      )
+
+      expect(await checkEOSAccountValidity('scra')).toEqual(true)
+    })
+
+    it('returns false when account name is valid', async () => {
+      httpModule.request.mockImplementation(() =>
+        Promise.resolve({ statusCode: 500 })
+      )
+
+      expect(await checkEOSAccountValidity('badAccountName')).toEqual(false)
+    })
+  })
+
   describe('fetchCoinsMarket function', () => {
     beforeEach(async () => {
-      httpModule.getJSON.mockImplementationOnce(() =>
+      httpModule.getJSON.mockImplementation(() =>
         Promise.resolve([
           {
             id: 'bitcoin',
@@ -57,7 +79,7 @@ describe('Api.js', () => {
 
   describe('fetchWalletsMarket function', () => {
     beforeEach(async () => {
-      httpModule.getJSON.mockImplementationOnce(() =>
+      httpModule.getJSON.mockImplementation(() =>
         Promise.resolve([
           {
             id: 'ripple',

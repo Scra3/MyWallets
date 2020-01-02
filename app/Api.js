@@ -37,6 +37,16 @@ const fetchXRPWallet = async address => {
   )
 }
 
+const checkEOSAccountValidity = async accountName => {
+  let httpResponse = await httpModule.request({
+    url: 'https://eos.greymass.com/v1/chain/get_account',
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    content: JSON.stringify({ account_name: accountName })
+  })
+  return httpResponse.statusCode === 200
+}
+
 const fetchEOSWallet = async accountName => {
   let wallet = await httpModule.request({
     url: 'https://eos.greymass.com/v1/chain/get_account',
@@ -78,6 +88,7 @@ const fetchNEOWallet = async address => {
   return new Wallet(new Coin(NEO), wallet.balance[0].amount, address, false)
 }
 
+//TODO: Implement request to BTC API
 const fetchBTCWallet = async address => {
   return Promise.resolve(new Wallet(new Coin(BTC), 0.041, address, false))
 }
@@ -85,6 +96,7 @@ const fetchBTCWallet = async address => {
 export {
   fetchXRPWallet,
   fetchETHWallet,
+  checkEOSAccountValidity,
   fetchEOSWallet,
   fetchNEOWallet,
   fetchBTCWallet,

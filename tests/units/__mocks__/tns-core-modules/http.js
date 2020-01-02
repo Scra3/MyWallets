@@ -1,3 +1,4 @@
 module.exports = {
-  getJSON: jest.fn()
+  getJSON: jest.fn(),
+  request: jest.fn()
 }
