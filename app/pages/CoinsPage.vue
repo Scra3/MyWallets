@@ -15,6 +15,7 @@
 
       <template v-if="coins">
         <SearchBar
+          ref="search-bar"
           v-model="searchQuery"
           hint="Search coin"
           class="search-bar"
@@ -83,6 +84,7 @@ export default {
   },
   async mounted() {
     await this.fetchCoinsMarket()
+    this.$refs['search-bar'].nativeView.android.clearFocus()
   },
   methods: {
     navigateToWalletPage(event) {

@@ -37,13 +37,13 @@
 
       <StackLayout v-if="currentWallet.isUsingBalanceSetting" class="input">
         <Label text="Total Balance" />
-        <FlexboxLayout>
+        <FlexboxLayout key="balance">
           <TextField
             v-model="currentWallet.balance"
             @focus="isFocusingInput = true"
             :class="{
               error: isAllowedInput === false,
-              focus: isFocusingInput
+              focus: isAllowedInput !== false && isFocusingInput
             }"
             class="text-field"
             data-test="balance-input"
@@ -67,12 +67,11 @@
 
       <StackLayout v-else class="input">
         <Label text="Public wallet address" />
-        <FlexboxLayout>
+        <FlexboxLayout key="address">
           <TextField
-            key="address"
             :class="{
               error: isAllowedInput === false,
-              focus: isFocusingInput
+              focus: isAllowedInput !== false && isFocusingInput
             }"
             @focus="isFocusingInput = true"
             v-model="currentWallet.address"
@@ -102,18 +101,12 @@
 
         <Label horizontalAlignment="center" text="OR" />
         <Button
-          @tap="scanQrCode()"
+          @tap="scanQrCode"
           class="scanner-button"
           text="Scan QR code"
           data-test="scanner-button"
         />
       </StackLayout>
-
-      <BarcodeScanner
-        v-if="isScanning"
-        @scanResult="onScanResult"
-        formats="QR_CODE"
-      />
 
       <Button
         @tap="checkInputAndBackToHomePage"
@@ -136,7 +129,7 @@ import WalletSwitch from '@/components/WalletSwitch'
 
 export default {
   name: 'WalletPage',
-  components: { WalletSwitch, PriceLabel, BarcodeScanner },
+  components: { WalletSwitch, PriceLabel },
   mixins: [WalletMixin],
   props: {
     wallet: {
@@ -150,7 +143,6 @@ export default {
   },
   data() {
     return {
-      isScanning: false,
       currentWallet: null,
       isAllowedInput: null,
       isFocusingInput: false,
@@ -213,27 +205,20 @@ export default {
 
       this.currentWallet.isUsingBalanceSetting = isUsingBalanceSetting
     },
-    onScanResult(result) {
-      this.currentWallet.address = result.text
-    },
     async scanQrCode() {
       try {
-        this.isScanning = true
         await camera.requestPermissions()
         this.scan()
       } catch (e) {
-        this.isScanning = false
+        console.log(e)
       }
     },
     async scan() {
       try {
-        const result = await new BarcodeScanner().scan()
-        this.isScanning = false
+        const result = await new BarcodeScanner().scan({ formats: 'QR_CODE' })
         this.currentWallet.address = result.text
       } catch (errorMessage) {
         console.log('No scan. ' + errorMessage)
-      } finally {
-        this.isScanning = false
       }
     }
   }
