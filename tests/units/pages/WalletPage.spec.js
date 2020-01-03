@@ -31,7 +31,10 @@ describe('WalletPage.vue', () => {
 
     wrapper = shallowMount(WalletPage, {
       propsData: { wallet, currency: USD },
-      mocks: { $navigateBack: jest.fn(), $navigateTo: jest.fn() }
+      mocks: {
+        $navigateBack: jest.fn(),
+        $navigateTo: jest.fn()
+      }
     })
   })
 
@@ -80,10 +83,12 @@ describe('WalletPage.vue', () => {
       expect(wrapper.findDataTest('scanner-button').isVisible()).toBe(true)
     })
 
-    it('displays scanner when scanner button is clicked', () => {
+    it('displays scanner when scanner button is clicked', async () => {
+      wrapper.vm.scan = jest.fn()
       wrapper.findDataTest('scanner-button').vm.$emit('tap')
+      await flushPromises()
 
-      expect(wrapper.find('BarcodeScanner-stub').isVisible()).toBe(true)
+      expect(wrapper.vm.scan).toHaveBeenCalled()
     })
 
     it('requests permission when scanner button is clicked', async () => {

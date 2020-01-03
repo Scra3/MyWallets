@@ -40,10 +40,8 @@
         <FlexboxLayout key="balance">
           <TextField
             v-model="currentWallet.balance"
-            @focus="isFocusingInput = true"
             :class="{
-              error: isAllowedInput === false,
-              focus: isAllowedInput !== false && isFocusingInput
+              error: isAllowedInput === false
             }"
             class="text-field"
             data-test="balance-input"
@@ -70,10 +68,8 @@
         <FlexboxLayout key="address">
           <TextField
             :class="{
-              error: isAllowedInput === false,
-              focus: isAllowedInput !== false && isFocusingInput
+              error: isAllowedInput === false
             }"
-            @focus="isFocusingInput = true"
             v-model="currentWallet.address"
             hint="Enter address"
             class="text-field"
@@ -146,7 +142,6 @@ export default {
     return {
       currentWallet: null,
       isAllowedInput: null,
-      isFocusingInput: false,
       isCheckingAddress: false
     }
   },
@@ -200,7 +195,6 @@ export default {
     },
     useBalanceSetting(isUsingBalanceSetting) {
       if (this.currentWallet.isUsingBalanceSetting !== isUsingBalanceSetting) {
-        this.isFocusingInput = false
         this.isAllowedInput = null
       }
 
@@ -268,11 +262,6 @@ export default {
       .text-field {
         width: 100%;
         color: $white;
-
-        &.focus {
-          border-bottom-width: 1;
-          border-color: $blue;
-        }
 
         &.error {
           border-bottom-width: 1;
