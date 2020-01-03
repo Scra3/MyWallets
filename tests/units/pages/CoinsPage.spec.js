@@ -25,6 +25,7 @@ const bitcoinCoin = new Coin(
 
 describe('CoinsPage.vue', () => {
   let wrapper
+  let clearSearchBarFocus
 
   beforeEach(async () => {
     fetchCoinsMarket.mockImplementation(() =>
@@ -41,10 +42,14 @@ describe('CoinsPage.vue', () => {
         )
       ])
     )
+    clearSearchBarFocus = jest.fn()
 
     wrapper = shallowMount(CoinsPage, {
       propsData: {
         currency: USD
+      },
+      methods: {
+        clearSearchBarFocus
       },
       mocks: {
         $navigateBack: jest.fn(),
@@ -119,11 +124,11 @@ describe('CoinsPage.vue', () => {
     expect(wrapper.findDataTest('no-coins-message').exists()).toBe(false)
   })
 
-  it('displays "trackable" info when it is a trackable coin adress', () => {
+  it('displays "trackable" info when it is a trackable coin address', () => {
     expect(wrapper.findDataTest('trackable').isVisible()).toBe(true)
   })
 
-  it('displays "trackable" info when it is a trackable coin adress', () => {
+  it('displays "trackable" info when it is a trackable coin address', () => {
     wrapper.setData({
       coins: [
         new Coin(
@@ -137,5 +142,9 @@ describe('CoinsPage.vue', () => {
       ]
     })
     expect(wrapper.findDataTest('trackable').exists()).toBe(false)
+  })
+
+  it('clears search bar focus on mounted', () => {
+    expect(clearSearchBarFocus).toHaveBeenCalled()
   })
 })

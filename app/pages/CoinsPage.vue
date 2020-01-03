@@ -84,9 +84,12 @@ export default {
   },
   async mounted() {
     await this.fetchCoinsMarket()
-    this.$refs['search-bar'].nativeView.android.clearFocus()
+    this.clearSearchBarFocus()
   },
   methods: {
+    clearSearchBarFocus() {
+      this.$refs['search-bar'].nativeView.android.clearFocus()
+    },
     navigateToWalletPage(event) {
       this.$navigateTo(WalletPage, {
         props: {
