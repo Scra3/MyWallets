@@ -75,6 +75,7 @@
             }"
             @focus="isFocusingInput = true"
             v-model="currentWallet.address"
+            hint="Enter address"
             class="text-field"
             data-test="address-input"
           />
@@ -266,6 +267,7 @@ export default {
 
       .text-field {
         width: 100%;
+        color: $white;
 
         &.focus {
           border-bottom-width: 1;
