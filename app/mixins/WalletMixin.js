@@ -1,10 +1,10 @@
 import { XRP, ETH, EOS, NEO, BTC } from '@/constants'
 import {
-  fetchXRPWallet,
-  fetchEOSWallet,
-  fetchETHWallet,
-  fetchNEOWallet,
-  fetchBTCWallet
+  fetchXRPWalletBalance,
+  fetchEOSWalletBalance,
+  fetchETHWalletBalance,
+  fetchNEOWalletBalance,
+  fetchBTCWalletBalance
 } from '@/Api'
 import WAValidator from 'multicoin-address-validator'
 import { checkEOSAccountValidity } from '@/Api'
@@ -30,18 +30,18 @@ export const WalletMixin = {
           return false
       }
     },
-    $_fetchWallet(addressOrAccountName, coinID) {
-      switch (coinID) {
+    $_fetchWalletBalance(wallet) {
+      switch (wallet.coin.id) {
         case XRP:
-          return fetchXRPWallet(addressOrAccountName)
+          return fetchXRPWalletBalance(wallet)
         case ETH:
-          return fetchETHWallet(addressOrAccountName)
+          return fetchETHWalletBalance(wallet)
         case EOS:
-          return fetchEOSWallet(addressOrAccountName)
+          return fetchEOSWalletBalance(wallet)
         case NEO:
-          return fetchNEOWallet(addressOrAccountName)
+          return fetchNEOWalletBalance(wallet)
         case BTC:
-          return fetchBTCWallet(addressOrAccountName)
+          return fetchBTCWalletBalance(wallet)
       }
     }
   }

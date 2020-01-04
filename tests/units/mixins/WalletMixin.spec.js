@@ -1,10 +1,12 @@
+import { Wallet } from '@/models/Wallet'
+import { Coin } from '@/models/Coin'
 jest.mock('@/Api')
 import {
-  fetchXRPWallet,
-  fetchEOSWallet,
-  fetchETHWallet,
-  fetchNEOWallet,
-  fetchBTCWallet,
+  fetchXRPWalletBalance,
+  fetchEOSWalletBalance,
+  fetchETHWalletBalance,
+  fetchNEOWalletBalance,
+  fetchBTCWalletBalance,
   checkEOSAccountValidity
 } from '@/Api'
 
@@ -76,22 +78,23 @@ describe('WalletMixin', () => {
     })
   })
 
-  describe('$_fetchWallet function', () => {
+  describe('$_fetchWalletBalance function', () => {
     const cases = [
-      ['xrpAddress', XRP, fetchXRPWallet],
-      ['eosAccountName', EOS, fetchEOSWallet],
-      ['ethAddress', ETH, fetchETHWallet],
-      ['neoAddress', NEO, fetchNEOWallet],
-      ['btcAddress', BTC, fetchBTCWallet]
+      [XRP, fetchXRPWalletBalance],
+      [EOS, fetchEOSWalletBalance],
+      [ETH, fetchETHWalletBalance],
+      [NEO, fetchNEOWalletBalance],
+      [BTC, fetchBTCWalletBalance]
     ]
 
     describe('calls the right function associated to id coin', () => {
       test.each(cases)(
         'given %p and %p as arguments, calls %p',
-        (addressOrAccountName, id, fetchFunction) => {
-          wrapper.vm.$_fetchWallet(addressOrAccountName, id)
+        (coinID, fetchFunction) => {
+          const expectedWallet = new Wallet(new Coin(coinID))
+          wrapper.vm.$_fetchWalletBalance(expectedWallet)
 
-          expect(fetchFunction).toHaveBeenCalledWith(addressOrAccountName)
+          expect(fetchFunction).toHaveBeenCalledWith(expectedWallet)
         }
       )
     })

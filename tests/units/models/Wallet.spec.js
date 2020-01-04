@@ -41,9 +41,9 @@ describe('Wallet.js', () => {
 
   it('returns a built wallet when buildWalletFromPersistedWallet is call with persisted wallet', () => {
     const persistedWallet = {
-      id: ETH,
+      coinId: ETH,
       address: '0x70Fe19189628d1050cb0e14aa7A1BBc246A48183',
-      isUsingBalanceSetting: false
+      isUsingLocalBalance: false
     }
 
     expect(Wallet.buildWalletFromPersistedWallet(persistedWallet)).toEqual(

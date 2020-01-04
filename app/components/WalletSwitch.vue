@@ -1,7 +1,7 @@
 <template>
   <FlexboxLayout class="WalletSwitch" data-test="switch-container">
     <Button
-      :class="{ selected: !wallet.isUsingBalanceSetting }"
+      :class="{ selected: !wallet.isUsingLocalBalance }"
       @tap="$emit('is-balance-mode-did-tap', false)"
       class="switch-label"
       text="Track wallet"
@@ -9,16 +9,16 @@
     />
 
     <Switch
-      v-model="wallet.isUsingBalanceSetting"
+      v-model="wallet.isUsingLocalBalance"
       @checkedChange="
-        $emit('is-balance-mode-did-tap', wallet.isUsingBalanceSetting)
+        $emit('is-balance-mode-did-tap', wallet.isUsingLocalBalance)
       "
       class="switch"
       data-test="switch"
     />
 
     <Button
-      :class="{ selected: wallet.isUsingBalanceSetting }"
+      :class="{ selected: wallet.isUsingLocalBalance }"
       @tap="$emit('is-balance-mode-did-tap', true)"
       text="Set balance manually"
       data-test="balance-label"

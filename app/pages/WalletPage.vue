@@ -27,7 +27,7 @@
         <Image :src="currentWallet.coin.image" class="icon coinIcon" />
         <Label :text="currentWallet.coin.name" />
         <PriceLabel
-          v-if="currentWallet.isUsingBalanceSetting"
+          v-if="currentWallet.isUsingLocalBalance"
           :value="currentWallet.value()"
           :currency="currency"
           class="price"
@@ -35,7 +35,20 @@
         />
       </FlexboxLayout>
 
-      <StackLayout v-if="currentWallet.isUsingBalanceSetting" class="input">
+      <StackLayout class="input">
+        <FlexboxLayout class="investment-label">
+          <Label :text="`Investment (${currency.symbol})`" />
+          <Label text="(Optional)" />
+        </FlexboxLayout>
+        <TextField
+          v-model="currentWallet.investment"
+          hint="Number"
+          class="text-field"
+          keyboardType="number"
+        />
+      </StackLayout>
+
+      <StackLayout v-if="currentWallet.isUsingLocalBalance" class="input">
         <Label text="Total Balance" />
         <FlexboxLayout key="balance">
           <TextField
@@ -43,6 +56,7 @@
             :class="{
               error: isAllowedInput === false
             }"
+            hint="Number"
             class="text-field"
             data-test="balance-input"
             keyboardType="number"
@@ -50,7 +64,7 @@
           <Label
             v-if="isAllowedInput === false"
             text="X"
-            class="failedIcon"
+            class="failed-icon"
             data-test="failed-icon"
           />
         </FlexboxLayout>
@@ -63,40 +77,42 @@
         />
       </StackLayout>
 
-      <StackLayout v-else class="input">
-        <Label text="Public wallet address" />
-        <FlexboxLayout key="address">
-          <TextField
-            :class="{
-              error: isAllowedInput === false
-            }"
-            v-model="currentWallet.address"
-            hint="Enter address"
-            class="text-field"
-            data-test="address-input"
-          />
+      <StackLayout v-else>
+        <StackLayout class="input">
+          <Label text="Public wallet address" />
+          <FlexboxLayout key="address">
+            <TextField
+              :class="{
+                error: isAllowedInput === false
+              }"
+              v-model="currentWallet.address"
+              hint="Address"
+              class="text-field"
+              data-test="address-input"
+            />
 
-          <ActivityIndicator
-            v-if="isCheckingAddress"
-            :busy="isCheckingAddress"
-            class="spinner"
-          />
+            <ActivityIndicator
+              v-if="isCheckingAddress"
+              :busy="isCheckingAddress"
+              class="spinner"
+            />
+            <Label
+              v-if="isAllowedInput === false"
+              text="X"
+              class="failed-icon"
+              data-test="failed-icon"
+            />
+          </FlexboxLayout>
+
           <Label
             v-if="isAllowedInput === false"
-            text="X"
-            class="failedIcon"
-            data-test="failed-icon"
+            text="Can't track wallet, check your address entry"
+            class="label-error"
+            data-test="label-error"
           />
-        </FlexboxLayout>
+        </StackLayout>
 
-        <Label
-          v-if="isAllowedInput === false"
-          text="Can't track wallet, check your address entry"
-          class="label-error"
-          data-test="label-error"
-        />
-
-        <Label horizontalAlignment="center" text="OR" />
+        <Label class="or-separator" text="OR" />
         <Button
           @tap="scanQrCode"
           class="scanner-button"
@@ -105,12 +121,14 @@
         />
       </StackLayout>
 
-      <Button
-        @tap="checkInputAndBackToHomePage"
-        class="save-button"
-        text="Save Wallet"
-        data-test="save-button"
-      />
+      <FlexboxLayout class="footer-container">
+        <Button
+          @tap="checkInputAndBackToHomePage"
+          class="save-button"
+          text="Save Wallet"
+          data-test="save-button"
+        />
+      </FlexboxLayout>
     </FlexboxLayout>
   </Page>
 </template>
@@ -168,7 +186,7 @@ export default {
       this.isCheckingAddress = true
 
       try {
-        if (this.currentWallet.isUsingBalanceSetting) {
+        if (this.currentWallet.isUsingLocalBalance) {
           this.isAllowedInput = this.isBalanceInputAllowed()
         } else {
           this.isAllowedInput = await this.isAddressInputAllowed()
@@ -193,12 +211,12 @@ export default {
     deleteWallet() {
       this.navigateToHomePage()
     },
-    useBalanceSetting(isUsingBalanceSetting) {
-      if (this.currentWallet.isUsingBalanceSetting !== isUsingBalanceSetting) {
+    useBalanceSetting(isUsingLocalBalance) {
+      if (this.currentWallet.isUsingLocalBalance !== isUsingLocalBalance) {
         this.isAllowedInput = null
       }
 
-      this.currentWallet.isUsingBalanceSetting = isUsingBalanceSetting
+      this.currentWallet.isUsingLocalBalance = isUsingLocalBalance
     },
     async scanQrCode() {
       try {
@@ -257,7 +275,13 @@ export default {
     }
 
     .input {
-      flex-grow: 1;
+      padding: $separation-content;
+      background-color: $grey;
+      margin-top: 2 * $separation-content;
+
+      .investment-label {
+        justify-content: space-between;
+      }
 
       .text-field {
         width: 100%;
@@ -269,7 +293,7 @@ export default {
         }
       }
 
-      .failedIcon {
+      .failed-icon {
         color: $error-color;
         width: 40;
         align-self: center;
@@ -282,15 +306,27 @@ export default {
       }
     }
 
+    .or-separator {
+      horizontal-alignment: center;
+      margin-top: $separation-content;
+      margin-bottom: $separation-content;
+    }
+
     .scanner-button {
       background-color: $blue;
       width: 50%;
     }
 
-    .save-button {
-      background-color: $success-color;
-      width: 50%;
-      font-weight: bold;
+    .footer-container {
+      flex-grow: 1;
+      flex-direction: column;
+      justify-content: flex-end;
+
+      .save-button {
+        width: 100%;
+        background-color: $success-color;
+        font-weight: bold;
+      }
     }
   }
 }

@@ -13,8 +13,9 @@ jest.mock('nativescript-camera', () => {
   return { requestPermissions: jest.fn() }
 })
 
-import { fetchWalletsMarket } from '@/Api'
+import { fetchWalletsCoinMarket } from '@/Api'
 import { XRP } from '@/constants'
+
 let wrapper
 const coin = new Coin(
   XRP,
@@ -25,12 +26,14 @@ const coin = new Coin(
   'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579',
   'xrp'
 )
-const walletA = new Wallet(coin, 10, 'fakeAddressA')
-const walletB = new Wallet(coin, 11, 'fakeAddressB')
+const walletAInvestment = 150
+const walletBInvestment = 200
+const walletA = new Wallet(coin, 10, 'fakeAddressA', true, walletAInvestment, 1)
+const walletB = new Wallet(coin, 11, 'fakeAddressB', true, walletBInvestment, 2)
 
 describe('WalletsView.vue', () => {
   beforeEach(async () => {
-    fetchWalletsMarket.mockImplementation(() =>
+    fetchWalletsCoinMarket.mockImplementation(() =>
       Promise.resolve([walletA, walletB])
     )
 
@@ -40,7 +43,6 @@ describe('WalletsView.vue', () => {
       },
       mocks: { $navigateTo: jest.fn() }
     })
-    wrapper.setData({ investment: 10 })
 
     await flushPromises()
   })
@@ -61,10 +63,23 @@ describe('WalletsView.vue', () => {
   it('displays wallets ratio', () => {
     expect(wrapper.findDataTest('wallets-ratio').props().value).toEqual(
       Number(
-        (((walletA.value() + walletB.value()) / 10) * 100 - 100).toFixed(2)
+        (
+          ((walletA.value() + walletB.value()) /
+            (walletAInvestment + walletBInvestment)) *
+            100 -
+          100
+        ).toFixed(2)
       )
     )
     expect(wrapper.findDataTest('wallets-ratio').props().unit).toEqual('%')
+  })
+
+  it('musts ignore the wallets with null investment to count total investment', () => {
+    walletB.investment = null
+    walletA.investment = 100
+    wrapper.setData({ wallets: [walletA, walletB] })
+
+    expect(wrapper.vm.totalInvestment).toEqual(100)
   })
 
   it('displays each wallet infos', () => {
@@ -120,7 +135,7 @@ describe('WalletsView.vue', () => {
   })
 
   it('displays error message when fetching wallet or market has a problem', async () => {
-    fetchWalletsMarket.mockImplementation(() => Promise.reject('fail'))
+    fetchWalletsCoinMarket.mockImplementation(() => Promise.reject('fail'))
 
     await wrapper.vm.fetchWallets()
 
@@ -128,7 +143,7 @@ describe('WalletsView.vue', () => {
   })
 
   it('stops refreshing list when fetching wallet has error', async () => {
-    fetchWalletsMarket.mockImplementation(() => Promise.reject('fail'))
+    fetchWalletsCoinMarket.mockImplementation(() => Promise.reject('fail'))
 
     const event = { object: { refreshing: true } }
     await wrapper.vm.refresh(event)
@@ -141,6 +156,14 @@ describe('WalletsView.vue', () => {
 
     expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(CoinsPage, {
       props: { currency: USD }
+    })
+  })
+
+  it('navigates to wallet page when wallet is tapped', () => {
+    wrapper.find('ListView-stub').vm.$emit('itemTap', { index: 1 })
+
+    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(WalletPage, {
+      props: { wallet: walletA, currency: USD }
     })
   })
 

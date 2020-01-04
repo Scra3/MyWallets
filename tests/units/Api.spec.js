@@ -1,7 +1,7 @@
 import * as httpModule from 'tns-core-modules/http'
 import {
   fetchCoinsMarket,
-  fetchWalletsMarket,
+  fetchWalletsCoinMarket,
   checkEOSAccountValidity
 } from '@/Api'
 import { Coin } from '@/models/Coin'
@@ -77,7 +77,7 @@ describe('Api.js', () => {
     })
   })
 
-  describe('fetchWalletsMarket function', () => {
+  describe('fetchWalletsCoinMarket function', () => {
     beforeEach(async () => {
       httpModule.getJSON.mockImplementation(() =>
         Promise.resolve([
@@ -111,7 +111,7 @@ describe('Api.js', () => {
 
     it('returns an list of hydrated wallets', async () => {
       const wallet = (
-        await fetchWalletsMarket(
+        await fetchWalletsCoinMarket(
           [new Wallet(new Coin(XRP), 10, 'fakeAddress')],
           USD
         )

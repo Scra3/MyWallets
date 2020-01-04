@@ -10,12 +10,12 @@
       <template v-else-if="wallets && wallets.length > 0">
         <FlexboxLayout class="main-infos">
           <PriceLabel
-            :value="investment"
+            :value="totalInvestment"
             :currency="investmentCurrency"
             class="price"
           />
           <PriceLabel
-            :value="walletsValue"
+            :value="totalValue"
             :currency="currency"
             class="wallets-value"
             data-test="wallets-value"
@@ -28,7 +28,7 @@
           />
         </FlexboxLayout>
         <ChangeLabel
-          :value="walletsPriceChange24H"
+          :value="totalPriceChange24H"
           :unit="`${currency.symbol} (24h)`"
           data-test="wallets-price-change"
           class="price"
@@ -42,7 +42,7 @@
 
     <grid-layout rows="auto, *">
       <StackLayout row="1" class="wallets">
-        <PullToRefresh v-if="wallets" @refresh="refresh" class="spinner">
+        <PullToRefresh @refresh="refresh" class="spinner">
           <ListView
             v-for="wallet in sortedWallets"
             @itemTap="navigateToWalletPage"
@@ -96,9 +96,9 @@
 </template>
 
 <script>
-import { fetchWalletsMarket } from '@/Api'
+import { fetchWalletsCoinMarket } from '@/Api'
 
-import { BTC, EOS, ETH, EUR, NEO, XRP } from '@/constants.js'
+import { ETH, EUR, XRP, BTC, NEO, EOS } from '@/constants.js'
 import ChangeLabel from '@/components/ChangeLabel'
 import PriceLabel from '@/components/PriceLabel'
 import WalletPage from '@/pages/WalletPage'
@@ -122,33 +122,46 @@ export default {
       intervalDelay: 60000,
       wallets: null,
       investmentCurrency: EUR,
-      investment: 1050,
       persistedWallets: [
         {
-          id: ETH,
+          id: 1,
+          investment: 150,
+          coinId: ETH,
           address: '0x70Fe19189628d1050cb0e14aa7A1BBc246A48183',
-          isUsingBalanceSetting: false
+          isUsingLocalBalance: false,
+          balance: 1
         },
         {
-          id: XRP,
+          coinId: XRP,
           address: 'rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR',
-          isUsingBalanceSetting: false
+          isUsingLocalBalance: false,
+          balance: 1,
+          investment: 250,
+          id: 2
         },
         {
-          id: EOS,
+          coinId: EOS,
           address: 'gi3tmnzsgqge',
-          isUsingBalanceSetting: false
+          isUsingLocalBalance: false,
+          balance: 1,
+          investment: 250,
+          id: 3
         },
         {
-          id: NEO,
+          coinId: NEO,
           address: 'ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf',
-          isUsingBalanceSetting: false
+          isUsingLocalBalance: false,
+          balance: 1,
+          investment: 100,
+          id: 4
         },
         {
-          id: BTC,
+          coinId: BTC,
+          investment: 300,
           balance: 0.041,
           address: 'ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf',
-          isUsingBalanceSetting: true
+          isUsingLocalBalance: true,
+          id: 5
         }
       ],
       intervalID: null,
@@ -158,25 +171,35 @@ export default {
   },
   computed: {
     sortedWallets() {
+      if (!this.wallets) {
+        return []
+      }
       const sortWallets = (walletA, walletB) =>
         walletB.value() - walletA.value()
       return [...this.wallets].sort(sortWallets)
     },
-    walletsValue() {
+    totalValue() {
       const sum = (currentValue, wallet) =>
         currentValue + parseFloat(wallet.value())
       return Number(parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2))
     },
-    walletsPriceChange24H() {
+    totalPriceChange24H() {
       const priceChange = (currentValue, wallet) =>
         currentValue + parseFloat(wallet.coin.priceChange24H) * wallet.balance
       return Number(
         parseFloat(this.wallets.reduce(priceChange, 0.0)).toFixed(2)
       )
     },
+    totalInvestment() {
+      const sum = (currentValue, wallet) =>
+        currentValue + parseFloat(wallet.investment || 0)
+      return Number(parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2))
+    },
     ratio() {
       return Number(
-        parseFloat((this.walletsValue / this.investment) * 100 - 100).toFixed(2)
+        parseFloat(
+          (this.totalValue / this.totalInvestment) * 100 - 100
+        ).toFixed(2)
       )
     }
   },
@@ -219,15 +242,26 @@ export default {
       this.isFailedToLoad = false
 
       try {
-        const pWallets = this.persistedWallets.map(wallet => {
-          if (wallet.isUsingBalanceSetting) {
-            return Wallet.buildWalletFromPersistedWallet(wallet)
-          } else {
-            return this.$_fetchWallet(wallet.address, wallet.id)
-          }
-        })
-        const wallets = await Promise.all(pWallets)
-        this.wallets = await fetchWalletsMarket(wallets, this.currency)
+        let wallets = this.persistedWallets.map(persistedWallet =>
+          Wallet.buildWalletFromPersistedWallet(persistedWallet)
+        )
+        const walletsWithRemoteBalance = wallets.filter(
+          wallet => !wallet.isUsingLocalBalance
+        )
+        const pWallets = walletsWithRemoteBalance.map(wallet =>
+          this.$_fetchWalletBalance(wallet)
+        )
+
+        const balances = await Promise.all(pWallets)
+        balances.forEach(
+          (balance, index) =>
+            (walletsWithRemoteBalance[index].balance = balance)
+        )
+        wallets = [
+          ...walletsWithRemoteBalance,
+          ...wallets.filter(wallet => wallet.isUsingLocalBalance)
+        ]
+        this.wallets = await fetchWalletsCoinMarket(wallets, this.currency)
       } catch (e) {
         this.isFailedToLoad = true
       } finally {
