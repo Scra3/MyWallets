@@ -8,7 +8,7 @@ lint: ## Run eslint and stylelint
 	npm run lint:fix ; npm run stylelint
 
 run: ## Run app on android
-	tns run android
+	tns run android --log trace
 
 debug: ## Run app in debug mode on android
 	tns debug android
