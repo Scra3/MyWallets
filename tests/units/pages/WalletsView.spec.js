@@ -116,7 +116,7 @@ describe('WalletsView.vue', () => {
     wrapper.setData({ isLoading: false, isFailedToLoad: true })
     wrapper.vm.fetchWallets()
 
-    expect(wrapper.find('ActivityIndicator-stub').exists()).toBe(true)
+    expect(wrapper.find('ActivityIndicator-stub').isVisible()).toBe(true)
     expect(wrapper.vm.isLoading).toBe(true)
     expect(wrapper.vm.isFailedToLoad).toBe(false)
   })
@@ -163,15 +163,7 @@ describe('WalletsView.vue', () => {
     wrapper.find('ListView-stub').vm.$emit('itemTap', { index: 1 })
 
     expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(WalletPage, {
-      props: { wallet: walletA, currency: USD }
-    })
-  })
-
-  it('navigates to wallet page when wallet is tapped', () => {
-    wrapper.find('ListView-stub').vm.$emit('itemTap', { index: 1 })
-
-    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(WalletPage, {
-      props: { wallet: walletA, currency: USD }
+      props: { wallet: walletA, currency: USD, isUpdating: true }
     })
   })
 })

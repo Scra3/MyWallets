@@ -20,14 +20,14 @@
       <WalletSwitch
         v-if="$_canTrackAddress(currentWallet.coin.id)"
         :wallet="currentWallet"
-        @is-balance-mode-did-tap="useBalanceSetting"
+        @is-balance-mode-did-tap="useLocalBalance"
       />
 
       <FlexboxLayout class="title" data-test="title">
         <Image :src="currentWallet.coin.image" class="icon coinIcon" />
         <Label :text="currentWallet.coin.name" />
         <PriceLabel
-          v-if="currentWallet.isUsingLocalBalance"
+          v-if="currentWallet.isUsingLocalBalance && currentWallet.balance"
           :value="currentWallet.value()"
           :currency="currency"
           class="price"
@@ -35,82 +35,31 @@
         />
       </FlexboxLayout>
 
-      <StackLayout class="input">
-        <FlexboxLayout class="investment-label">
-          <Label :text="`Investment (${currency.symbol})`" />
-          <Label text="(Optional)" />
-        </FlexboxLayout>
-        <TextField
-          v-model="currentWallet.investment"
-          hint="Number"
-          class="text-field"
-          keyboardType="number"
-        />
-      </StackLayout>
+      <InputField
+        key="investment"
+        :label="`Investment (${currency.symbol})`"
+        :is-optional="true"
+        :value="currentWallet.investment"
+        @value-did-change="currentWallet.investment = $event"
+        keyboardType="number"
+        hint="Number"
+      />
 
-      <StackLayout v-if="currentWallet.isUsingLocalBalance" class="input">
-        <Label text="Total Balance" />
-        <FlexboxLayout key="balance">
-          <TextField
-            v-model="currentWallet.balance"
-            :class="{
-              error: isAllowedInput === false
-            }"
-            hint="Number"
-            class="text-field"
-            data-test="balance-input"
-            keyboardType="number"
-          />
-          <Label
-            v-if="isAllowedInput === false"
-            text="X"
-            class="failed-icon"
-            data-test="failed-icon"
-          />
-        </FlexboxLayout>
-
-        <Label
-          v-if="isAllowedInput === false"
-          text="Must be equal or greater than 0 and not be blank"
-          class="label-error"
-          data-test="label-error"
-        />
-      </StackLayout>
+      <WalletBalanceInput
+        v-if="currentWallet.isUsingLocalBalance"
+        :balance="currentWallet.balance"
+        @balance-did-change="currentWallet.balance = $event"
+        @is-balance-valid="isBalanceValid = $event"
+      />
 
       <StackLayout v-else>
-        <StackLayout class="input">
-          <Label text="Public wallet address" />
-          <FlexboxLayout key="address">
-            <TextField
-              :class="{
-                error: isAllowedInput === false
-              }"
-              v-model="currentWallet.address"
-              hint="Address"
-              class="text-field"
-              data-test="address-input"
-            />
-
-            <ActivityIndicator
-              v-if="isCheckingAddress"
-              :busy="isCheckingAddress"
-              class="spinner"
-            />
-            <Label
-              v-if="isAllowedInput === false"
-              text="X"
-              class="failed-icon"
-              data-test="failed-icon"
-            />
-          </FlexboxLayout>
-
-          <Label
-            v-if="isAllowedInput === false"
-            text="Can't track wallet, check your address entry"
-            class="label-error"
-            data-test="label-error"
-          />
-        </StackLayout>
+        <WalletAddressInput
+          :address="currentWallet.address"
+          :coin-id="currentWallet.coin.id"
+          @address-did-change="currentWallet.address = $event"
+          @is-address-valid="isAddressValid = $event"
+          @is-checking-address-validity="isCheckingAddressValidity = $event"
+        />
 
         <Label class="or-separator" text="OR" />
         <Button
@@ -123,9 +72,9 @@
 
       <FlexboxLayout class="footer-container">
         <Button
-          @tap="checkInputAndBackToHomePage"
+          @tap="backToHomePage"
+          :text="isUpdating ? 'Update Wallet' : 'Save Wallet'"
           class="save-button"
-          text="Save Wallet"
           data-test="save-button"
         />
       </FlexboxLayout>
@@ -141,10 +90,19 @@ import PriceLabel from '@/components/PriceLabel'
 import App from '@/App'
 import { WalletMixin } from '@/mixins/WalletMixin'
 import WalletSwitch from '@/components/WalletSwitch'
+import WalletBalanceInput from '@/components/WalletBalanceInput'
+import WalletAddressInput from '@/components/WalletAddressInput'
+import InputField from '@/components/InputField'
 
 export default {
   name: 'WalletPage',
-  components: { WalletSwitch, PriceLabel },
+  components: {
+    WalletAddressInput,
+    WalletBalanceInput,
+    WalletSwitch,
+    PriceLabel,
+    InputField
+  },
   mixins: [WalletMixin],
   props: {
     wallet: {
@@ -154,51 +112,46 @@ export default {
     currency: {
       type: Object,
       required: true
+    },
+    isUpdating: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data() {
     return {
       currentWallet: null,
-      isAllowedInput: null,
-      isCheckingAddress: false
+      isBalanceValid: null,
+      isAddressValid: null,
+      isCheckingAddressValidity: false
     }
   },
   beforeMount() {
     this.currentWallet = this.wallet
   },
   methods: {
-    isBalanceInputAllowed() {
-      return (
-        this.currentWallet.balance !== '' && this.currentWallet.balance >= 0
-      )
-    },
-    async isAddressInputAllowed() {
-      return (
-        !!this.currentWallet.address &&
-        (await this.$_checkAddressValidity(
-          this.currentWallet.address,
-          this.currentWallet.coin.id
-        ))
-      )
-    },
-    async checkInputAndBackToHomePage() {
-      this.isAllowedInput = null
-      this.isCheckingAddress = true
+    backToHomePage() {
+      if (this.isCheckingAddressValidity) {
+        return false
+      }
 
-      try {
-        if (this.currentWallet.isUsingLocalBalance) {
-          this.isAllowedInput = this.isBalanceInputAllowed()
-        } else {
-          this.isAllowedInput = await this.isAddressInputAllowed()
-        }
-
-        if (this.isAllowedInput) {
-          this.navigateToHomePage()
-        }
-      } catch (e) {
-        console.log(e)
-      } finally {
-        this.isCheckingAddress = false
+      if (
+        this.isBalanceValid === null &&
+        this.isAddressValid === null &&
+        this.isUpdating
+      ) {
+        this.navigateToHomePage()
+      } else if (
+        this.currentWallet.isUsingLocalBalance &&
+        this.isBalanceValid
+      ) {
+        this.navigateToHomePage()
+      } else if (
+        !this.currentWallet.isUsingLocalBalance &&
+        this.isAddressValid
+      ) {
+        this.navigateToHomePage()
       }
     },
     navigateToHomePage() {
@@ -211,11 +164,7 @@ export default {
     deleteWallet() {
       this.navigateToHomePage()
     },
-    useBalanceSetting(isUsingLocalBalance) {
-      if (this.currentWallet.isUsingLocalBalance !== isUsingLocalBalance) {
-        this.isAllowedInput = null
-      }
-
+    useLocalBalance(isUsingLocalBalance) {
       this.currentWallet.isUsingLocalBalance = isUsingLocalBalance
     },
     async scanQrCode() {
@@ -271,38 +220,6 @@ export default {
       .price {
         flex-grow: 1;
         justify-content: flex-end;
-      }
-    }
-
-    .input {
-      padding: $separation-content;
-      background-color: $grey;
-      margin-top: 2 * $separation-content;
-
-      .investment-label {
-        justify-content: space-between;
-      }
-
-      .text-field {
-        width: 100%;
-        color: $white;
-
-        &.error {
-          border-bottom-width: 1;
-          border-color: red;
-        }
-      }
-
-      .failed-icon {
-        color: $error-color;
-        width: 40;
-        align-self: center;
-      }
-
-      .label-error {
-        color: $error-color;
-        margin-left: $separation-content;
-        margin-bottom: $separation-content;
       }
     }
 

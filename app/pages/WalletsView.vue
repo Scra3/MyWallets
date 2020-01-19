@@ -221,7 +221,8 @@ export default {
       this.$navigateTo(WalletPage, {
         props: {
           wallet: this.sortedWallets[event.index],
-          currency: this.currency
+          currency: this.currency,
+          isUpdating: true
         }
       })
     },

@@ -4,9 +4,8 @@ import { Coin } from '@/models/Coin'
 import { Wallet } from '@/models/Wallet'
 import flushPromises from 'flush-promises'
 import * as camera from 'nativescript-camera'
-import { USD } from '@/constants.js'
+import { USD, BTC } from '@/constants'
 import App from '@/App'
-import { BTC } from '@/constants'
 
 jest.mock('nativescript-barcodescanner', () => '')
 jest.mock('nativescript-camera', () => {
@@ -52,6 +51,24 @@ describe('WalletPage.vue', () => {
     })
   })
 
+  it('goes to home page when user does nothing and clicks on update wallet when he is updating wallet', () => {
+    wrapper.setProps({ isUpdating: true })
+
+    wrapper.findDataTest('save-button').vm.$emit('tap')
+
+    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(App, {
+      props: { currency: USD }
+    })
+  })
+
+  it('does not go to home page when user clicks on save wallet but did not provide any information', () => {
+    wrapper.setProps({ isUpdating: false })
+
+    wrapper.findDataTest('save-button').vm.$emit('tap')
+
+    expect(wrapper.vm.$navigateTo).not.toHaveBeenCalled()
+  })
+
   describe('when it is in tracked mode', () => {
     beforeEach(() => {
       wrapper
@@ -59,28 +76,20 @@ describe('WalletPage.vue', () => {
         .vm.$emit('is-balance-mode-did-tap', false)
     })
 
-    it('displays wallet price', () => {
-      expect(wrapper.findDataTest('wallet-price').exists()).toBe(false)
-    })
-
-    it('does not add error class on input address', () => {
-      expect(wrapper.findDataTest('address-input').classes()).not.toContain(
-        'error'
-      )
-    })
-
-    it('does not add focus class on input address', () => {
-      expect(wrapper.findDataTest('address-input').classes()).not.toContain(
-        'focus'
-      )
-    })
-
-    it('displays address input', () => {
-      expect(wrapper.findDataTest('address-input').isVisible()).toBe(true)
+    it('displays input wallet address', () => {
+      expect(wrapper.find('WalletAddressInput-stub').isVisible()).toBe(true)
     })
 
     it('displays scanner button', () => {
       expect(wrapper.findDataTest('scanner-button').isVisible()).toBe(true)
+    })
+
+    it('does not display input wallet balance', () => {
+      expect(wrapper.find('WalletBalanceInput-stub').exists()).toBe(false)
+    })
+
+    it('displays wallet price', () => {
+      expect(wrapper.findDataTest('wallet-price').exists()).toBe(false)
     })
 
     it('displays scanner when scanner button is clicked', async () => {
@@ -98,111 +107,31 @@ describe('WalletPage.vue', () => {
       expect(camera.requestPermissions).toHaveBeenCalled()
     })
 
-    it('displays spinner when save button is tapped pending verify address', () => {
-      wrapper.vm.$_checkAddressValidity = jest.fn()
-
+    it('goes to home page when save button is tapped and address is valid', () => {
+      wrapper.find('WalletAddressInput-stub').vm.$emit('is-address-valid', true)
       wrapper.findDataTest('save-button').vm.$emit('tap')
 
-      expect(wrapper.find('ActivityIndicator-stub').isVisible()).toBe(true)
-    })
-
-    describe('when switching mode', () => {
-      it('resets error when there is error', () => {
-        wrapper.findDataTest('address-input').vm.$emit('input', '')
-        wrapper.findDataTest('save-button').vm.$emit('tap')
-
-        wrapper
-          .find('WalletSwitch-stub')
-          .vm.$emit('is-balance-mode-did-tap', true)
-
-        expect(wrapper.findDataTest('failed-icon').exists()).toBe(false)
-      })
-
-      it('does not focus input', () => {
-        wrapper.findDataTest('address-input').vm.$emit('input', 'anAddress')
-
-        wrapper
-          .find('WalletSwitch-stub')
-          .vm.$emit('is-balance-mode-did-tap', true)
-
-        expect(wrapper.findDataTest('balance-input').classes()).not.toContain(
-          'focus'
-        )
-      })
-
-      it("does not display switch container when wallet can't be track", () => {
-        coin = new Coin(
-          'coinFake',
-          'CoinFake',
-          9668.09,
-          7.17426,
-          647.18,
-          'https://assets.coingecko.com/coins/images/1/large/coinFake.png?1547033579'
-        )
-        wallet = new Wallet(coin, 10, 'fakeAddress', true)
-        wrapper.setData({ currentWallet: wallet })
-
-        expect(wrapper.findDataTest('switch-container').exists()).toBe(false)
+      expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(App, {
+        props: { currency: USD }
       })
     })
 
-    describe('when is a valid address', () => {
-      it('goes to home page when save button is clicked', async () => {
-        wrapper.vm.$_checkAddressValidity = jest.fn(() => Promise.resolve(true))
+    it('does not go to home page when save button is tapped and address is not valid', () => {
+      wrapper
+        .find('WalletAddressInput-stub')
+        .vm.$emit('is-address-valid', false)
+      wrapper.findDataTest('save-button').vm.$emit('tap')
 
-        wrapper.findDataTest('address-input').vm.$emit('input', 'fakeAddress')
-        wrapper.findDataTest('save-button').vm.$emit('tap')
-        await flushPromises()
-
-        expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(App, {
-          props: { currency: USD }
-        })
-      })
+      expect(wrapper.vm.$navigateTo).not.toHaveBeenCalled()
     })
 
-    describe('when is not a valid address', () => {
-      it('displays failed icon', async () => {
-        wrapper.vm.$_checkAddressValidity = jest.fn(() =>
-          Promise.resolve(false)
-        )
+    it('does not go to home page when user clicks on save wallet but is checking address validity', () => {
+      wrapper.findDataTest('save-button').vm.$emit('tap')
+      wrapper
+        .find('WalletAddressInput-stub')
+        .vm.$emit('is-checking-address-validity', true)
 
-        wrapper.findDataTest('save-button').vm.$emit('tap')
-        await flushPromises()
-
-        expect(wrapper.findDataTest('failed-icon').isVisible()).toBe(true)
-      })
-
-      it('displays label error', async () => {
-        wrapper.vm.$_checkAddressValidity = jest.fn(() =>
-          Promise.resolve(false)
-        )
-
-        wrapper.findDataTest('save-button').vm.$emit('tap')
-        await flushPromises()
-
-        expect(wrapper.findDataTest('label-error').isVisible()).toBe(true)
-      })
-
-      it('does not go to home page when address is not valid', async () => {
-        wrapper.vm.$_checkAddressValidity = jest.fn(() =>
-          Promise.resolve(false)
-        )
-
-        wrapper.findDataTest('save-button').vm.$emit('tap')
-        await flushPromises()
-
-        expect(wrapper.vm.$navigateTo).not.toHaveBeenCalled()
-      })
-
-      it('does not go to home page when address is not defined', async () => {
-        wrapper.vm.$_checkAddressValidity = jest.fn(() => Promise.resolve(true))
-
-        wrapper.findDataTest('address-input').vm.$emit('input', '')
-        wrapper.findDataTest('save-button').vm.$emit('tap')
-        await flushPromises()
-
-        expect(wrapper.vm.$navigateTo).not.toHaveBeenCalled()
-      })
+      expect(wrapper.vm.$navigateTo).not.toHaveBeenCalled()
     })
   })
 
@@ -213,62 +142,30 @@ describe('WalletPage.vue', () => {
         .vm.$emit('is-balance-mode-did-tap', true)
     })
 
-    it('displays wallet price', () => {
-      expect(wrapper.findDataTest('wallet-price').isVisible()).toBe(true)
+    it('displays input wallet balance', () => {
+      expect(wrapper.find('WalletBalanceInput-stub').isVisible()).toBe(true)
     })
 
-    it('does not focus input address', () => {
-      expect(wrapper.findDataTest('balance-input').classes()).not.toContain(
-        'focus'
-      )
+    it('does not display input wallet address', () => {
+      expect(wrapper.find('WalletAddressInput-stub').exists()).toBe(false)
     })
 
-    it('displays balance input', () => {
-      expect(wrapper.findDataTest('balance-input').isVisible()).toBe(true)
-    })
-
-    it('goes to home page when save button is clicked with 0 value', () => {
-      wrapper.findDataTest('balance-input').vm.$emit('input', 0)
-
+    it('goes to home page when save button is tapped and balance is valid', () => {
+      wrapper.find('WalletBalanceInput-stub').vm.$emit('is-balance-valid', true)
       wrapper.findDataTest('save-button').vm.$emit('tap')
 
-      expect(wrapper.vm.$navigateTo).toHaveBeenCalled()
+      expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(App, {
+        props: { currency: USD }
+      })
     })
 
-    describe('when is not a valid balance', () => {
-      it('displays failed icon', () => {
-        wrapper.findDataTest('balance-input').vm.$emit('input', '')
+    it('does not go to home page when save button is tapped and balance is not valid', () => {
+      wrapper
+        .find('WalletBalanceInput-stub')
+        .vm.$emit('is-balance-valid', false)
+      wrapper.findDataTest('save-button').vm.$emit('tap')
 
-        wrapper.findDataTest('save-button').vm.$emit('tap')
-
-        expect(wrapper.findDataTest('failed-icon').isVisible()).toBe(true)
-      })
-
-      it('highlights input', () => {
-        wrapper.findDataTest('balance-input').vm.$emit('input', '')
-
-        wrapper.findDataTest('save-button').vm.$emit('tap')
-
-        expect(wrapper.findDataTest('balance-input').classes()).toContain(
-          'error'
-        )
-      })
-
-      it('displays label error', () => {
-        wrapper.findDataTest('balance-input').vm.$emit('input', '')
-
-        wrapper.findDataTest('save-button').vm.$emit('tap')
-
-        expect(wrapper.findDataTest('label-error').isVisible()).toBe(true)
-      })
-
-      it('does not go to home page when save button is clicked', () => {
-        wrapper.findDataTest('balance-input').vm.$emit('input', '')
-
-        wrapper.findDataTest('save-button').vm.$emit('tap')
-
-        expect(wrapper.vm.$navigateTo).not.toHaveBeenCalled()
-      })
+      expect(wrapper.vm.$navigateTo).not.toHaveBeenCalled()
     })
   })
 })

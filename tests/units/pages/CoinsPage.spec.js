@@ -77,7 +77,7 @@ describe('CoinsPage.vue', () => {
     wrapper.find('ListView-stub').vm.$emit('itemTap', { index: 0 })
 
     expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(WalletPage, {
-      props: { wallet: new Wallet(bitcoinCoin, 0), currency: USD }
+      props: { wallet: new Wallet(bitcoinCoin), currency: USD }
     })
   })
 

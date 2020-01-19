@@ -93,7 +93,7 @@ export default {
     navigateToWalletPage(event) {
       this.$navigateTo(WalletPage, {
         props: {
-          wallet: new Wallet(this.filteredCoins[event.index], 0),
+          wallet: new Wallet(this.filteredCoins[event.index]),
           currency: this.currency
         }
       })

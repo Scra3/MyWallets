@@ -6,7 +6,7 @@ export class Wallet {
     balance = null,
     address = null,
     isUsingLocalBalance = true,
-    investment = 0,
+    investment = null,
     id
   ) {
     this.coin = coin
