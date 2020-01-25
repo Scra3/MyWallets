@@ -9,7 +9,8 @@
       />
 
       <ActionItem
-        @tap="deleteWallet()"
+        v-if="isUpdating"
+        @tap="deleteWallet"
         text="Delete"
         android.position="popup"
         data-test="delete-wallet"
@@ -39,40 +40,33 @@
         key="investment"
         :label="`Investment (${currency.symbol})`"
         :is-optional="true"
+        :is-valid="isInvestmentValid"
         :value="currentWallet.investment"
         @value-did-change="currentWallet.investment = $event"
         keyboardType="number"
         hint="Number"
+        label-error="Must be equal or greater than 0"
       />
 
       <WalletBalanceInput
         v-if="currentWallet.isUsingLocalBalance"
         :balance="currentWallet.balance"
+        :is-valid="isBalanceValid"
         @balance-did-change="currentWallet.balance = $event"
-        @is-balance-valid="isBalanceValid = $event"
       />
 
-      <StackLayout v-else>
-        <WalletAddressInput
-          :address="currentWallet.address"
-          :coin-id="currentWallet.coin.id"
-          @address-did-change="currentWallet.address = $event"
-          @is-address-valid="isAddressValid = $event"
-          @is-checking-address-validity="isCheckingAddressValidity = $event"
-        />
-
-        <Label class="or-separator" text="OR" />
-        <Button
-          @tap="scanQrCode"
-          class="scanner-button"
-          text="Scan QR code"
-          data-test="scanner-button"
-        />
-      </StackLayout>
+      <WalletAddressInput
+        v-else
+        :address="currentWallet.address"
+        :is-valid="isAddressValid"
+        :is-checking-address="isCheckingAddressValidity"
+        :has-connection-error="isFailedCheckingAddressValidity"
+        @address-did-change="currentWallet.address = $event"
+      />
 
       <FlexboxLayout class="footer-container">
         <Button
-          @tap="backToHomePage"
+          @tap="saveWalletAndBackToHomePage"
           :text="isUpdating ? 'Update Wallet' : 'Save Wallet'"
           class="save-button"
           data-test="save-button"
@@ -84,8 +78,6 @@
 
 <script>
 import { Wallet } from '@/models/Wallet'
-import { BarcodeScanner } from 'nativescript-barcodescanner'
-import * as camera from 'nativescript-camera'
 import PriceLabel from '@/components/PriceLabel'
 import App from '@/App'
 import { WalletMixin } from '@/mixins/WalletMixin'
@@ -93,6 +85,7 @@ import WalletSwitch from '@/components/WalletSwitch'
 import WalletBalanceInput from '@/components/WalletBalanceInput'
 import WalletAddressInput from '@/components/WalletAddressInput'
 import InputField from '@/components/InputField'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'WalletPage',
@@ -122,36 +115,68 @@ export default {
   data() {
     return {
       currentWallet: null,
-      isBalanceValid: null,
       isAddressValid: null,
-      isCheckingAddressValidity: false
+      isBalanceValid: null,
+      isInvestmentValid: null,
+      isCheckingAddressValidity: false,
+      isFailedCheckingAddressValidity: false
     }
   },
   beforeMount() {
     this.currentWallet = this.wallet
   },
   methods: {
-    backToHomePage() {
-      if (this.isCheckingAddressValidity) {
-        return false
-      }
+    ...mapActions(['insert', 'delete']),
+    async verifyAddress() {
+      this.isCheckingAddressValidity = true
+      this.isFailedCheckingAddressValidity = false
+      this.isAddressValid = null
 
-      if (
-        this.isBalanceValid === null &&
-        this.isAddressValid === null &&
-        this.isUpdating
-      ) {
-        this.navigateToHomePage()
-      } else if (
-        this.currentWallet.isUsingLocalBalance &&
-        this.isBalanceValid
-      ) {
-        this.navigateToHomePage()
+      try {
+        if (this.currentWallet.address) {
+          this.isAddressValid = await this.$_checkAddressValidity(
+            this.currentWallet.address,
+            this.currentWallet.coin.id
+          )
+        } else {
+          this.isAddressValid = false
+        }
+      } catch (e) {
+        this.isFailedCheckingAddressValidity = true
+      } finally {
+        this.isCheckingAddressValidity = false
+      }
+    },
+    verifyBalance() {
+      const balance = this.currentWallet.balance
+      this.isBalanceValid = !!balance && balance !== '' && balance >= 0
+    },
+    verifyInvestment() {
+      const investment = this.currentWallet.investment
+
+      this.isInvestmentValid =
+        investment === null || investment === '' || investment >= 0
+    },
+    async saveWalletAndBackToHomePage() {
+      this.verifyInvestment()
+
+      if (this.currentWallet.isUsingLocalBalance && this.isInvestmentValid) {
+        this.verifyBalance()
+
+        if (this.isBalanceValid) {
+          await this.insert(this.currentWallet)
+          this.navigateToHomePage()
+        }
       } else if (
         !this.currentWallet.isUsingLocalBalance &&
-        this.isAddressValid
+        this.isInvestmentValid
       ) {
-        this.navigateToHomePage()
+        await this.verifyAddress()
+
+        if (this.isAddressValid) {
+          await this.insert(this.currentWallet)
+          this.navigateToHomePage()
+        }
       }
     },
     navigateToHomePage() {
@@ -161,27 +186,12 @@ export default {
         }
       })
     },
-    deleteWallet() {
+    async deleteWallet() {
+      await this.delete(this.currentWallet.id)
       this.navigateToHomePage()
     },
     useLocalBalance(isUsingLocalBalance) {
       this.currentWallet.isUsingLocalBalance = isUsingLocalBalance
-    },
-    async scanQrCode() {
-      try {
-        await camera.requestPermissions()
-        this.scan()
-      } catch (e) {
-        console.log(e)
-      }
-    },
-    async scan() {
-      try {
-        const result = await new BarcodeScanner().scan({ formats: 'QR_CODE' })
-        this.currentWallet.address = result.text
-      } catch (errorMessage) {
-        console.log('No scan. ' + errorMessage)
-      }
     }
   }
 }
@@ -221,17 +231,6 @@ export default {
         flex-grow: 1;
         justify-content: flex-end;
       }
-    }
-
-    .or-separator {
-      horizontal-alignment: center;
-      margin-top: $separation-content;
-      margin-bottom: $separation-content;
-    }
-
-    .scanner-button {
-      background-color: $blue;
-      width: 50%;
     }
 
     .footer-container {

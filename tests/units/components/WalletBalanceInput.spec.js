@@ -6,31 +6,31 @@ describe('WalletPage.vue', () => {
 
   beforeEach(async () => {
     wrapper = shallowMount(WalletBalanceInput, {
-      propsData: { balance: null }
+      propsData: { balance: null, isValid: null }
     })
   })
 
   it('gives is-valid props as null on mounted', () => {
-    expect(wrapper.vm.isValid).toEqual(null)
+    expect(wrapper.find('InputField-stub').props('isValid')).toEqual(null)
   })
 
   describe('when balance is not valid', () => {
     beforeEach(() => {
-      wrapper.setProps({ balance: -5 })
+      wrapper.setProps({ balance: -5, isValid: false })
     })
 
-    it('gives is-valid props as false', () => {
-      expect(wrapper.vm.isValid).toEqual(false)
+    it('provides is-valid props as false', () => {
+      expect(wrapper.find('InputField-stub').props('isValid')).toEqual(false)
     })
   })
 
   describe('when balance is valid', () => {
     beforeEach(() => {
-      wrapper.setProps({ balance: 5 })
+      wrapper.setProps({ balance: 5, isValid: true })
     })
 
     it('gives is-valid props as true', () => {
-      expect(wrapper.vm.isValid).toEqual(true)
+      expect(wrapper.find('InputField-stub').props('isValid')).toEqual(true)
     })
   })
 })

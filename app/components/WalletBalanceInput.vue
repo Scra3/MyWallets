@@ -5,7 +5,7 @@
     :is-valid="isValid"
     @value-did-change="$emit('balance-did-change', $event)"
     label="Total Balance"
-    label-error="Must be equal or greater than 0 and not be blank"
+    label-error="Must be greater than 0 and not be blank"
     hint="Number"
     keyboardType="number"
   />
@@ -22,16 +22,11 @@ export default {
       type: [String, Number],
       required: false,
       default: null
-    }
-  },
-  data() {
-    return { isValid: null }
-  },
-  watch: {
-    balance() {
-      this.isValid = !!this.balance && this.balance !== '' && this.balance >= 0
-
-      this.$emit('is-balance-valid', this.isValid)
+    },
+    isValid: {
+      type: Boolean,
+      required: false,
+      default: null
     }
   }
 }

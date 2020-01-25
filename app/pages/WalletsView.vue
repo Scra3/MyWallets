@@ -98,7 +98,7 @@
 <script>
 import { fetchWalletsCoinMarket } from '@/Api'
 
-import { ETH, EUR, XRP, BTC, NEO, EOS } from '@/constants.js'
+import { EUR } from '@/constants.js'
 import ChangeLabel from '@/components/ChangeLabel'
 import PriceLabel from '@/components/PriceLabel'
 import WalletPage from '@/pages/WalletPage'
@@ -106,6 +106,7 @@ import CoinsPage from '@/pages/CoinsPage'
 import ErrorMessage from '@/components/ErrorMessage'
 import { WalletMixin } from '@/mixins/WalletMixin.js'
 import { Wallet } from '@/models/Wallet'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'WalletsView',
@@ -122,54 +123,16 @@ export default {
       intervalDelay: 60000,
       wallets: null,
       investmentCurrency: EUR,
-      persistedWallets: [
-        {
-          id: 1,
-          investment: 150,
-          coinId: ETH,
-          address: '0x70Fe19189628d1050cb0e14aa7A1BBc246A48183',
-          isUsingLocalBalance: false,
-          balance: 1
-        },
-        {
-          coinId: XRP,
-          address: 'rs7YB1m6EQfNRCmm5VbqFW3GDvA9SoFTAR',
-          isUsingLocalBalance: false,
-          balance: 1,
-          investment: 250,
-          id: 2
-        },
-        {
-          coinId: EOS,
-          address: 'gi3tmnzsgqge',
-          isUsingLocalBalance: false,
-          balance: 1,
-          investment: 250,
-          id: 3
-        },
-        {
-          coinId: NEO,
-          address: 'ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf',
-          isUsingLocalBalance: false,
-          balance: 1,
-          investment: 100,
-          id: 4
-        },
-        {
-          coinId: BTC,
-          investment: 300,
-          balance: 0.041,
-          address: 'ASfa8eQHaG2ZXt9VZaYA9SkkcCpbi3cacf',
-          isUsingLocalBalance: true,
-          id: 5
-        }
-      ],
       intervalID: null,
       isLoading: false,
       isFailedToLoad: false
     }
   },
   computed: {
+    ...mapState(['persistedWallets']),
+    persistedWalletsFromDB() {
+      return this.persistedWallets || []
+    },
     sortedWallets() {
       if (!this.wallets) {
         return []
@@ -208,14 +171,16 @@ export default {
       this.fetchWallets()
     }
   },
-  mounted() {
-    this.fetchWallets()
+  async mounted() {
+    await this.fetchWallets()
+
     this.intervalID = setInterval(this.fetchWallets, this.intervalDelay)
   },
   beforeDestroy() {
     clearInterval(this.intervalID)
   },
   methods: {
+    ...mapActions(['query']),
     navigateToWalletPage(event) {
       // wallet in listview is undefined that why we use event.
       this.$navigateTo(WalletPage, {
@@ -243,9 +208,12 @@ export default {
       this.isFailedToLoad = false
 
       try {
-        let wallets = this.persistedWallets.map(persistedWallet =>
+        await this.query()
+
+        let wallets = this.persistedWalletsFromDB.map(persistedWallet =>
           Wallet.buildWalletFromPersistedWallet(persistedWallet)
         )
+
         const walletsWithRemoteBalance = wallets.filter(
           wallet => !wallet.isUsingLocalBalance
         )

@@ -8,6 +8,7 @@
       <TextField
         v-model="currentValue"
         @textChange="$emit('value-did-change', $event.value)"
+        @blur="$emit('input-did-unfocus', $event.value)"
         :class="{
           error: isValid === false,
           success: isValid === true

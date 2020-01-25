@@ -1,5 +1,5 @@
 jest.mock('@/Api')
-jest.mock('nativescript-barcodescanner', () => '')
+jest.mock('nativescript-barcodescanner', () => jest.fn())
 jest.mock('nativescript-camera', () => {
   return { requestPermissions: jest.fn(() => Promise.resolve()) }
 })

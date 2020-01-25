@@ -1,81 +1,99 @@
 <template>
-  <InputField
-    key="address"
-    :value="address"
-    :is-valid="isValid"
-    @value-did-change="$emit('address-did-change', $event)"
-    :is-checking="isCheckingAddress"
-    :label-error="labelError"
-    label="Public wallet address"
-    hint="Address"
-  />
+  <StackLayout class="WalletAddressInput">
+    <InputField
+      key="address"
+      :value="address"
+      :is-valid="isValid"
+      @value-did-change="$emit('address-did-change', $event)"
+      :is-checking="isCheckingAddress"
+      :label-error="labelError"
+      label="Public wallet address"
+      hint="Address"
+    />
+
+    <Label class="or-separator" text="OR" />
+
+    <Button
+      @tap="scanQrCode"
+      class="scanner-button"
+      text="Scan QR code"
+      data-test="scanner-button"
+    />
+  </StackLayout>
 </template>
 <script>
-import { WalletMixin } from '@/mixins/WalletMixin'
 import InputField from '@/components/InputField'
+import { BarcodeScanner } from 'nativescript-barcodescanner'
+import * as camera from 'nativescript-camera'
 
 export default {
   name: 'WalletAddressInput',
   components: { InputField },
-  mixins: [WalletMixin],
   props: {
     address: {
       type: String,
       required: false,
       default: null
     },
-    coinId: {
-      type: String,
+    hasConnectionError: {
+      type: Boolean,
+      required: true
+    },
+    isValid: {
+      type: Boolean,
+      required: false,
+      default: null
+    },
+    isCheckingAddress: {
+      type: Boolean,
       required: true
     }
   },
   data() {
     return {
-      isValid: null,
-      isCheckingAddress: false,
-      isFailedVerification: false,
       connectionLabelError: 'Connection error',
       defaultLabelError: "Can't track wallet, check your address entry"
     }
   },
   computed: {
     labelError() {
-      return this.isFailedVerification
+      return this.hasConnectionError
         ? this.connectionLabelError
         : this.defaultLabelError
     }
   },
-  watch: {
-    address() {
-      this.checkInputValidity()
-    }
-  },
   methods: {
-    async checkInputValidity() {
-      this.isCheckingAddress = true
-      this.$emit('is-checking-address-validity', this.isCheckingAddress)
-
-      this.isFailedVerification = false
-      this.isValid = null
-
+    async scanQrCode() {
       try {
-        if (this.address) {
-          this.isValid = await this.$_checkAddressValidity(
-            this.address,
-            this.coinId
-          )
-        } else {
-          this.isValid = false
-        }
+        await camera.requestPermissions()
+        this.scan()
       } catch (e) {
-        this.isFailedVerification = true
-      } finally {
-        this.$emit('is-address-valid', this.isValid)
-
-        this.isCheckingAddress = false
-        this.$emit('is-checking-address-validity', this.isCheckingAddress)
+        console.log(e)
+      }
+    },
+    async scan() {
+      try {
+        const result = await new BarcodeScanner().scan({ formats: 'QR_CODE' })
+        this.$emit('address-did-change', result.text)
+      } catch (errorMessage) {
+        console.log('No scan. ' + errorMessage)
       }
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.WalletAddressInput {
+  .or-separator {
+    horizontal-alignment: center;
+    margin-top: $separation-content;
+    margin-bottom: $separation-content;
+  }
+
+  .scanner-button {
+    background-color: $blue;
+    width: 50%;
+  }
+}
+</style>

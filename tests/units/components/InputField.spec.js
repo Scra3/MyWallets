@@ -36,6 +36,12 @@ describe('WalletPage.vue', () => {
     expect(wrapper.emitted('value-did-change')[0][0]).toEqual('newValue')
   })
 
+  it('emits an event when input is unfocused', () => {
+    wrapper.findDataTest('input').vm.$emit('blur', { value: 'newValue' })
+
+    expect(wrapper.emitted('input-did-unfocus')[0][0]).toEqual('newValue')
+  })
+
   describe('when value is not valid', () => {
     beforeEach(() => {
       wrapper.setProps({ isValid: false })
