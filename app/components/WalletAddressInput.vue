@@ -1,7 +1,7 @@
 <template>
   <StackLayout class="WalletAddressInput">
     <InputField
-      key="address"
+      :key="key"
       :value="address"
       :is-valid="isValid"
       @value-did-change="$emit('address-did-change', $event)"
@@ -51,6 +51,7 @@ export default {
   },
   data() {
     return {
+      key: 1,
       connectionLabelError: 'Connection error',
       defaultLabelError: "Can't track wallet, check your address entry"
     }
@@ -75,6 +76,8 @@ export default {
       try {
         const result = await new BarcodeScanner().scan({ formats: 'QR_CODE' })
         this.$emit('address-did-change', result.text)
+        // reload input when address changes by scanning it
+        this.key++
       } catch (errorMessage) {
         console.log('No scan. ' + errorMessage)
       }
