@@ -1,22 +1,20 @@
-import { shallowMount } from '@vue/test-utils'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import WalletsView from '@/pages/WalletsView'
 import { USD } from '@/constants.js'
 import { Coin } from '@/models/Coin'
 import { Wallet } from '@/models/Wallet'
 import CoinsPage from '@/pages/CoinsPage'
 import WalletPage from '@/pages/WalletPage'
-
+import Vuex from 'vuex'
 import flushPromises from 'flush-promises'
+
 jest.mock('@/Api')
-jest.mock('nativescript-barcodescanner', () => '')
-jest.mock('nativescript-camera', () => {
-  return { requestPermissions: jest.fn() }
-})
+jest.mock('nativescript-barcodescanner', () => jest.fn())
+jest.mock('nativescript-camera', () => jest.fn())
 
 import { fetchWalletsCoinMarket } from '@/Api'
 import { XRP } from '@/constants'
 
-let wrapper
 const coin = new Coin(
   XRP,
   'Ripple',
@@ -31,13 +29,29 @@ const walletBInvestment = 200
 const walletA = new Wallet(coin, 10, 'fakeAddressA', true, walletAInvestment, 1)
 const walletB = new Wallet(coin, 11, 'fakeAddressB', true, walletBInvestment, 2)
 
+const localVue = createLocalVue()
+localVue.use(Vuex)
+
 describe('WalletsView.vue', () => {
+  let actions
+  let store
+  let wrapper
+
   beforeEach(async () => {
     fetchWalletsCoinMarket.mockImplementation(() =>
       Promise.resolve([walletA, walletB])
     )
+    actions = {
+      selectAll: jest.fn()
+    }
+    store = new Vuex.Store({
+      state: { persistedWallets: null },
+      actions
+    })
 
     wrapper = shallowMount(WalletsView, {
+      localVue,
+      store,
       propsData: {
         currency: USD
       },
@@ -98,12 +112,7 @@ describe('WalletsView.vue', () => {
   })
 
   it('sorts wallets by value', () => {
-    expect(
-      wrapper
-        .findAllDataTests('value')
-        .at(0)
-        .props().value
-    ).toEqual(1056)
+    expect(wrapper.findDataTest('value').props().value).toEqual(1056)
     expect(
       wrapper
         .findAllDataTests('value')
@@ -113,19 +122,15 @@ describe('WalletsView.vue', () => {
   })
 
   it('displays spinner and reset states when fetching wallets', () => {
-    wrapper.setData({ isLoading: false, isFailedToLoad: true })
     wrapper.vm.fetchWallets()
 
     expect(wrapper.find('ActivityIndicator-stub').isVisible()).toBe(true)
-    expect(wrapper.vm.isLoading).toBe(true)
-    expect(wrapper.vm.isFailedToLoad).toBe(false)
   })
 
   it('does not display spinner when fetching wallets is finished', async () => {
     await wrapper.vm.fetchWallets()
 
     expect(wrapper.find('ActivityIndicator-stub').exists()).toBe(false)
-    expect(wrapper.vm.isLoading).toBe(false)
   })
 
   it('displays information message when there is no added wallets', () => {

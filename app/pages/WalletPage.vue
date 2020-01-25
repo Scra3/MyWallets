@@ -126,7 +126,7 @@ export default {
     this.currentWallet = this.wallet
   },
   methods: {
-    ...mapActions(['insert', 'delete']),
+    ...mapActions(['insert', 'delete', 'update']),
     async verifyAddress() {
       this.isCheckingAddressValidity = true
       this.isFailedCheckingAddressValidity = false
@@ -164,7 +164,11 @@ export default {
         this.verifyBalance()
 
         if (this.isBalanceValid) {
-          await this.insert(this.currentWallet)
+          if (this.isUpdating) {
+            await this.update(this.currentWallet)
+          } else {
+            await this.insert(this.currentWallet)
+          }
           this.navigateToHomePage()
         }
       } else if (
@@ -174,7 +178,11 @@ export default {
         await this.verifyAddress()
 
         if (this.isAddressValid) {
-          await this.insert(this.currentWallet)
+          if (this.isUpdating) {
+            await this.update(this.currentWallet)
+          } else {
+            await this.insert(this.currentWallet)
+          }
           this.navigateToHomePage()
         }
       }

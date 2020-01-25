@@ -41,6 +41,12 @@ export const store = new Vuex.Store({
         balance: wallet.balance
       })
     },
+    update(state, updatedWallet) {
+      const wallet = state.persistedWallets.find(
+        persistedWallet => persistedWallet.id === updatedWallet.id
+      )
+      Object.assign(wallet, updatedWallet)
+    },
     delete(state, id) {
       state.persistedWallets.filter(
         persistedWallet => persistedWallet.id !== id
@@ -94,7 +100,25 @@ export const store = new Vuex.Store({
           }
         )
     },
-    query(context) {
+    update(context, wallet) {
+      context.state.database
+        .execSQL(
+          `UPDATE wallets SET investment = ${wallet.investment}, ` +
+            `address = '${wallet.address}', ` +
+            `isUsingLocalBalance = ${wallet.isUsingLocalBalance ? 1 : 0}, ` +
+            `balance = ${wallet.balance} ` +
+            `where id = ${wallet.id}`
+        )
+        .then(
+          id => {
+            context.commit('update', wallet)
+          },
+          error => {
+            console.log('UPDATE ERROR', error)
+          }
+        )
+    },
+    selectAll(context) {
       context.state.database
         .all(
           'SELECT id, investment, coinId, address, isUsingLocalBalance, balance FROM wallets',

@@ -180,7 +180,7 @@ export default {
     clearInterval(this.intervalID)
   },
   methods: {
-    ...mapActions(['query']),
+    ...mapActions(['selectAll']),
     navigateToWalletPage(event) {
       // wallet in listview is undefined that why we use event.
       this.$navigateTo(WalletPage, {
@@ -208,7 +208,7 @@ export default {
       this.isFailedToLoad = false
 
       try {
-        await this.query()
+        await this.selectAll()
 
         let wallets = this.persistedWalletsFromDB.map(persistedWallet =>
           Wallet.buildWalletFromPersistedWallet(persistedWallet)
