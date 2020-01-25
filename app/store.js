@@ -45,6 +45,7 @@ export const store = new Vuex.Store({
       const wallet = state.persistedWallets.find(
         persistedWallet => persistedWallet.id === updatedWallet.id
       )
+
       Object.assign(wallet, updatedWallet)
     },
     delete(state, id) {
@@ -63,9 +64,9 @@ export const store = new Vuex.Store({
               'coinId TEXT NOT NULL, ' +
               'address TEXT, ' +
               'isUsingLocalBalance INTEGER NOT NULL, ' +
-              'balance REAL)'
+              'balance TEXT)'
           ).then(
-            id => {
+            () => {
               context.commit('init', { database: db })
             },
             error => {
@@ -104,13 +105,13 @@ export const store = new Vuex.Store({
       context.state.database
         .execSQL(
           `UPDATE wallets SET investment = ${wallet.investment}, ` +
-            `address = '${wallet.address}', ` +
+            `address = ${wallet.address ? wallet.address : ''}, ` +
             `isUsingLocalBalance = ${wallet.isUsingLocalBalance ? 1 : 0}, ` +
             `balance = ${wallet.balance} ` +
             `where id = ${wallet.id}`
         )
         .then(
-          id => {
+          () => {
             context.commit('update', wallet)
           },
           error => {
@@ -137,11 +138,11 @@ export const store = new Vuex.Store({
       context.state.database
         .execSQL('DELETE FROM wallets WHERE id = ?', [id])
         .then(
-          _ => {
+          () => {
             context.commit('delete', id)
           },
           error => {
-            console.log('SELECT ERROR', error)
+            console.log('DELETE ERROR', error)
           }
         )
     }
