@@ -157,6 +157,13 @@ export default {
       this.isInvestmentValid =
         investment === null || investment === '' || investment >= 0
     },
+    async saveInDb() {
+      if (this.isUpdating) {
+        await this.update(this.currentWallet)
+      } else {
+        await this.insert(this.currentWallet)
+      }
+    },
     async saveWalletAndBackToHomePage() {
       this.verifyInvestment()
 
@@ -164,11 +171,7 @@ export default {
         this.verifyBalance()
 
         if (this.isBalanceValid) {
-          if (this.isUpdating) {
-            await this.update(this.currentWallet)
-          } else {
-            await this.insert(this.currentWallet)
-          }
+          await this.saveInDb()
           this.navigateToHomePage()
         }
       } else if (
@@ -178,11 +181,7 @@ export default {
         await this.verifyAddress()
 
         if (this.isAddressValid) {
-          if (this.isUpdating) {
-            await this.update(this.currentWallet)
-          } else {
-            await this.insert(this.currentWallet)
-          }
+          await this.saveInDb()
           this.navigateToHomePage()
         }
       }
@@ -208,12 +207,12 @@ export default {
 <style lang="scss" scoped>
 .WalletPage {
   .action-bar {
-    background-color: $dark-grey;
-    color: $white;
+    background-color: $background;
+    color: $onBackground;
 
     ActionItem {
-      color: $white;
-      background-color: $white;
+      color: $onBackground;
+      background-color: $background;
     }
   }
 
@@ -225,11 +224,10 @@ export default {
     .title {
       align-items: center;
       font-weight: bold;
+      background-color: $surface;
       font-size: $normal-font-size;
-      margin-bottom: 20;
-      border-color: $white;
-      border-width: 1;
-      padding: 5;
+      margin-bottom: 10;
+      padding: $separation-content;
 
       .icon {
         margin-right: $separation-content;
@@ -248,8 +246,9 @@ export default {
 
       .save-button {
         width: 100%;
-        background-color: $success-color;
+        background-color: $secondary;
         font-weight: bold;
+        color: $onSecondary;
       }
     }
   }

@@ -1,43 +1,46 @@
 <template>
   <StackLayout class="WalletsView darkMode">
-    <FlexboxLayout :class="{ loading: isLoading }" class="wallets-overview">
+    <FlexboxLayout class="wallets-overview">
       <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
       <ErrorMessage
         v-else-if="isFailedToLoad"
         :is-failed-to-load="isFailedToLoad"
         data-test="error-message"
       />
-      <template v-else-if="wallets && wallets.length > 0">
-        <FlexboxLayout class="main-infos">
+      <FlexboxLayout
+        v-else-if="wallets && wallets.length > 0"
+        class="main-infos"
+      >
+        <PriceLabel
+          :value="totalValue"
+          :currency="currency"
+          class="wallets-value"
+          data-test="wallets-value"
+        />
+
+        <FlexboxLayout class="sub-infos">
           <PriceLabel
             :value="totalInvestment"
             :currency="investmentCurrency"
             class="price"
           />
-          <PriceLabel
-            :value="totalValue"
-            :currency="currency"
-            class="wallets-value"
-            data-test="wallets-value"
-          />
+
           <ChangeLabel
             :value="ratio"
             unit="%"
             data-test="wallets-ratio"
             class="price"
           />
+          <ChangeLabel
+            :value="totalPriceChange24H"
+            :unit="`${currency.symbol} (24h)`"
+            data-test="wallets-price-change"
+            class="price"
+          />
         </FlexboxLayout>
-        <ChangeLabel
-          :value="totalPriceChange24H"
-          :unit="`${currency.symbol} (24h)`"
-          data-test="wallets-price-change"
-          class="price"
-        />
-      </template>
+      </FlexboxLayout>
 
-      <template v-else>
-        <label text="Please add wallets" data-test="information-message" />
-      </template>
+      <label v-else text="Please add wallets" data-test="information-message" />
     </FlexboxLayout>
 
     <grid-layout rows="auto, *">
@@ -54,17 +57,24 @@
                   class="icon coinIcon"
                   data-test="image"
                 />
-                <Label :text="wallet.coin.name" class="name" data-test="name" />
-                <Label
-                  :text="
-                    `${parseFloat(wallet.balance).toFixed(
-                      2
-                    )} ${wallet.coin.symbol.toUpperCase()}`
-                  "
-                  class="balance"
-                  data-test="balance"
-                />
-                <FlexboxLayout class="current-price">
+                <FlexboxLayout class="column">
+                  <Label
+                    :text="wallet.coin.name"
+                    class="name"
+                    data-test="name"
+                  />
+                  <Label
+                    :text="
+                      `${parseFloat(wallet.balance).toFixed(
+                        2
+                      )} ${wallet.coin.symbol.toUpperCase()}`
+                    "
+                    class="balance"
+                    data-test="balance"
+                  />
+                </FlexboxLayout>
+
+                <FlexboxLayout class="column">
                   <PriceLabel
                     :value="wallet.coin.currentPrice"
                     :currency="currency"
@@ -77,12 +87,19 @@
                   />
                 </FlexboxLayout>
 
-                <PriceLabel
-                  :value="wallet.value()"
-                  :currency="currency"
-                  class="value"
-                  data-test="value"
-                />
+                <FlexboxLayout class="column">
+                  <PriceLabel
+                    :value="wallet.value()"
+                    :currency="currency"
+                    class="value"
+                    data-test="value"
+                  />
+                  <PriceLabel
+                    v-if="wallet.investment"
+                    :value="wallet.investment"
+                    :currency="currency"
+                  />
+                </FlexboxLayout>
               </FlexboxLayout>
             </v-template>
           </ListView>
@@ -245,66 +262,70 @@ export default {
 .WalletsView {
   .wallets-overview {
     justify-content: center;
-    flex-direction: column;
     align-items: center;
     padding: $separation-content;
-    border-radius: 10;
+    border-radius: $border-radius;
     height: 120;
     font-size: $large-font-size;
-    background-color: $grey;
+    background-color: $surface;
     margin: $separation-content;
-
-    &.loading {
-      justify-content: center;
-    }
-
-    .price {
-      font-weight: normal;
-    }
 
     .main-infos {
       justify-content: space-around;
       align-items: center;
+      flex-direction: column;
       width: 100%;
 
       .wallets-value {
         font-weight: bold;
-        color: $blue;
+        color: $onSurface;
+        flex-grow: 1;
+        align-items: center;
+        font-size: $large-font-size;
+      }
+
+      .sub-infos {
+        width: 100%;
+        justify-content: space-around;
+        align-items: center;
+        margin-top: $separation-content;
+
+        .price {
+          font-size: $normal-font-size;
+        }
       }
     }
   }
 
   .wallets {
+    padding: $separation-content;
+
     .wallet {
       height: 60;
-      padding: 10;
       justify-content: space-between;
       align-items: center;
+      background-color: $surface;
+      border-radius: $border-radius;
+      margin: $separation-content;
 
       .icon {
         width: 10%;
       }
 
-      .name {
-        font-size: $normal-font-size;
-        margin-left: 20;
-        width: 20%;
-      }
-
-      .balance {
-        width: 25%;
-      }
-
-      .current-price {
+      .column {
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        width: 20%;
+        width: 30%;
+
+        .name {
+          font-size: $normal-font-size;
+        }
       }
 
       .value {
         font-weight: bold;
-        width: 20%;
+        color: $primary;
       }
     }
   }
@@ -313,10 +334,10 @@ export default {
     height: 60;
     width: 50;
     margin: 15;
-    background-color: $white;
+    background-color: $secondary;
     horizontal-align: right;
     vertical-align: bottom;
-    color: $blue;
+    color: $onSecondary;
   }
 }
 </style>

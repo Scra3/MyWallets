@@ -48,8 +48,8 @@ export default {
   margin-bottom: 30;
 
   .switch {
-    background-color: $white;
-    color: $blue;
+    background-color: $onBackground;
+    color: $secondary;
   }
 
   .switch-label {
@@ -63,7 +63,7 @@ export default {
   }
 
   .selected {
-    color: $success-color;
+    color: $secondary;
     font-weight: bold;
   }
 }

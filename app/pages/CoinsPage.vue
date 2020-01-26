@@ -32,7 +32,7 @@
                 class="trackable"
                 data-test="trackable"
               />
-              <Label text=">" class="arrow" />
+              <Label text="›" class="arrow" />
             </FlexboxLayout>
           </v-template>
         </ListView>
@@ -116,17 +116,19 @@ export default {
 <style lang="scss" scoped>
 .CoinsPage {
   .action-bar {
-    background-color: $dark-grey;
-    color: $white;
+    background-color: $background;
+    color: $onBackground;
   }
 
   .search-bar {
-    color: $blue;
+    color: $primary;
     background-color: $white;
   }
 
   .coin {
-    color: $white;
+    color: $onSurface;
+    background-color: $surface;
+    border-radius: $border-radius;
     flex-direction: row;
     height: 60;
     align-items: center;
@@ -138,12 +140,13 @@ export default {
     }
 
     .trackable {
-      color: $success-color;
+      color: $secondary;
       margin-right: 30;
     }
 
     .arrow {
       text-align: right;
+      font-size: 30;
     }
   }
 

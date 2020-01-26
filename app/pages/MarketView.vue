@@ -108,11 +108,15 @@ export default {
     padding: 10;
   }
 
+  .coin {
+    border-radius: $border-radius;
+    background-color: $surface;
+  }
+
   .header {
     height: 40;
     font-weight: bold;
-    color: $blue;
-    background-color: $grey;
+    color: $onBackground;
 
     .name {
       width: 50%;

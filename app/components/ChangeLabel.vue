@@ -28,10 +28,10 @@ export default {
 @import '../styles';
 
 .positive-change {
-  color: $success-color;
+  color: $secondary;
 }
 
 .negative-change {
-  color: $error-color;
+  color: $error;
 }
 </style>

@@ -101,7 +101,7 @@ export default {
 <style lang="scss" scoped>
 .Input {
   padding: $separation-content;
-  background-color: $grey;
+  background-color: $surface;
   margin-top: 2 * $separation-content;
 
   .optional {
@@ -117,24 +117,24 @@ export default {
     }
 
     &.success {
-      border-color: $success-color;
+      border-color: $secondary;
     }
   }
 
   .success-icon {
-    color: $success-color;
+    color: $secondary;
     width: 40;
     align-self: center;
   }
 
   .failed-icon {
-    color: $error-color;
+    color: $error;
     width: 40;
     align-self: center;
   }
 
   .label-error {
-    color: $error-color;
+    color: $error;
     margin-left: $separation-content;
     margin-bottom: $separation-content;
   }

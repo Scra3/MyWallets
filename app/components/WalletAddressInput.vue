@@ -95,7 +95,8 @@ export default {
   }
 
   .scanner-button {
-    background-color: $blue;
+    background-color: $primary;
+    color: $onPrimary;
     width: 50%;
   }
 }
