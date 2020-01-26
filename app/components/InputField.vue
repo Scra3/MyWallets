@@ -110,10 +110,11 @@ export default {
 
   .text-field {
     width: 100%;
-    color: $white;
+    color: $onSurface;
+    placeholder-color: $onSurfaceMediumEmphasis;
 
     &.error {
-      border-color: red;
+      border-color: $error;
     }
 
     &.success {

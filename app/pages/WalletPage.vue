@@ -217,7 +217,7 @@ export default {
   }
 
   .container {
-    color: $white;
+    color: $onSurface;
     flex-direction: column;
     margin: 10;
 

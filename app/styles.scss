@@ -4,16 +4,15 @@
 // COLORS
 $background: #121212;
 $onBackground: #FFFFFF;
-$surfaceBar: lighten($background, 7);
-$surface: lighten($background, 5);
+$surface: lighten($background, 5%);
 $onSurface: #FFFFFF;
+$onSurfaceMediumEmphasis: lighten($surface, 60%);
 $primaryVariant: #3700B3;
 $onPrimaryVariant: #000000;
 $primary: #BB86FC;
 $onPrimary: #000000;
 $secondary: #03DAC6;
 $onSecondary: #000000;
-$white: #eee;
 $error: #c70d3a;
 $onError: #000000;
 
@@ -36,7 +35,7 @@ $small-font-size: 10;
   color: $primary;
 
   ListView {
-    color: $white
+    color: $onSurface
   }
 }
 

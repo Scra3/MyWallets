@@ -20,7 +20,7 @@
         <WalletsView :currency="selectedCurrency" />
       </TabViewItem>
 
-      <TabViewItem iconSource="res://icon">
+      <TabViewItem title="Market">
         <MarketView :currency="selectedCurrency" />
       </TabViewItem>
     </TabView>
@@ -68,6 +68,7 @@ export default {
   }
 
   .tab-view {
+    font-size: $normal-font-size;
     selected-tab-text-color: $primary;
     tab-background-color: $background;
     tab-text-color: $onBackground;

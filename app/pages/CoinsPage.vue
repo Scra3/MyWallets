@@ -121,8 +121,10 @@ export default {
   }
 
   .search-bar {
-    color: $primary;
-    background-color: $white;
+    color: $onSurface;
+    background-color: $surface;
+    margin-bottom: $separation-content;
+    text-field-hint-color: $onSurface;
   }
 
   .coin {
@@ -152,7 +154,7 @@ export default {
 
   .no-coins-message {
     font-size: $large-font-size;
-    color: $white;
+    color: $onSurface;
     text-align: center;
   }
 }
