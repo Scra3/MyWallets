@@ -10,31 +10,25 @@
     <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
     <ErrorMessage v-else-if="isFailedToLoad" data-test="error-message" />
     <PullToRefresh @refresh="refreshCoinsMarket" class="spinner">
-      <template v-if="coins">
-        <ListView v-for="(coin, index) in coins">
-          <v-template>
-            <FlexboxLayout class="coin" data-test="coin">
-              <label :text="index + 1" class="index" data-test="index" />
-              <Image
-                :src="coin.image"
-                class="image coinIcon"
-                data-test="image"
-              />
-              <label :text="coin.name" class="name" data-test="name" />
-              <ChangeLabel
-                :value="coin.priceChangePercentage24H"
-                unit="%"
-                class="change-percentage"
-              />
-              <PriceLabel
-                :value="coin.currentPrice"
-                :currency="currency"
-                class="price"
-              />
-            </FlexboxLayout>
-          </v-template>
-        </ListView>
-      </template>
+      <ListView v-for="(coin, index) in coins">
+        <v-template>
+          <FlexboxLayout class="coin" data-test="coin">
+            <label :text="index + 1" class="index" data-test="index" />
+            <Image :src="coin.image" class="image coinIcon" data-test="image" />
+            <label :text="coin.name" class="name" data-test="name" />
+            <ChangeLabel
+              :value="coin.priceChangePercentage24H"
+              unit="%"
+              class="change-percentage"
+            />
+            <PriceLabel
+              :value="coin.currentPrice"
+              :currency="currency"
+              class="price"
+            />
+          </FlexboxLayout>
+        </v-template>
+      </ListView>
     </PullToRefresh>
   </StackLayout>
 </template>
@@ -56,7 +50,7 @@ export default {
   },
   data() {
     return {
-      coins: null,
+      coins: [],
       isLoading: false,
       isFailedToLoad: false
     }
@@ -126,22 +120,24 @@ export default {
   }
 
   .index {
-    width: 10%;
+    width: 15%;
     text-align: left;
   }
 
   .image {
-    width: 15%;
+    width: 10%;
     text-align: left;
   }
 
   .name {
     width: 35%;
     text-align: left;
+    margin-left: $separation-content;
   }
 
   .change-percentage {
-    width: 15%;
+    width: 35%;
+    text-align: center;
   }
 
   .price {

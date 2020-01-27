@@ -28,6 +28,7 @@ const walletAInvestment = 150
 const walletBInvestment = 200
 const walletA = new Wallet(coin, 10, 'fakeAddressA', true, walletAInvestment, 1)
 const walletB = new Wallet(coin, 11, 'fakeAddressB', true, walletBInvestment, 2)
+const walletWithoutInvestment = new Wallet(coin, 11, 'fakeAddressB', true, 0, 2)
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -86,6 +87,16 @@ describe('WalletsView.vue', () => {
       )
     )
     expect(wrapper.findDataTest('wallets-ratio').props().unit).toEqual('%')
+  })
+
+  it('does not display wallets ratio when total investment is equal to 0', () => {
+    wrapper.setData({ wallets: [walletWithoutInvestment] })
+    expect(wrapper.findDataTest('wallets-ratio').exists()).toBe(false)
+  })
+
+  it('does not display wallets price when total investment is equal to 0', () => {
+    wrapper.setData({ wallets: [walletWithoutInvestment] })
+    expect(wrapper.findDataTest('wallets-price').exists()).toBe(false)
   })
 
   it('musts ignore the wallets with null investment to count total investment', () => {

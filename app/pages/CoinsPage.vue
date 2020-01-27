@@ -10,40 +10,36 @@
     </ActionBar>
 
     <StackLayout>
+      <SearchBar
+        ref="search-bar"
+        v-model="searchQuery"
+        hint="Search coin"
+        class="search-bar"
+      />
       <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
       <ErrorMessage v-else-if="isFailedToLoad" />
+      <ListView v-for="coin in filteredCoins" @itemTap="navigateToWalletPage">
+        <v-template>
+          <FlexboxLayout class="coin">
+            <Image :src="coin.image" class="coinIcon" />
+            <Label :text="coin.name" class="name" data-test="name" />
+            <Label
+              v-if="$_canTrackAddress(coin.id)"
+              text="Trackable"
+              class="trackable"
+              data-test="trackable"
+            />
+            <Label text="›" class="arrow" />
+          </FlexboxLayout>
+        </v-template>
+      </ListView>
 
-      <template v-if="coins">
-        <SearchBar
-          ref="search-bar"
-          v-model="searchQuery"
-          hint="Search coin"
-          class="search-bar"
-        />
-
-        <ListView v-for="coin in filteredCoins" @itemTap="navigateToWalletPage">
-          <v-template>
-            <FlexboxLayout class="coin">
-              <Image :src="coin.image" class="coinIcon" />
-              <Label :text="coin.name" class="name" data-test="name" />
-              <Label
-                v-if="$_canTrackAddress(coin.id)"
-                text="Trackable"
-                class="trackable"
-                data-test="trackable"
-              />
-              <Label text="›" class="arrow" />
-            </FlexboxLayout>
-          </v-template>
-        </ListView>
-
-        <Label
-          v-if="filteredCoins.length === 0"
-          text="No coins found"
-          class="no-coins-message"
-          data-test="no-coins-message"
-        />
-      </template>
+      <Label
+        v-if="filteredCoins.length === 0 && isLoading === false"
+        text="No coins found"
+        class="no-coins-message"
+        data-test="no-coins-message"
+      />
     </StackLayout>
   </Page>
 </template>
@@ -67,7 +63,7 @@ export default {
   },
   data() {
     return {
-      coins: null,
+      coins: [],
       isLoading: true,
       isFailedToLoad: false,
       searchQuery: ''
@@ -153,7 +149,7 @@ export default {
   }
 
   .no-coins-message {
-    font-size: $large-font-size;
+    font-size: $normal-font-size;
     color: $onSurface;
     text-align: center;
   }

@@ -20,12 +20,15 @@
 
         <FlexboxLayout class="sub-infos">
           <PriceLabel
+            v-if="totalInvestment !== 0"
             :value="totalInvestment"
             :currency="investmentCurrency"
             class="price"
+            data-test="wallets-price"
           />
 
           <ChangeLabel
+            v-if="totalInvestment !== 0"
             :value="ratio"
             unit="%"
             data-test="wallets-ratio"
@@ -188,8 +191,8 @@ export default {
       this.fetchWallets()
     }
   },
-  async mounted() {
-    await this.fetchWallets()
+  mounted() {
+    this.fetchWallets()
 
     this.intervalID = setInterval(this.fetchWallets, this.intervalDelay)
   },
@@ -301,15 +304,15 @@ export default {
     padding: $separation-content;
 
     .wallet {
-      height: 60;
       justify-content: space-between;
       align-items: center;
       background-color: $surface;
       border-radius: $border-radius;
-      margin: $separation-content;
+      padding: $separation-content;
+      width: auto;
 
       .icon {
-        width: 10%;
+        width: auto;
       }
 
       .column {
@@ -326,6 +329,7 @@ export default {
       .value {
         font-weight: bold;
         color: $primary;
+        width: auto;
       }
     }
   }

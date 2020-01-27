@@ -20,7 +20,7 @@
       />
       <Label
         v-if="isValid === false"
-        text="X"
+        text="✖"
         class="failed-icon"
         data-test="failed-icon"
       />

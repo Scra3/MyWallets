@@ -83,7 +83,7 @@ describe('CoinsPage.vue', () => {
 
   it('displays spinner and hides coin list when is loading data', () => {
     wrapper.vm.fetchCoinsMarket()
-    wrapper.setData({ coins: null })
+    wrapper.setData({ coins: [] })
 
     expect(wrapper.find('ActivityIndicator-stub').isVisible()).toBe(true)
     expect(wrapper.find('ListView-stub').exists()).toBe(false)

@@ -45,7 +45,7 @@ export default {
 .WalletSwitch {
   align-items: center;
   justify-content: flex-end;
-  margin-bottom: 30;
+  margin-bottom: $separation-content * 2;
 
   .switch {
     background-color: $onBackground;

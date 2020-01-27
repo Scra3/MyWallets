@@ -167,20 +167,17 @@ export default {
     async saveWalletAndBackToHomePage() {
       this.verifyInvestment()
 
-      if (this.currentWallet.isUsingLocalBalance && this.isInvestmentValid) {
+      if (this.currentWallet.isUsingLocalBalance) {
         this.verifyBalance()
 
-        if (this.isBalanceValid) {
+        if (this.isBalanceValid && this.isInvestmentValid) {
           await this.saveInDb()
           this.navigateToHomePage()
         }
-      } else if (
-        !this.currentWallet.isUsingLocalBalance &&
-        this.isInvestmentValid
-      ) {
+      } else if (!this.currentWallet.isUsingLocalBalance) {
         await this.verifyAddress()
 
-        if (this.isAddressValid) {
+        if (this.isAddressValid && this.isInvestmentValid) {
           await this.saveInDb()
           this.navigateToHomePage()
         }
@@ -226,7 +223,7 @@ export default {
       font-weight: bold;
       background-color: $surface;
       font-size: $normal-font-size;
-      margin-bottom: 10;
+      margin-bottom: $separation-content;
       padding: $separation-content;
 
       .icon {
