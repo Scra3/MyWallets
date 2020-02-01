@@ -12,7 +12,7 @@ jest.mock('@/Api')
 jest.mock('nativescript-barcodescanner', () => jest.fn())
 jest.mock('nativescript-camera', () => jest.fn())
 
-import { fetchWalletsCoinMarket } from '@/Api'
+import { fetchWalletsCoinMarket, fetchCryptoFear } from '@/Api'
 import { XRP } from '@/constants'
 
 const coin = new Coin(
@@ -38,10 +38,11 @@ describe('WalletsView.vue', () => {
   let store
   let wrapper
 
-  beforeEach(async () => {
+  beforeEach(() => {
     fetchWalletsCoinMarket.mockImplementation(() =>
       Promise.resolve([walletA, walletB])
     )
+    fetchCryptoFear.mockImplementation(() => Promise.resolve(20))
     actions = {
       selectAll: jest.fn()
     }
@@ -49,7 +50,9 @@ describe('WalletsView.vue', () => {
       state: { persistedWallets: null },
       actions
     })
+  })
 
+  beforeEach(async () => {
     wrapper = shallowMount(WalletsView, {
       localVue,
       store,
@@ -132,8 +135,8 @@ describe('WalletsView.vue', () => {
     ).toEqual(960)
   })
 
-  it('displays spinner and reset states when fetching wallets', () => {
-    wrapper.vm.fetchWallets()
+  it('displays spinner and reset states when fetching data', () => {
+    wrapper.vm.fetchData()
 
     expect(wrapper.find('ActivityIndicator-stub').isVisible()).toBe(true)
   })
@@ -150,10 +153,10 @@ describe('WalletsView.vue', () => {
     expect(wrapper.findDataTest('information-message').exists()).toBe(true)
   })
 
-  it('displays error message when fetching wallet or market has a problem', async () => {
+  it('displays error message when fetching data has a problem', async () => {
     fetchWalletsCoinMarket.mockImplementation(() => Promise.reject('fail'))
 
-    await wrapper.vm.fetchWallets()
+    await wrapper.vm.fetchData()
 
     expect(wrapper.findDataTest('error-message').isVisible()).toBe(true)
   })

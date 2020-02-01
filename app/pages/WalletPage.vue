@@ -154,9 +154,7 @@ export default {
     },
     verifyInvestment() {
       const investment = this.currentWallet.investment
-
-      this.isInvestmentValid =
-        investment === null || investment === '' || investment >= 0
+      this.isInvestmentValid = !investment || investment >= 0
     },
     async saveInDb() {
       if (this.isUpdating) {
@@ -196,6 +194,7 @@ export default {
       this.navigateToHomePage()
     },
     useLocalBalance(isUsingLocalBalance) {
+      this.currentWallet = this.wallet
       this.currentWallet.isUsingLocalBalance = isUsingLocalBalance
     }
   }
