@@ -100,6 +100,7 @@ export default {
         this.isLoading = true
         this.coins = await fetchCoinsMarket(this.currency)
       } catch (e) {
+        console.log('when fetching coins market in CoinsPage', e)
         this.isFailedToLoad = true
       } finally {
         this.isLoading = false

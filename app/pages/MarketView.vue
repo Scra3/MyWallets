@@ -71,6 +71,7 @@ export default {
       try {
         this.coins = await fetchCoinsMarket(this.currency)
       } catch (e) {
+        console.log('when refresh coins market in MarketView', e)
         this.isFailedToLoad = true
       } finally {
         pullRefresh.refreshing = false
@@ -83,6 +84,7 @@ export default {
       try {
         this.coins = await fetchCoinsMarket(this.currency)
       } catch (e) {
+        console.log('when fetching coins market in MarketView', e)
         this.isFailedToLoad = true
       } finally {
         this.isLoading = false

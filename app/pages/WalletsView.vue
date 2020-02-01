@@ -18,6 +18,8 @@
           data-test="wallets-value"
         />
 
+        <label :text="`Crypto Fear: ${cryptoFear}`" class="crypto-fear" />
+
         <FlexboxLayout class="sub-infos">
           <PriceLabel
             v-if="totalInvestment !== 0"
@@ -116,16 +118,15 @@
 </template>
 
 <script>
-import { fetchWalletsCoinMarket } from '@/Api'
-
+import { fetchWalletsCoinMarket, fetchCryptoFear } from '@/Api'
 import { EUR } from '@/constants.js'
 import ChangeLabel from '@/components/ChangeLabel'
 import PriceLabel from '@/components/PriceLabel'
 import WalletPage from '@/pages/WalletPage'
-import CoinsPage from '@/pages/CoinsPage'
 import ErrorMessage from '@/components/ErrorMessage'
 import { WalletMixin } from '@/mixins/WalletMixin.js'
 import { Wallet } from '@/models/Wallet'
+import CoinsPage from '@/pages/CoinsPage'
 import { mapActions, mapState } from 'vuex'
 
 export default {
@@ -145,7 +146,8 @@ export default {
       investmentCurrency: EUR,
       intervalID: null,
       isLoading: false,
-      isFailedToLoad: false
+      isFailedToLoad: false,
+      cryptoFear: null
     }
   },
   computed: {
@@ -188,13 +190,13 @@ export default {
   },
   watch: {
     currency() {
-      this.fetchWallets()
+      this.fetchData()
     }
   },
   mounted() {
-    this.fetchWallets()
+    this.fetchData()
 
-    this.intervalID = setInterval(this.fetchWallets, this.intervalDelay)
+    this.intervalID = setInterval(this.fetchData, this.intervalDelay)
   },
   beforeDestroy() {
     clearInterval(this.intervalID)
@@ -218,44 +220,53 @@ export default {
         }
       })
     },
-    async refresh(event) {
-      const pullRefresh = event.object
-      await this.fetchWallets()
-      pullRefresh.refreshing = false
-    },
-    async fetchWallets() {
+
+    async fetchData() {
       this.isLoading = true
       this.isFailedToLoad = false
 
       try {
-        await this.selectAll()
-
-        let wallets = this.persistedWalletsFromDB.map(persistedWallet =>
-          Wallet.buildWalletFromPersistedWallet(persistedWallet)
-        )
-
-        const walletsWithRemoteBalance = wallets.filter(
-          wallet => !wallet.isUsingLocalBalance
-        )
-        const pWallets = walletsWithRemoteBalance.map(wallet =>
-          this.$_fetchWalletBalance(wallet)
-        )
-
-        const balances = await Promise.all(pWallets)
-        balances.forEach(
-          (balance, index) =>
-            (walletsWithRemoteBalance[index].balance = balance)
-        )
-        wallets = [
-          ...walletsWithRemoteBalance,
-          ...wallets.filter(wallet => wallet.isUsingLocalBalance)
-        ]
-        this.wallets = await fetchWalletsCoinMarket(wallets, this.currency)
+        const results = await Promise.all([
+          fetchCryptoFear(),
+          this.fetchWallets()
+        ])
+        this.cryptoFear = results[0]
+        this.wallets = results[1]
       } catch (e) {
+        console.log('when fetching data in WalletsView', e)
         this.isFailedToLoad = true
       } finally {
         this.isLoading = false
       }
+    },
+    async refresh(event) {
+      const pullRefresh = event.object
+      await this.fetchData()
+      pullRefresh.refreshing = false
+    },
+    async fetchWallets() {
+      // load all data from the bd into the store
+      await this.selectAll()
+      let wallets = this.persistedWalletsFromDB.map(persistedWallet =>
+        Wallet.buildWalletFromPersistedWallet(persistedWallet)
+      )
+
+      const walletsWithRemoteBalance = wallets.filter(
+        wallet => !wallet.isUsingLocalBalance
+      )
+      const pWallets = walletsWithRemoteBalance.map(wallet =>
+        this.$_fetchWalletBalance(wallet)
+      )
+
+      const balances = await Promise.all(pWallets)
+      balances.forEach(
+        (balance, index) => (walletsWithRemoteBalance[index].balance = balance)
+      )
+      wallets = [
+        ...walletsWithRemoteBalance,
+        ...wallets.filter(wallet => wallet.isUsingLocalBalance)
+      ]
+      return fetchWalletsCoinMarket(wallets, this.currency)
     }
   }
 }
@@ -274,7 +285,6 @@ export default {
     margin: $separation-content;
 
     .main-infos {
-      justify-content: space-around;
       align-items: center;
       flex-direction: column;
       width: 100%;
@@ -285,6 +295,12 @@ export default {
         flex-grow: 1;
         align-items: center;
         font-size: $large-font-size;
+      }
+
+      .crypto-fear {
+        align-items: flex-end;
+        font-size: $normal-font-size;
+        color: $onSurfaceMediumEmphasis;
       }
 
       .sub-infos {

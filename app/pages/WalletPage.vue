@@ -142,6 +142,7 @@ export default {
           this.isAddressValid = false
         }
       } catch (e) {
+        console.log('when verify address in WalletPage', e)
         this.isFailedCheckingAddressValidity = true
       } finally {
         this.isCheckingAddressValidity = false
