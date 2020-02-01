@@ -105,7 +105,7 @@ export const store = new Vuex.Store({
       context.state.database
         .execSQL(
           `UPDATE wallets SET investment = ${wallet.investment}, ` +
-            `address = ${wallet.address ? wallet.address : ''}, ` +
+            `address = ${wallet.address}, ` +
             `isUsingLocalBalance = ${wallet.isUsingLocalBalance ? 1 : 0}, ` +
             `balance = ${wallet.balance} ` +
             `where id = ${wallet.id}`
