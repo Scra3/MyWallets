@@ -3,7 +3,7 @@ import { Coin } from '@/models/Coin'
 
 const fetchCoinsMarket = async currency => {
   const coinsMarket = await httpModule.getJSON(
-    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency.acronym}&order=market_cap_desc&per_page=100&page=1&sparkline=false`
+    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency.acronym}&order=market_cap_desc&per_page=200&page=1&sparkline=false`
   )
 
   return coinsMarket.map(coin => new Coin().deserialize(coin))
@@ -12,7 +12,7 @@ const fetchCoinsMarket = async currency => {
 const fetchWalletsCoinMarket = async (wallets, currency) => {
   const ids = wallets.map(wallet => wallet.coin.id).join(',')
   const coinsMarket = await httpModule.getJSON(
-    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency.acronym}&ids=${ids}&order=market_cap_desc&per_page=100&page=1&sparkline=false`
+    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency.acronym}&ids=${ids}&order=market_cap_desc&per_page=200&page=1&sparkline=false`
   )
 
   return wallets.map(wallet => {
@@ -79,6 +79,11 @@ const fetchBTCWalletBalance = async wallet => {
   return wallet
 }
 
+const fetchCryptoFear = async () => {
+  const cryptoFear = await httpModule.getJSON(`https://api.alternative.me/fng/`)
+  return cryptoFear.data[0].value
+}
+
 export {
   fetchXRPWalletBalance,
   fetchETHWalletBalance,
@@ -87,5 +92,6 @@ export {
   fetchNEOWalletBalance,
   fetchBTCWalletBalance,
   fetchWalletsCoinMarket,
-  fetchCoinsMarket
+  fetchCoinsMarket,
+  fetchCryptoFear
 }
