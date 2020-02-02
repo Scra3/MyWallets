@@ -24,7 +24,7 @@
           <PriceLabel
             v-if="totalInvestment !== 0"
             :value="totalInvestment"
-            :currency="investmentCurrency"
+            :currency="currency"
             class="price"
             data-test="wallets-price"
           />
@@ -119,7 +119,6 @@
 
 <script>
 import { fetchWalletsCoinMarket, fetchCryptoFear } from '@/Api'
-import { EUR } from '@/constants.js'
 import ChangeLabel from '@/components/ChangeLabel'
 import PriceLabel from '@/components/PriceLabel'
 import WalletPage from '@/pages/WalletPage'
@@ -143,7 +142,6 @@ export default {
     return {
       intervalDelay: 60000,
       wallets: null,
-      investmentCurrency: EUR,
       intervalID: null,
       isLoading: false,
       isFailedToLoad: false,

@@ -1,40 +1,51 @@
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, createLocalVue } from '@vue/test-utils'
 import App from '@/App'
 import { EUR, USD } from '@/constants.js'
+import Vuex from 'vuex'
 
 jest.mock('nativescript-barcodescanner', () => '')
 jest.mock('nativescript-camera', () => {
   return { requestPermissions: jest.fn() }
 })
 
+const localVue = createLocalVue()
+localVue.use(Vuex)
+
 describe('App.vue', () => {
   let wrapper
+  let actions
+  let state
+  let store
 
   beforeEach(async () => {
-    wrapper = shallowMount(App)
+    actions = {
+      select: jest.fn(),
+      update: jest.fn(),
+      insert: jest.fn()
+    }
+    state = { app: { id: 1, currency: USD.acronym } }
+
+    store = new Vuex.Store({
+      modules: {
+        appDb: { namespaced: true, actions, state }
+      }
+    })
+
+    wrapper = shallowMount(App, { store, localVue })
   })
 
-  it('displays EUR currency by default', () => {
-    expect(
-      wrapper.findDataTest('action-item-currency').attributes().text
-    ).toEqual(EUR.acronym)
-  })
-
-  it('displays USD currency when EUR currency is tapped', () => {
-    wrapper.findDataTest('action-item-currency').vm.$emit('tap')
-
+  it('displays USD currency by default', () => {
     expect(
       wrapper.findDataTest('action-item-currency').attributes().text
     ).toEqual(USD.acronym)
   })
 
-  it('displays EUR currency when USD currency is tapped', () => {
+  it('toggles EUR currency when USD currency is tapped', () => {
     wrapper.findDataTest('action-item-currency').vm.$emit('tap')
-    wrapper.findDataTest('action-item-currency').vm.$emit('tap')
-
-    expect(
-      wrapper.findDataTest('action-item-currency').attributes().text
-    ).toEqual(EUR.acronym)
+    expect(actions.update).toHaveBeenCalledWith(expect.any(Object), {
+      ...store.state.appDb.app,
+      currency: EUR.acronym
+    })
   })
 
   it('renders MarketView when his tab is clicked', () => {
