@@ -1,3 +1,5 @@
+import { DB_NAME } from '@/constants'
+
 const Sqlite = require('nativescript-sqlite')
 
 export const walletsDb = {
@@ -52,7 +54,7 @@ export const walletsDb = {
   },
   actions: {
     init(context) {
-      new Sqlite('myWallets.db').then(
+      new Sqlite(DB_NAME).then(
         db => {
           db.execSQL(
             'CREATE TABLE IF NOT EXISTS wallets (id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
@@ -104,7 +106,7 @@ export const walletsDb = {
             `address = ${wallet.address}, ` +
             `isUsingLocalBalance = ${wallet.isUsingLocalBalance ? 1 : 0}, ` +
             `balance = ${wallet.balance} ` +
-            `where id = ${wallet.id}`
+            `WHERE id = ${wallet.id}`
         )
         .then(
           () => {

@@ -34,8 +34,12 @@ describe('WalletPage.vue', () => {
       delete: jest.fn()
     }
     store = new Vuex.Store({
-      state: {},
-      actions
+      modules: {
+        walletsDb: {
+          namespaced: true,
+          actions
+        }
+      }
     })
 
     wrapper = shallowMount(WalletPage, {

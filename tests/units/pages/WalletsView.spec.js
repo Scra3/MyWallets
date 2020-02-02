@@ -43,12 +43,22 @@ describe('WalletsView.vue', () => {
       Promise.resolve([walletA, walletB])
     )
     fetchCryptoFear.mockImplementation(() => Promise.resolve(20))
+
     actions = {
-      selectAll: jest.fn()
+      selectAll: jest.fn(),
+      select: jest.fn(),
+      update: jest.fn(),
+      insert: jest.fn()
     }
+
     store = new Vuex.Store({
-      state: { persistedWallets: null },
-      actions
+      modules: {
+        walletsDb: {
+          namespaced: true,
+          state: { persistedWallets: null },
+          actions
+        }
+      }
     })
   })
 
