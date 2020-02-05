@@ -109,6 +109,12 @@ export default {
     background-color: $surface;
   }
 
+  .name {
+    width: 35%;
+    text-align: left;
+    margin-left: $separation-content;
+  }
+
   .header {
     height: 40;
     font-weight: bold;
@@ -129,12 +135,6 @@ export default {
   .image {
     width: 10%;
     text-align: left;
-  }
-
-  .name {
-    width: 35%;
-    text-align: left;
-    margin-left: $separation-content;
   }
 
   .change-percentage {

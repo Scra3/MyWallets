@@ -3,18 +3,18 @@
 
 // COLORS
 $background: #121212;
-$onBackground: #FFFFFF;
+$onBackground: #fff;
 $surface: lighten($background, 5%);
-$onSurface: #FFFFFF;
+$onSurface: #fff;
 $onSurfaceMediumEmphasis: lighten($surface, 30%);
-$primaryVariant: #3700B3;
-$onPrimaryVariant: #000000;
-$primary: #BB86FC;
-$onPrimary: #000000;
-$secondary: #03DAC6;
-$onSecondary: #000000;
+$primaryVariant: #3700b3;
+$onPrimaryVariant: #000;
+$primary: #bb86fc;
+$onPrimary: #000;
+$secondary: #03dac6;
+$onSecondary: #000;
 $error: #c70d3a;
-$onError: #000000;
+$onError: #000;
 
 $separation-content: 10;
 $border-radius: 10;
@@ -35,7 +35,6 @@ $small-font-size: 10;
   color: $primary;
 
   ListView {
-    color: $onSurface
+    color: $onSurface;
   }
 }
-
