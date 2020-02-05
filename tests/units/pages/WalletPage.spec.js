@@ -31,6 +31,7 @@ describe('WalletPage.vue', () => {
   beforeEach(async () => {
     actions = {
       insert: jest.fn(),
+      update: jest.fn(),
       delete: jest.fn()
     }
     store = new Vuex.Store({
@@ -71,7 +72,7 @@ describe('WalletPage.vue', () => {
     })
   })
 
-  it('does not go to home page when user clicks on save wallet but did not provide any information', () => {
+  it('does not go to home page when user clicks on save wallet and did not provide any information', () => {
     wrapper.setProps({ isUpdating: false })
 
     wrapper.findDataTest('save-button').vm.$emit('tap')
@@ -114,22 +115,30 @@ describe('WalletPage.vue', () => {
       })
     })
 
-    it('does not go to home page when save button is tapped and address is not valid', () => {
+    it('does not go to home page when save button is tapped and address is not valid', async () => {
+      wrapper.vm.$_checkAddressValidity = jest.fn(() => Promise.resolve(false))
+
       wrapper
         .find('WalletAddressInput-stub')
-        .vm.$emit('is-address-valid', false)
+        .vm.$emit('address-did-change', 'badAddress')
+
       wrapper.findDataTest('save-button').vm.$emit('tap')
 
-      expect(wrapper.vm.$navigateTo).not.toHaveBeenCalled()
+      await flushPromises()
+
+      expect(wrapper.vm.$navigateTo).not.toHaveBeenCalledWith(App, {
+        props: { currency: USD }
+      })
     })
 
-    it('does not go to home page when user clicks on save wallet but is checking address validity', () => {
-      wrapper.findDataTest('save-button').vm.$emit('tap')
-      wrapper
-        .find('WalletAddressInput-stub')
-        .vm.$emit('is-checking-address-validity', true)
+    it('does not go to home page when save button is tapped and address is empty', () => {
+      wrapper.find('WalletAddressInput-stub').vm.$emit('address-did-change', '')
 
-      expect(wrapper.vm.$navigateTo).not.toHaveBeenCalled()
+      wrapper.findDataTest('save-button').vm.$emit('tap')
+
+      expect(wrapper.vm.$navigateTo).not.toHaveBeenCalledWith(App, {
+        props: { currency: USD }
+      })
     })
   })
 
@@ -138,6 +147,19 @@ describe('WalletPage.vue', () => {
       wrapper
         .find('WalletSwitch-stub')
         .vm.$emit('is-balance-mode-did-tap', true)
+    })
+
+    it('inserts wallet in db when save button is tapped and inputs are valid', () => {
+      wrapper.findDataTest('save-button').vm.$emit('tap')
+
+      expect(actions.insert).toHaveBeenCalled()
+    })
+
+    it('updates wallet in db when save button is tapped and inputs are valid', () => {
+      wrapper.setProps({ isUpdating: true })
+      wrapper.findDataTest('save-button').vm.$emit('tap')
+
+      expect(actions.update).toHaveBeenCalled()
     })
 
     it('displays input wallet balance', () => {
