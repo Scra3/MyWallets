@@ -14,11 +14,12 @@ make run
 ```
 
 ### Run tests
+
 ``` bash
 make tests
 ```
 
-### To show all available command
+### To show all available commands
 
 ``` bash
 make
