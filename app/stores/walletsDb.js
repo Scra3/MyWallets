@@ -2,6 +2,17 @@ import { DB_NAME } from '@/constants'
 
 const Sqlite = require('nativescript-sqlite')
 
+// Must to replace undefined by null value because sqlite does not support it.
+const removeUndefinedAttributeValues = wallet => {
+  Object.entries(wallet).forEach(walletEntry => {
+    if (walletEntry[1] === undefined) {
+      wallet[walletEntry[0]] = null
+    }
+  })
+
+  return wallet
+}
+
 export const walletsDb = {
   namespaced: true,
   state: {
@@ -78,6 +89,8 @@ export const walletsDb = {
       )
     },
     insert(context, wallet) {
+      removeUndefinedAttributeValues(wallet)
+
       context.state.database
         .execSQL(
           'INSERT INTO wallets (investment, coinId, address, isUsingLocalBalance, balance) VALUES (?, ?, ?, ?, ?)',
@@ -100,10 +113,12 @@ export const walletsDb = {
         )
     },
     update(context, wallet) {
+      removeUndefinedAttributeValues(wallet)
+
       context.state.database
         .execSQL(
           `UPDATE wallets SET investment = ${wallet.investment}, ` +
-            `address = ${wallet.address}, ` +
+            `address = '${wallet.address}', ` +
             `isUsingLocalBalance = ${wallet.isUsingLocalBalance ? 1 : 0}, ` +
             `balance = ${wallet.balance} ` +
             `WHERE id = ${wallet.id}`
