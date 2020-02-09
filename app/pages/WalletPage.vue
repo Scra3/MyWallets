@@ -156,7 +156,7 @@ export default {
       const investment = this.currentWallet.investment
       this.isInvestmentValid = !investment || investment >= 0
     },
-    async saveInDb() {
+    async insertOrUpdate() {
       if (this.isUpdating) {
         await this.update(this.currentWallet)
       } else {
@@ -170,14 +170,14 @@ export default {
         this.verifyBalance()
 
         if (this.isBalanceValid && this.isInvestmentValid) {
-          await this.saveInDb()
+          await this.insertOrUpdate()
           this.navigateToHomePage()
         }
       } else if (!this.currentWallet.isUsingLocalBalance) {
         await this.verifyAddress()
 
         if (this.isAddressValid && this.isInvestmentValid) {
-          await this.saveInDb()
+          await this.insertOrUpdate()
           this.navigateToHomePage()
         }
       }
