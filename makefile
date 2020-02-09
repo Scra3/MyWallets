@@ -25,8 +25,11 @@ devices: ## List devices
 docker_build: ## build Docker Image from Dockerfile
 	docker build -t $(IMAGE_NAME) .
 
-docker_test: ## Run unit test in Docker container
-	@docker run -v "$(PWD):/usr/src/app" -it --rm --name $(CONTAINER_NAME) $(IMAGE_NAME) npm run test
+docker_test: ## Run unit tests in Docker container
+	@docker run -v "$(PWD):/usr/src/app" -it --rm --name $(CONTAINER_NAME) $(IMAGE_NAME) make test
+
+docker_lint: ## Run lint in Docker container
+	@docker run -v "$(PWD):/usr/src/app" -it --rm --name $(CONTAINER_NAME) $(IMAGE_NAME) make lint
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
