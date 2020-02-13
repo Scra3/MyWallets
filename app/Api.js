@@ -73,10 +73,12 @@ const fetchNEOWalletBalance = async wallet => {
   return parseFloat(fetchedWallet.balance[0].amount)
 }
 
-//TODO: Implement request to BTC API
 const fetchBTCWalletBalance = async wallet => {
-  wallet.balance = 0.041
-  return wallet
+  const fetchedWallet = await httpModule.getJSON(
+    `https://blockchain.info/balance?active=${wallet.address}`
+  )
+
+  return parseFloat(fetchedWallet[wallet.address].final_balance) / 100000000
 }
 
 const fetchCryptoFear = async () => {
