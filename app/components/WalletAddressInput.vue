@@ -74,7 +74,10 @@ export default {
     },
     async scan() {
       try {
-        const result = await new BarcodeScanner().scan({ formats: 'QR_CODE' })
+        const result = await new BarcodeScanner().scan({
+          formats: 'QR_CODE',
+          beepOnScan: false
+        })
         this.$emit('address-did-change', result.text)
         // reload input when address changes by scanning it
         this.key++
