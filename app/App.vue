@@ -1,6 +1,17 @@
 <template>
   <Page class="App">
     <ActionBar title="My Wallets" class="action-bar">
+      <StackLayout
+        orientation="horizontal"
+        android:horizontalAlignment="left"
+        android:verticalAlignment="center"
+        class="action-title"
+      >
+        <Label text="My" />
+        <Image src="res://logo" class="action-logo" />
+        <Label text="allets" />
+      </StackLayout>
+
       <ActionItem
         @tap="toggleCurrency"
         :text="selectedCurrency.acronym"
@@ -87,8 +98,16 @@ export default {
   color: $onBackground;
 
   .action-bar {
+    font-size: $large-font-size;
     background-color: $background;
     color: $onBackground;
+
+    .action-title {
+      font-size: 18;
+      .action-logo {
+        width: 20;
+      }
+    }
 
     .currency {
       size: 24;

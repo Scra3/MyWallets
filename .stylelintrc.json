@@ -12,7 +12,8 @@
           "placeholder-color",
           "horizontal-alignment",
           "text-field-hint-color",
-          "horizontal-align"
+          "horizontal-align",
+          "verticalAlignment"
         ]
       }
     ],
