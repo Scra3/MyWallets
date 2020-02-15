@@ -1,3 +1,37 @@
 {
-  "extends": "stylelint-config-standard"
+  "extends": "stylelint-config-standard",
+  "rules": {
+    "property-no-unknown": [
+      true,
+      {
+        "ignoreProperties": [
+          "selected-tab-text-color",
+          "tab-background-color",
+          "tab-text-color",
+          "tab-text-font-size",
+          "placeholder-color",
+          "horizontal-alignment",
+          "text-field-hint-color",
+          "horizontal-align"
+        ]
+      }
+    ],
+    "selector-type-no-unknown": [
+      true,
+      {
+        "ignoreTypes": [
+          "ActionItem",
+          "ListView"
+        ]
+      }
+    ],
+    "selector-type-case": ["lower",
+      {
+        "ignoreTypes": [
+          "ActionItem",
+          "ListView"
+        ]
+      }
+    ]
+  }
 }
