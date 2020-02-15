@@ -13,6 +13,9 @@ lint: ## Run eslint and stylelint
 run: ## Run app on android
 	tns run android --log trace
 
+deploy: ## Deploy the project to a connected physical or virtual device
+	tns deploy android
+
 debug: ## Run app in debug mode on android
 	tns debug android
 

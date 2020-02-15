@@ -15,4 +15,4 @@ const store = new Vuex.Store({
 store.dispatch('walletsDb/init')
 store.dispatch('appDb/init')
 
-Vue.prototype.$store = store
+export default store
