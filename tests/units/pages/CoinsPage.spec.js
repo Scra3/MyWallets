@@ -124,11 +124,11 @@ describe('CoinsPage.vue', () => {
     expect(wrapper.findDataTest('no-coins-message').exists()).toBe(false)
   })
 
-  it('displays "trackable" info when it is a trackable coin address', () => {
-    expect(wrapper.findDataTest('trackable').isVisible()).toBe(true)
+  it('displays "connectable" info when it is a connectable coin address', () => {
+    expect(wrapper.findDataTest('connectable').isVisible()).toBe(true)
   })
 
-  it('displays "trackable" info when it is a trackable coin address', () => {
+  it('displays "connectable" info when it is a connectable coin address', () => {
     wrapper.setData({
       coins: [
         new Coin(
@@ -141,7 +141,7 @@ describe('CoinsPage.vue', () => {
         )
       ]
     })
-    expect(wrapper.findDataTest('trackable').exists()).toBe(false)
+    expect(wrapper.findDataTest('connectable').exists()).toBe(false)
   })
 
   it('clears search bar focus on mounted', () => {

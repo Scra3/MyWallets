@@ -4,7 +4,7 @@
       :class="{ selected: !wallet.isUsingLocalBalance }"
       @tap="$emit('is-balance-mode-did-tap', false)"
       class="switch-label"
-      text="Track wallet"
+      text="Connect wallet"
       data-test="address-label"
     />
 

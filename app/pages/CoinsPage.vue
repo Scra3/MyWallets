@@ -25,9 +25,9 @@
             <Label :text="coin.name" class="name" data-test="name" />
             <Label
               v-if="$_canTrackAddress(coin.id)"
-              text="Trackable"
-              class="trackable"
-              data-test="trackable"
+              text="Connectable"
+              class="connectable"
+              data-test="connectable"
             />
             <Label text="›" class="arrow" />
           </FlexboxLayout>
@@ -138,7 +138,7 @@ export default {
       flex-grow: 1;
     }
 
-    .trackable {
+    .connectable {
       color: $secondary;
       margin-right: 30;
     }
