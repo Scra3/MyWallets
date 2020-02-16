@@ -17,7 +17,13 @@ module.exports = {
   },
   rules: {
     'vue/attribute-hyphenation': ['error', 'always', {
-      'ignore': ['android:androidTabsPosition', 'android.systemIcon', 'horizontalAlignment', 'keyboardType']
+      'ignore': [
+        'android:androidTabsPosition',
+        'android.systemIcon',
+        'horizontalAlignment',
+        'verticalAlignment',
+        'keyboardType'
+      ]
     }],
     'prettier/prettier': [
       'error',
