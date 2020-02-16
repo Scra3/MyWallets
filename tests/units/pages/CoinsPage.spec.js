@@ -8,7 +8,6 @@ import { shallowMount } from '@vue/test-utils'
 import CoinsPage from '@/pages/CoinsPage'
 import { USD, BTC, XRP } from '@/constants.js'
 import { Coin } from '@/models/Coin'
-import flushPromises from 'flush-promises'
 import { fetchCoinsMarket } from '@/Api'
 import { Wallet } from '@/models/Wallet'
 import WalletPage from '@/pages/WalletPage'
@@ -27,7 +26,7 @@ describe('CoinsPage.vue', () => {
   let wrapper
   let clearSearchBarFocus
 
-  beforeEach(async () => {
+  beforeEach(() => {
     fetchCoinsMarket.mockImplementation(() =>
       Promise.resolve([
         bitcoinCoin,
@@ -57,8 +56,8 @@ describe('CoinsPage.vue', () => {
       }
     })
 
-    await flushPromises()
     fetchCoinsMarket.mockClear()
+    jest.useFakeTimers()
   })
 
   it('goes to back when back button is tapped in the action bar', () => {
@@ -145,6 +144,7 @@ describe('CoinsPage.vue', () => {
   })
 
   it('clears search bar focus on mounted', () => {
-    expect(clearSearchBarFocus).toHaveBeenCalled()
+    setTimeout(() => expect(clearSearchBarFocus).toHaveBeenCalled(), 500)
+    jest.runAllTimers()
   })
 })

@@ -78,9 +78,9 @@ export default {
       )
     }
   },
-  async mounted() {
-    await this.fetchCoinsMarket()
-    this.clearSearchBarFocus()
+  mounted() {
+    setTimeout(this.clearSearchBarFocus, 300)
+    this.fetchCoinsMarket()
   },
   methods: {
     clearSearchBarFocus() {
