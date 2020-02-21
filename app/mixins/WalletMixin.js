@@ -4,10 +4,10 @@ import {
   fetchEOSWalletBalance,
   fetchETHWalletBalance,
   fetchNEOWalletBalance,
-  fetchBTCWalletBalance
+  fetchBTCWalletBalance,
+  checkEOSAccountValidity
 } from '@/Api'
 import WAValidator from 'multicoin-address-validator'
-import { checkEOSAccountValidity } from '@/Api'
 
 export const WalletMixin = {
   methods: {
