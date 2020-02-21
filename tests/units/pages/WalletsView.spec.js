@@ -126,7 +126,7 @@ describe('WalletsView.vue', () => {
     )
     expect(wrapper.findDataTest('name').attributes().text).toEqual('Ripple')
     expect(wrapper.findDataTest('balance').attributes().text).toEqual(
-      '11.00 XRP'
+      '11 XRP'
     )
     expect(wrapper.findDataTest('current-price').props().value).toEqual(96)
     expect(wrapper.findDataTest('change-percentage').props().value).toEqual(

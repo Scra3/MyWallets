@@ -70,11 +70,8 @@
                   />
                   <Label
                     :text="
-                      `${parseFloat(wallet.balance).toFixed(
-                        2
-                      )} ${wallet.coin.symbol.toUpperCase()}`
+                      `${wallet.balance} ${wallet.coin.symbol.toUpperCase()}`
                     "
-                    class="balance"
                     data-test="balance"
                   />
                 </FlexboxLayout>
