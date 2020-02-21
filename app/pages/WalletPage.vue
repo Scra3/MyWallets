@@ -9,8 +9,8 @@
       />
 
       <ActionItem
-        v-if="isUpdating"
         @tap="deleteWallet"
+        :visibility="isUpdating ? 'visible' : 'collapse'"
         text="Delete"
         android.position="popup"
         data-test="delete-wallet"
@@ -70,6 +70,7 @@
           :text="isUpdating ? 'Update Wallet' : 'Save Wallet'"
           class="save-button"
           data-test="save-button"
+          automationText="save-button"
         />
       </FlexboxLayout>
     </FlexboxLayout>

@@ -1,0 +1,14 @@
+{
+    "androidPixel": {
+        "platformName": "Android",
+        "platformVersion": "28",
+        "deviceName": "Pixel_2_API_28",
+        "avd": "Pixel_2_API_28",
+        "lt": 60000,
+        "newCommandTimeout": 720,
+        "noReset": false,
+        "fullReset": false,
+        "app": "./app-debug.apk",
+        "relaxedSecurity": "true"
+    }
+}

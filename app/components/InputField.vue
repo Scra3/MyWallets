@@ -17,6 +17,7 @@
         :hint="hint"
         class="text-field"
         data-test="input"
+        automationText="text-field"
       />
       <Label
         v-if="isValid === false"

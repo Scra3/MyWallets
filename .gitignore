@@ -10,3 +10,9 @@ platforms
 
 # Jest
 coverage
+
+# e2e
+/e2e/reports/
+
+# Apk
+/*.apk

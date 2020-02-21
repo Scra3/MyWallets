@@ -1,5 +1,10 @@
 <template>
-  <Button @tap="$emit('tap')" :text="text" class="TappableLabel" />
+  <Button
+    @tap="$emit('tap')"
+    :text="text"
+    class="TappableLabel"
+    automationText="tappable-label"
+  />
 </template>
 <script>
 export default {

@@ -22,7 +22,8 @@ module.exports = {
         'android.systemIcon',
         'horizontalAlignment',
         'verticalAlignment',
-        'keyboardType'
+        'keyboardType',
+        'automationText'
       ]
     }],
     'prettier/prettier': [

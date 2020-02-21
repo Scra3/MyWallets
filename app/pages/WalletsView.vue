@@ -54,6 +54,7 @@
           <ListView
             v-for="wallet in sortedWallets"
             @itemTap="navigateToWalletPage"
+            automationText="wallet-item"
           >
             <v-template>
               <FlexboxLayout class="wallet">
@@ -105,7 +106,12 @@
           </ListView>
         </PullToRefresh>
       </StackLayout>
-      <Fab @tap="navigateToCoinsPage" row="1" class="fab-button">
+      <Fab
+        @tap="navigateToCoinsPage"
+        row="1"
+        automationText="add-wallet-button"
+        class="fab-button"
+      >
         +
       </Fab>
     </grid-layout>
