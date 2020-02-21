@@ -69,9 +69,7 @@
                     data-test="name"
                   />
                   <Label
-                    :text="
-                      `${wallet.balance} ${wallet.coin.symbol.toUpperCase()}`
-                    "
+                    :text="wallet | formatBalanceWithSymbol"
                     data-test="balance"
                   />
                 </FlexboxLayout>
@@ -128,6 +126,11 @@ import { mapActions, mapState } from 'vuex'
 export default {
   name: 'WalletsView',
   components: { ErrorMessage, ChangeLabel, PriceLabel },
+  filters: {
+    formatBalanceWithSymbol(wallet) {
+      return `${wallet.balance} ${wallet.coin.symbol.toUpperCase()}`
+    }
+  },
   mixins: [WalletMixin],
   props: {
     currency: {

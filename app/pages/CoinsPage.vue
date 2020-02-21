@@ -24,7 +24,7 @@
             <Image :src="coin.image" class="coinIcon" />
             <Label :text="coin.name" class="name" data-test="name" />
             <Label
-              v-if="$_canTrackAddress(coin.id)"
+              v-if="$_canConnectAddress(coin.id)"
               text="Connectable"
               class="connectable"
               data-test="connectable"

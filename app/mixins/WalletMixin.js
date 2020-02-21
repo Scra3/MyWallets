@@ -18,7 +18,7 @@ export const WalletMixin = {
         return WAValidator.validate(addressOrAccountName, coinID)
       }
     },
-    $_canTrackAddress(coinID) {
+    $_canConnectAddress(coinID) {
       switch (coinID) {
         case XRP:
         case ETH:

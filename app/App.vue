@@ -79,7 +79,6 @@ export default {
       const selectedCurrency = this.selectedCurrency === USD ? EUR : USD
 
       if (this.app) {
-        console.log(selectedCurrency.acronym)
         this.update({ ...this.app, currency: selectedCurrency.acronym })
       } else {
         this.insert({ id: null, currency: selectedCurrency.acronym })
