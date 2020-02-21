@@ -104,6 +104,7 @@ export default {
 
     .action-title {
       font-size: 18;
+
       .action-logo {
         width: 20;
       }

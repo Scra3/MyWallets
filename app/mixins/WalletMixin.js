@@ -4,10 +4,10 @@ import {
   fetchEOSWalletBalance,
   fetchETHWalletBalance,
   fetchNEOWalletBalance,
-  fetchBTCWalletBalance
+  fetchBTCWalletBalance,
+  checkEOSAccountValidity
 } from '@/Api'
 import WAValidator from 'multicoin-address-validator'
-import { checkEOSAccountValidity } from '@/Api'
 
 export const WalletMixin = {
   methods: {
@@ -18,7 +18,7 @@ export const WalletMixin = {
         return WAValidator.validate(addressOrAccountName, coinID)
       }
     },
-    $_canTrackAddress(coinID) {
+    $_canConnectAddress(coinID) {
       switch (coinID) {
         case XRP:
         case ETH:

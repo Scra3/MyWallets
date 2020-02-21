@@ -19,7 +19,7 @@
 
     <FlexboxLayout class="container">
       <WalletSwitch
-        v-if="$_canTrackAddress(currentWallet.coin.id)"
+        v-if="$_canConnectAddress(currentWallet.coin.id)"
         :wallet="currentWallet"
         @is-balance-mode-did-tap="useLocalBalance"
       />
