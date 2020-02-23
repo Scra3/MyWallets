@@ -9,7 +9,7 @@ const {
   clickOnCoinItem
 } = require('./utils.js')
 
-describe('sample scenario', () => {
+describe('MVP scenarios', () => {
   let driver
 
   beforeAll(async () => {
@@ -31,7 +31,7 @@ describe('sample scenario', () => {
     await usdLabel.click()
 
     const label = await driver.findElementByText('EUR', 'contains')
-    expect(await label.isDisplayed()).toBeTruthy()
+    expect(label.isDisplayed()).toBeTruthy()
   })
 
   it('displays a message to explain at the user to add a new wallet', async () => {
@@ -39,14 +39,14 @@ describe('sample scenario', () => {
       'Please add wallets',
       'contains'
     )
-    expect(await label.isDisplayed()).toBeTruthy()
+    expect(label.isDisplayed()).toBeTruthy()
   })
 
   it('shows market view when the user clicks on the market tab', async () => {
     await clickToMarketFromHomePage(driver)
 
     const nameLabel = await driver.findElementByText('24h', 'contains')
-    expect(await nameLabel.isDisplayed()).toBeTruthy()
+    expect(nameLabel.isDisplayed()).toBeTruthy()
   })
 
   it('shows wallets view when the user clicks on the wallet tab', async () => {
@@ -55,31 +55,33 @@ describe('sample scenario', () => {
     const walletsTab = await driver.findElementByAutomationText('Wallets')
     await walletsTab.click()
 
+    await driver.sleep(1000)
+
     const label = await driver.findElementByText(
       'Please add wallets',
       'contains'
     )
-    expect(await label.isDisplayed()).toBeTruthy()
+    expect(label.isDisplayed()).toBeTruthy()
   })
 
   it('shows coins page when the user click on add button', async () => {
     await clickOnAddWalletFromHomePage(driver)
 
     const label = await driver.findElementByText('Select your coin', 'contains')
-    expect(await label.isDisplayed()).toBeTruthy()
+    expect(label.isDisplayed()).toBeTruthy()
   })
 
   it('shows wallet page with the bitcoin coin', async () => {
     await clickOnCoinItem(driver, 'Bitcoin')
 
     const title = await driver.findElementByText('Edit Wallet', 'contains')
-    expect(await title.isDisplayed()).toBeTruthy()
+    expect(title.isDisplayed()).toBeTruthy()
 
     const bitcoinLabel = await driver.findElementByText('Bitcoin', 'contains')
-    expect(await bitcoinLabel.isDisplayed()).toBeTruthy()
+    expect(bitcoinLabel.isDisplayed()).toBeTruthy()
   })
 
-  it('goes to home page', async () => {
+  it('goes to home page when the user clicks two times on back button', async () => {
     await clickOnBackButton(driver)
     await clickOnBackButton(driver)
 
@@ -87,7 +89,7 @@ describe('sample scenario', () => {
       'Please add wallets',
       'contains'
     )
-    expect(await label.isDisplayed()).toBeTruthy()
+    expect(label.isDisplayed()).toBeTruthy()
   })
 
   it('adds a bitcoin wallet', async () => {
@@ -99,7 +101,7 @@ describe('sample scenario', () => {
     await clickOnSaveWallet(driver)
 
     const label = await driver.findElementByText('7.4 BTC', 'contains')
-    expect(await label.isDisplayed()).toBeTruthy()
+    expect(label.isDisplayed()).toBeTruthy()
   })
 
   it('updates a bitcoin wallet', async () => {
@@ -110,7 +112,7 @@ describe('sample scenario', () => {
     await clickOnSaveWallet(driver)
 
     const label = await driver.findElementByText('3.4 BTC', 'contains')
-    expect(await label.isDisplayed()).toBeTruthy()
+    expect(label.isDisplayed()).toBeTruthy()
   })
 
   it('add EOS wallet by connecting it', async () => {
@@ -134,7 +136,7 @@ describe('sample scenario', () => {
     await driver.sleep(1000)
 
     const label = await driver.findElementByText('EOS', 'contains')
-    expect(await label.isDisplayed()).toBeTruthy()
+    expect(label.isDisplayed()).toBeTruthy()
   })
 
   it('updates EOS wallet by adding investment', async () => {
@@ -148,7 +150,25 @@ describe('sample scenario', () => {
     await driver.sleep(1000)
 
     const label = await driver.findElementByText('986', 'contains')
-    expect(await label.isDisplayed()).toBeTruthy()
+    expect(label.isDisplayed()).toBeTruthy()
+  })
+
+  it('removes EOS wallet when user clicked on delete', async () => {
+    await clickOnCoinItem(driver, 'EOS')
+
+    const moreOptions = await driver.findElementByAutomationText('More options')
+    await moreOptions.click()
+
+    const deleteButton = await driver.findElementByText('Delete', 'contains')
+    await deleteButton.click()
+
+    const wallets = await driver.findElementsByAutomationText(
+      'wallet-item',
+      'contains'
+    )
+    const btcLabel = await driver.findElementByText('3.4 BTC', 'contains')
+    expect(wallets.length).toEqual(1)
+    expect(btcLabel.isDisplayed()).toBeTruthy()
   })
 
   it('does not navigate to home page when user adds a negative balance and negative investment', async () => {
@@ -161,6 +181,6 @@ describe('sample scenario', () => {
     await clickOnSaveWallet(driver)
 
     const label = await driver.findElementByText('Save Wallet', 'contains')
-    expect(await label.isDisplayed()).toBeTruthy()
+    expect(label.isDisplayed()).toBeTruthy()
   })
 })
