@@ -26,6 +26,14 @@ describe('sample scenario', () => {
     await driver.logTestArtifacts('failure')
   })
 
+  it('changes USD to EUR', async () => {
+    const usdLabel = await driver.findElementByText('USD', 'contains')
+    await usdLabel.click()
+
+    const label = await driver.findElementByText('EUR', 'contains')
+    expect(await label.isDisplayed()).toBeTruthy()
+  })
+
   it('displays a message to explain at the user to add a new wallet', async () => {
     const label = await driver.findElementByText(
       'Please add wallets',
