@@ -104,17 +104,6 @@ export default {
     padding: 10;
   }
 
-  .coin {
-    border-radius: $border-radius;
-    background-color: $surface;
-  }
-
-  .name {
-    width: 35%;
-    text-align: left;
-    margin-left: $separation-content;
-  }
-
   .header {
     height: 40;
     font-weight: bold;
@@ -125,6 +114,17 @@ export default {
       padding-left: 20;
       text-align: left;
     }
+  }
+
+  .coin {
+    border-radius: $border-radius;
+    background-color: $surface;
+  }
+
+  .name {
+    width: 35%;
+    text-align: left;
+    margin-left: $separation-content;
   }
 
   .index {
@@ -138,7 +138,7 @@ export default {
   }
 
   .change-percentage {
-    width: 35%;
+    width: 25%;
     text-align: center;
   }
 
