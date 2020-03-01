@@ -3,7 +3,7 @@ CONTAINER_NAME:=myWalletsContainer
 IMAGE_SDK_NAME:=androidsdk
 CONTAINER_SDK_NAME:=androidSdkContainer
 
-.PHONY: help lint run e2e tests debug docker_build docker_test build deploy docker_build_android docker_build_android_apk
+.PHONY: help, lint, run, test_mhi, tests, debug, docker_build, docker_test, build, deploy, docker_build_android, docker_build_android_apk
 .DEFAULT_GOAL := help
 
 tests: ## Run unit tests and e2e tests
@@ -12,8 +12,8 @@ tests: ## Run unit tests and e2e tests
 test: ## Run unit tests
 	npm run test:unit
 
-e2e: ## Run end to end tests
-	npm run e2e -- --allow-insecure=adb_shell --runType=androidPixel
+test_mhi: ## Run end to end tests
+	npm run e2e -- --runType=androidPixel
 
 lint: ## Run eslint and stylelint
 	npm run lint:fix ; npm run stylelint
@@ -39,7 +39,7 @@ devices: ## List devices
 docker_build: ## Build Docker Image from Dockerfile to run lints and tests
 	docker build -t $(IMAGE_NAME) .
 
-docker_build_android: ## Build Docker Image from Dockerfile to build app
+docker_build_android: ## Build Docker Image from android Dockerfile to build app
 	docker build -t $(IMAGE_SDK_NAME) --file ./dockerfiles/android.sdk.Dockerfile .
 
 docker_build_android_apk: ## Build app for android platform from container
