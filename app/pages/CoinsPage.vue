@@ -10,12 +10,7 @@
     </ActionBar>
 
     <StackLayout>
-      <SearchBar
-        ref="search-bar"
-        v-model="searchQuery"
-        hint="Search coin"
-        class="search-bar"
-      />
+      <SearchBar v-model="searchQuery" hint="Search coin" class="search-bar" />
       <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
       <ErrorMessage v-else-if="isFailedToLoad" />
       <ListView v-for="coin in filteredCoins" @itemTap="navigateToWalletPage">
@@ -79,13 +74,9 @@ export default {
     }
   },
   mounted() {
-    setTimeout(this.clearSearchBarFocus, 300)
     this.fetchCoinsMarket()
   },
   methods: {
-    clearSearchBarFocus() {
-      this.$refs['search-bar'].nativeView.android.clearFocus()
-    },
     navigateToWalletPage(event) {
       this.$navigateTo(WalletPage, {
         props: {
