@@ -13,13 +13,13 @@
       <SearchBar v-model="searchQuery" hint="Search coin" class="search-bar" />
       <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
       <ErrorMessage v-else-if="isFailedToLoad" />
-      <ListView v-for="coin in filteredCoins" @itemTap="navigateToWalletPage">
+      <ListView v-for="coin in filteredCoins" @itemTap="handlerTapItem">
         <v-template>
           <FlexboxLayout class="coin">
             <Image :src="coin.image" class="coinIcon" />
             <Label :text="coin.name" class="name" data-test="name" />
             <Label
-              v-if="$_canConnectAddress(coin.id)"
+              v-if="$_canConnectAddress(coin.id) && isConnectableTagDisplayed"
               text="Connectable"
               class="connectable"
               data-test="connectable"
@@ -42,7 +42,8 @@
 <script>
 import { fetchCoinsMarket } from '@/Api'
 import ErrorMessage from '@/components/ErrorMessage'
-import WalletPage from '@/pages/WalletPage'
+import WalletFormPage from '@/pages/WalletFormPage'
+import AlertFormPage from '@/pages/AlertFormPage'
 import { Wallet } from '@/models/Wallet'
 import { WalletMixin } from '@/mixins/WalletMixin'
 
@@ -54,6 +55,16 @@ export default {
     currency: {
       type: Object,
       required: true
+    },
+    isConnectableTagDisplayed: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    navigateTo: {
+      type: String,
+      required: false,
+      default: 'WalletFormPage'
     }
   },
   data() {
@@ -77,10 +88,26 @@ export default {
     this.fetchCoinsMarket()
   },
   methods: {
-    navigateToWalletPage(event) {
-      this.$navigateTo(WalletPage, {
+    handlerTapItem(event) {
+      const coin = this.filteredCoins[event.index]
+      if (this.navigateTo === 'WalletFormPage') {
+        this.navigateToWalletFormPage(coin)
+      } else if (this.navigateTo === 'AlertFormPage') {
+        this.navigateToAlertFormPage(coin)
+      }
+    },
+    navigateToAlertFormPage(coin) {
+      this.$navigateTo(AlertFormPage, {
         props: {
-          wallet: new Wallet(this.filteredCoins[event.index]),
+          coin: coin,
+          currency: this.currency
+        }
+      })
+    },
+    navigateToWalletFormPage(coin) {
+      this.$navigateTo(WalletFormPage, {
+        props: {
+          wallet: new Wallet(coin),
           currency: this.currency
         }
       })

@@ -34,6 +34,10 @@
       <TabViewItem title="Market">
         <MarketView :currency="selectedCurrency" />
       </TabViewItem>
+
+      <TabViewItem title="Alerts">
+        <AlertsView :currency="selectedCurrency" />
+      </TabViewItem>
     </TabView>
   </Page>
 </template>
@@ -41,15 +45,23 @@
 <script>
 import WalletsView from '@/pages/WalletsView'
 import MarketView from '@/pages/MarketView'
+import AlertsView from '@/pages/AlertsView'
 import { USD, EUR } from '@/constants.js'
 import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'App',
-  components: { WalletsView, MarketView },
+  components: { WalletsView, MarketView, AlertsView },
+  props: {
+    defaultSelectedViewIndex: {
+      type: Number,
+      required: false,
+      default: 0
+    }
+  },
   data() {
     return {
-      selectedIndex: 0
+      selectedIndex: null
     }
   },
   computed: {
@@ -62,6 +74,9 @@ export default {
 
       return this.app.currency === USD.acronym ? USD : EUR
     }
+  },
+  beforeMount() {
+    this.selectedIndex = this.defaultSelectedViewIndex
   },
   mounted() {
     this.loadAppState()

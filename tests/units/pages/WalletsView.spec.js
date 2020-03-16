@@ -4,7 +4,7 @@ import { USD } from '@/constants.js'
 import { Coin } from '@/models/Coin'
 import { Wallet } from '@/models/Wallet'
 import CoinsPage from '@/pages/CoinsPage'
-import WalletPage from '@/pages/WalletPage'
+import WalletFormPage from '@/pages/WalletFormPage'
 import Vuex from 'vuex'
 import flushPromises from 'flush-promises'
 
@@ -191,7 +191,7 @@ describe('WalletsView.vue', () => {
   it('navigates to wallet page when wallet is tapped', () => {
     wrapper.find('ListView-stub').vm.$emit('itemTap', { index: 1 })
 
-    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(WalletPage, {
+    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(WalletFormPage, {
       props: { wallet: walletA, currency: USD, isUpdating: true }
     })
   })

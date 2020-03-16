@@ -53,7 +53,7 @@
         <PullToRefresh @refresh="refresh" class="spinner">
           <ListView
             v-for="wallet in sortedWallets"
-            @itemTap="navigateToWalletPage"
+            @itemTap="navigateToWalletFormPage"
             automationText="wallet-item"
           >
             <v-template>
@@ -122,7 +122,7 @@
 import { fetchWalletsCoinMarket, fetchCryptoFear } from '@/Api'
 import ChangeLabel from '@/components/ChangeLabel'
 import PriceLabel from '@/components/PriceLabel'
-import WalletPage from '@/pages/WalletPage'
+import WalletFormPage from '@/pages/WalletFormPage'
 import ErrorMessage from '@/components/ErrorMessage'
 import { WalletMixin } from '@/mixins/WalletMixin.js'
 import { Wallet } from '@/models/Wallet'
@@ -207,9 +207,9 @@ export default {
   },
   methods: {
     ...mapActions('walletsDb', ['selectAll']),
-    navigateToWalletPage(event) {
+    navigateToWalletFormPage(event) {
       // wallet in listview is undefined that why we use event.
-      this.$navigateTo(WalletPage, {
+      this.$navigateTo(WalletFormPage, {
         props: {
           wallet: this.sortedWallets[event.index],
           currency: this.currency,

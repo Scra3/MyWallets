@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 import WalletBalanceInput from '@/components/WalletBalanceInput'
 
-describe('WalletPage.vue', () => {
+describe('WalletBalanceInput.vue', () => {
   let wrapper
 
   beforeEach(async () => {

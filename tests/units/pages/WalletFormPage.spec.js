@@ -1,5 +1,5 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
-import WalletPage from '@/pages/WalletPage'
+import WalletFormPage from '@/pages/WalletFormPage'
 import { Coin } from '@/models/Coin'
 import { Wallet } from '@/models/Wallet'
 import flushPromises from 'flush-promises'
@@ -23,7 +23,7 @@ const coin = new Coin(
 )
 const wallet = new Wallet(coin, 10, 'fakeAddress', false)
 
-describe('WalletPage.vue', () => {
+describe('WalletFormPage.vue', () => {
   let wrapper
   let store
   let actions
@@ -43,7 +43,7 @@ describe('WalletPage.vue', () => {
       }
     })
 
-    wrapper = shallowMount(WalletPage, {
+    wrapper = shallowMount(WalletFormPage, {
       localVue,
       store,
       propsData: { wallet, currency: USD },
@@ -67,14 +67,10 @@ describe('WalletPage.vue', () => {
 
     await flushPromises()
 
-    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(App, {
-      props: { currency: USD }
-    })
+    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(App)
   })
 
   it('does not go to home page when user clicks on save wallet and did not provide any information', () => {
-    wrapper.setProps({ isUpdating: false })
-
     wrapper.findDataTest('save-button').vm.$emit('tap')
 
     expect(wrapper.vm.$navigateTo).not.toHaveBeenCalled()
@@ -110,9 +106,7 @@ describe('WalletPage.vue', () => {
 
       await flushPromises()
 
-      expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(App, {
-        props: { currency: USD }
-      })
+      expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(App)
     })
 
     it('does not go to home page when save button is tapped and address is not valid', async () => {
@@ -126,9 +120,7 @@ describe('WalletPage.vue', () => {
 
       await flushPromises()
 
-      expect(wrapper.vm.$navigateTo).not.toHaveBeenCalledWith(App, {
-        props: { currency: USD }
-      })
+      expect(wrapper.vm.$navigateTo).not.toHaveBeenCalledWith(App)
     })
 
     it('does not go to home page when save button is tapped and address is empty', () => {
@@ -136,9 +128,7 @@ describe('WalletPage.vue', () => {
 
       wrapper.findDataTest('save-button').vm.$emit('tap')
 
-      expect(wrapper.vm.$navigateTo).not.toHaveBeenCalledWith(App, {
-        props: { currency: USD }
-      })
+      expect(wrapper.vm.$navigateTo).not.toHaveBeenCalledWith(App)
     })
   })
 
@@ -175,9 +165,7 @@ describe('WalletPage.vue', () => {
       wrapper.findDataTest('save-button').vm.$emit('tap')
       await flushPromises()
 
-      expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(App, {
-        props: { currency: USD }
-      })
+      expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(App)
     })
 
     it('does not go to home page when save button is tapped and balance is not valid', () => {

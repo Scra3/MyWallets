@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 import InputField from '@/components/InputField'
 
-describe('WalletPage.vue', () => {
+describe('WalletFormPage.vue', () => {
   let wrapper
 
   beforeEach(async () => {

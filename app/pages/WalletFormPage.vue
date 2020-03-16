@@ -1,5 +1,5 @@
 <template>
-  <Page class="WalletPage darkMode">
+  <Page class="WalletFormPage darkMode">
     <ActionBar title="Edit Wallet" class="action-bar">
       <NavigationButton
         @tap="$navigateBack()"
@@ -89,7 +89,7 @@ import InputField from '@/components/InputField'
 import { mapActions } from 'vuex'
 
 export default {
-  name: 'WalletPage',
+  name: 'WalletFormPage',
   components: {
     WalletAddressInput,
     WalletBalanceInput,
@@ -143,7 +143,7 @@ export default {
           this.isAddressValid = false
         }
       } catch (e) {
-        console.log('when is verifying address in WalletPage', e)
+        console.log('when is verifying address in WalletFormPage', e)
         this.isFailedCheckingAddressValidity = true
       } finally {
         this.isCheckingAddressValidity = false
@@ -184,11 +184,7 @@ export default {
       }
     },
     navigateToHomePage() {
-      this.$navigateTo(App, {
-        props: {
-          currency: this.currency
-        }
-      })
+      this.$navigateTo(App)
     },
     async deleteWallet() {
       await this.delete(this.currentWallet.id)
@@ -203,7 +199,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.WalletPage {
+.WalletFormPage {
   .action-bar {
     background-color: $background;
     color: $onBackground;

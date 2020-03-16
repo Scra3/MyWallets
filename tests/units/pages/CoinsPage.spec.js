@@ -10,7 +10,7 @@ import { USD, BTC, XRP } from '@/constants.js'
 import { Coin } from '@/models/Coin'
 import { fetchCoinsMarket } from '@/Api'
 import { Wallet } from '@/models/Wallet'
-import WalletPage from '@/pages/WalletPage'
+import WalletFormPage from '@/pages/WalletFormPage'
 
 const bitcoinCoin = new Coin(
   BTC,
@@ -75,7 +75,7 @@ describe('CoinsPage.vue', () => {
   it('navigates to wallet page when coin is tapped', () => {
     wrapper.find('ListView-stub').vm.$emit('itemTap', { index: 0 })
 
-    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(WalletPage, {
+    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(WalletFormPage, {
       props: { wallet: new Wallet(bitcoinCoin), currency: USD }
     })
   })
@@ -141,10 +141,5 @@ describe('CoinsPage.vue', () => {
       ]
     })
     expect(wrapper.findDataTest('connectable').exists()).toBe(false)
-  })
-
-  it('clears search bar focus on mounted', () => {
-    setTimeout(() => expect(clearSearchBarFocus).toHaveBeenCalled(), 500)
-    jest.runAllTimers()
   })
 })

@@ -16,7 +16,7 @@ jest.mock('nativescript-barcodescanner', () => {
   }
 })
 
-describe('WalletPage.vue', () => {
+describe('WalletAddressInput.vue', () => {
   let wrapper
 
   beforeEach(async () => {
