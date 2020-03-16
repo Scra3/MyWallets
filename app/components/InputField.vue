@@ -6,6 +6,7 @@
     </FlexboxLayout>
     <FlexboxLayout>
       <TextField
+        v-if="inputType === 'TextField'"
         v-model="currentValue"
         @textChange="$emit('value-did-change', $event.value)"
         @blur="$emit('input-did-unfocus', $event.value)"
@@ -19,6 +20,21 @@
         data-test="input"
         automationText="text-field"
       />
+
+      <TextView
+        v-else-if="inputType === 'TextView'"
+        v-model="currentValue"
+        @textChange="$emit('value-did-change', $event.value)"
+        @blur="$emit('input-did-unfocus', $event.value)"
+        :class="{
+          error: isValid === false,
+          success: isValid === true
+        }"
+        class="text-field"
+        data-test="input"
+        automationText="text-field"
+      />
+
       <Label
         v-if="isValid === false"
         text="✖"
@@ -86,6 +102,11 @@ export default {
       type: String,
       required: false,
       default: null
+    },
+    inputType: {
+      type: String,
+      required: false,
+      default: 'TextField'
     }
   },
   data() {

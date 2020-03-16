@@ -30,7 +30,7 @@
       </FlexboxLayout>
 
       <InputField
-        key="input"
+        key="target-value"
         :is-valid="isTargetValueValid"
         :value="targetValue"
         @value-did-change="targetValue = $event"
@@ -40,6 +40,18 @@
         label-error="Must be equal or greater than 0"
         data-test="input-target-value"
       />
+
+      <FlexboxLayout class="note-container">
+        <InputField
+          key="note"
+          :value="note"
+          @value-did-change="note = $event"
+          :is-optional="true"
+          label="Note"
+          data-test="input-note"
+          input-type="TextView"
+        />
+      </FlexboxLayout>
 
       <FlexboxLayout class="footer-container">
         <Button
@@ -87,6 +99,7 @@ export default {
     return {
       currentCoin: null,
       targetValue: null,
+      note: null,
       isTargetValueValid: null
     }
   },
@@ -152,6 +165,10 @@ export default {
         flex-grow: 1;
         justify-content: flex-end;
       }
+    }
+
+    .note-container {
+      height: 50%;
     }
 
     .footer-container {

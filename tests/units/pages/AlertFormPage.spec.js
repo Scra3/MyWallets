@@ -56,6 +56,10 @@ describe('AlertFormPage.vue', () => {
     expect(wrapper.findDataTest('input-target-value').isVisible()).toBe(true)
   })
 
+  it('displays input note', () => {
+    expect(wrapper.findDataTest('input-note').isVisible()).toBe(true)
+  })
+
   it('goes to home page when save button is tapped and target value is valid', () => {
     wrapper.findDataTest('input-target-value').vm.$emit('value-did-change', 5)
 
