@@ -65,7 +65,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('appDb', ['app']),
+    ...mapState('appManager', ['app']),
 
     selectedCurrency() {
       if (!this.app) {
@@ -82,7 +82,7 @@ export default {
     this.loadAppState()
   },
   methods: {
-    ...mapActions('appDb', ['select', 'update', 'insert']),
+    ...mapActions('appManager', ['select', 'update', 'insert']),
     async loadAppState() {
       try {
         await this.select()

@@ -155,7 +155,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('walletsDb', ['persistedWallets']),
+    ...mapState('walletsManager', ['persistedWallets']),
     persistedWalletsFromDB() {
       return this.persistedWallets || []
     },
@@ -206,7 +206,7 @@ export default {
     clearInterval(this.intervalID)
   },
   methods: {
-    ...mapActions('walletsDb', ['selectAll']),
+    ...mapActions('walletsManager', ['selectAll']),
     navigateToWalletFormPage(event) {
       // wallet in listview is undefined that why we use event.
       this.$navigateTo(WalletFormPage, {

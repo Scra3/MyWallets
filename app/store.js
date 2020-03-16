@@ -1,18 +1,18 @@
 import Vue from 'nativescript-vue'
 import Vuex from 'vuex'
-import { walletsDb } from './stores/walletsDb'
-import { appDb } from './stores/appDb'
+import { walletsManager } from './stores/WalletsManager'
+import { appManager } from './stores/AppManager'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   modules: {
-    walletsDb: walletsDb,
-    appDb: appDb
+    walletsManager: walletsManager,
+    appManager: appManager
   }
 })
 
-store.dispatch('walletsDb/init')
-store.dispatch('appDb/init')
+store.dispatch('walletsManager/init')
+store.dispatch('appManager/init')
 
 export default store

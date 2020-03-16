@@ -36,7 +36,7 @@ describe('WalletFormPage.vue', () => {
     }
     store = new Vuex.Store({
       modules: {
-        walletsDb: {
+        walletsManager: {
           namespaced: true,
           actions
         }

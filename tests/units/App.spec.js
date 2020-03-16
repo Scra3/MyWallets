@@ -27,7 +27,7 @@ describe('App.vue', () => {
 
     store = new Vuex.Store({
       modules: {
-        appDb: { namespaced: true, actions, state }
+        appManager: { namespaced: true, actions, state }
       }
     })
 
@@ -43,7 +43,7 @@ describe('App.vue', () => {
   it('toggles EUR currency when USD currency is tapped', () => {
     wrapper.findDataTest('action-item-currency').vm.$emit('tap')
     expect(actions.update).toHaveBeenCalledWith(expect.any(Object), {
-      ...store.state.appDb.app,
+      ...store.state.appManager.app,
       currency: EUR.acronym
     })
   })

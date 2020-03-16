@@ -13,7 +13,7 @@ const removeUndefinedAttributeValues = wallet => {
   return wallet
 }
 
-export const walletsDb = {
+export const walletsManager = {
   namespaced: true,
   state: {
     database: null,
