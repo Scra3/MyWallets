@@ -45,6 +45,7 @@ import ErrorMessage from '@/components/ErrorMessage'
 import WalletFormPage from '@/pages/WalletFormPage'
 import AlertFormPage from '@/pages/AlertFormPage'
 import { Wallet } from '@/models/Wallet'
+import { Alert } from '@/models/Alert'
 import { WalletMixin } from '@/mixins/WalletMixin'
 
 export default {
@@ -100,7 +101,8 @@ export default {
       this.$navigateTo(AlertFormPage, {
         props: {
           coin: coin,
-          currency: this.currency
+          currency: this.currency,
+          alert: new Alert(null, null, coin.currentPrice, coin.id)
         }
       })
     },

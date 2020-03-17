@@ -1,19 +1,11 @@
 import { DB_NAME } from '@/constants'
+import { removeUndefinedAttributeValues } from '@/stores/utils'
 
 const Sqlite = require('nativescript-sqlite')
 
-// Must to replace undefined by null value because sqlite does not support it.
-const removeUndefinedAttributeValues = wallet => {
-  Object.entries(wallet).forEach(walletEntry => {
-    if (walletEntry[1] === undefined) {
-      wallet[walletEntry[0]] = null
-    }
-  })
+const TABLE_NAME = 'wallet'
 
-  return wallet
-}
-
-export const walletsManager = {
+export const WalletManager = {
   namespaced: true,
   state: {
     database: null,
@@ -68,7 +60,7 @@ export const walletsManager = {
       new Sqlite(DB_NAME).then(
         db => {
           db.execSQL(
-            'CREATE TABLE IF NOT EXISTS wallets (id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
+            `CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (id INTEGER PRIMARY KEY AUTOINCREMENT, ` +
               'investment REAL, ' +
               'coinId TEXT NOT NULL, ' +
               'address TEXT, ' +
@@ -93,7 +85,7 @@ export const walletsManager = {
 
       context.state.database
         .execSQL(
-          'INSERT INTO wallets (investment, coinId, address, isUsingLocalBalance, balance) VALUES (?, ?, ?, ?, ?)',
+          `INSERT INTO ${TABLE_NAME} (investment, coinId, address, isUsingLocalBalance, balance) VALUES (?, ?, ?, ?, ?)`,
           [
             wallet.investment,
             wallet.coin.id,
@@ -117,7 +109,7 @@ export const walletsManager = {
 
       context.state.database
         .execSQL(
-          `UPDATE wallets SET investment = ${wallet.investment}, ` +
+          `UPDATE ${TABLE_NAME} SET investment = ${wallet.investment}, ` +
             `address = '${wallet.address}', ` +
             `isUsingLocalBalance = ${wallet.isUsingLocalBalance ? 1 : 0}, ` +
             `balance = ${wallet.balance} ` +
@@ -135,7 +127,7 @@ export const walletsManager = {
     selectAll(context) {
       context.state.database
         .all(
-          'SELECT id, investment, coinId, address, isUsingLocalBalance, balance FROM wallets',
+          `SELECT id, investment, coinId, address, isUsingLocalBalance, balance FROM ${TABLE_NAME}`,
           []
         )
         .then(
@@ -149,7 +141,7 @@ export const walletsManager = {
     },
     delete(context, id) {
       context.state.database
-        .execSQL('DELETE FROM wallets WHERE id = ?', [id])
+        .execSQL(`DELETE FROM ${TABLE_NAME} WHERE id = ?`, [id])
         .then(
           () => {
             context.commit('delete', id)

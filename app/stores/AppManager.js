@@ -2,7 +2,7 @@ import { DB_NAME } from '@/constants'
 
 const Sqlite = require('nativescript-sqlite')
 
-export const appManager = {
+export const AppManager = {
   namespaced: true,
   state: {
     database: null,

@@ -1,6 +1,6 @@
 <template>
   <StackLayout class="WalletsView darkMode">
-    <FlexboxLayout class="wallets-overview">
+    <FlexboxLayout class="overview">
       <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
       <ErrorMessage
         v-else-if="isFailedToLoad"
@@ -155,7 +155,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('walletsManager', ['persistedWallets']),
+    ...mapState('walletManager', ['persistedWallets']),
     persistedWalletsFromDB() {
       return this.persistedWallets || []
     },
@@ -206,7 +206,7 @@ export default {
     clearInterval(this.intervalID)
   },
   methods: {
-    ...mapActions('walletsManager', ['selectAll']),
+    ...mapActions('walletManager', ['selectAll']),
     navigateToWalletFormPage(event) {
       // wallet in listview is undefined that why we use event.
       this.$navigateTo(WalletFormPage, {
@@ -278,7 +278,7 @@ export default {
 
 <style lang="scss" scoped>
 .WalletsView {
-  .wallets-overview {
+  .overview {
     justify-content: center;
     align-items: center;
     padding: $separation-content;

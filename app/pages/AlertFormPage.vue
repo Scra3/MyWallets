@@ -19,10 +19,10 @@
 
     <FlexboxLayout class="container">
       <FlexboxLayout class="title" data-test="title">
-        <Image :src="currentCoin.image" class="icon coinIcon" />
-        <Label :text="currentCoin.name" />
+        <Image :src="coin.image" class="icon coinIcon" />
+        <Label :text="coin.name" />
         <PriceLabel
-          :value="currentCoin.currentPrice"
+          :value="coin.currentPrice"
           :currency="currency"
           class="price"
           data-test="wallet-price"
@@ -32,9 +32,9 @@
       <InputField
         key="target-value"
         :is-valid="isTargetValueValid"
-        :value="targetValue"
-        @value-did-change="targetValue = $event"
-        label="Target Value"
+        :value="currentAlert.targetPrice"
+        @value-did-change="currentAlert.targetPrice = $event"
+        label="Target Price"
         keyboardType="number"
         hint="Number"
         label-error="Must be equal or greater than 0"
@@ -44,8 +44,8 @@
       <FlexboxLayout class="note-container">
         <InputField
           key="note"
-          :value="note"
-          @value-did-change="note = $event"
+          :value="currentAlert.note"
+          @value-did-change="currentAlert.note = $event"
           :is-optional="true"
           label="Note"
           data-test="input-note"
@@ -68,10 +68,12 @@
 
 <script>
 import { Coin } from '@/models/Coin'
+import { Alert } from '@/models/Alert'
 import PriceLabel from '@/components/PriceLabel'
 import App from '@/App'
 import { WalletMixin } from '@/mixins/WalletMixin'
 import InputField from '@/components/InputField'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'AlertFormPage',
@@ -81,6 +83,10 @@ export default {
   },
   mixins: [WalletMixin],
   props: {
+    alert: {
+      type: Alert,
+      required: true
+    },
     coin: {
       type: Coin,
       required: true
@@ -97,29 +103,37 @@ export default {
   },
   data() {
     return {
-      currentCoin: null,
-      targetValue: null,
-      note: null,
       isTargetValueValid: null
     }
   },
   beforeMount() {
-    this.currentCoin = this.coin
+    this.currentAlert = this.alert
   },
   methods: {
-    deleteCoin() {
+    ...mapActions('alertManager', ['insert', 'update', 'delete']),
+    async deleteCoin() {
+      await this.delete(this.alert.id)
       this.navigateToHomePageOnAlertsView()
     },
-    saveAlertIfValidAndBackToHomePage() {
+    async saveAlertIfValidAndBackToHomePage() {
       this.verifyTargetValue()
 
-      if (this.isTargetValueValid === true) {
+      if (this.isTargetValueValid) {
+        await this.insertOrUpdate()
         this.navigateToHomePageOnAlertsView()
       }
     },
+    async insertOrUpdate() {
+      if (this.isUpdating) {
+        await this.update(this.currentAlert)
+      } else {
+        await this.insert(this.currentAlert)
+      }
+    },
     verifyTargetValue() {
+      const targetPrice = this.currentAlert.targetPrice
       this.isTargetValueValid =
-        !!this.targetValue && this.targetValue !== '' && this.targetValue >= 0
+        !!targetPrice && targetPrice !== '' && targetPrice >= 0
     },
     navigateToHomePageOnAlertsView() {
       this.$navigateTo(App, {

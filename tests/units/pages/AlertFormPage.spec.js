@@ -1,9 +1,10 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import AlertFormPage from '@/pages/AlertFormPage'
 import { Coin } from '@/models/Coin'
-import flushPromises from 'flush-promises'
+import { Alert } from '@/models/Alert'
 import { USD, BTC } from '@/constants'
 import App from '@/App'
+import Vuex from 'vuex'
 
 jest.mock('nativescript-barcodescanner', () => jest.fn())
 jest.mock('nativescript-camera', () => jest.fn())
@@ -17,12 +18,37 @@ const coin = new Coin(
   'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579'
 )
 
+const newAlert = new Alert(null, null, 10, coin.id)
+
+const alert = new Alert(11, 'stop lose', 10, coin.id)
+
+const localVue = createLocalVue()
+localVue.use(Vuex)
+
 describe('AlertFormPage.vue', () => {
   let wrapper
+  let store
+  let actions
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    actions = {
+      insert: jest.fn(),
+      update: jest.fn(),
+      delete: jest.fn()
+    }
+    store = new Vuex.Store({
+      modules: {
+        alertManager: {
+          namespaced: true,
+          actions
+        }
+      }
+    })
+
     wrapper = shallowMount(AlertFormPage, {
-      propsData: { coin, currency: USD },
+      propsData: { coin, currency: USD, alert: newAlert },
+      localVue,
+      store,
       mocks: {
         $navigateBack: jest.fn(),
         $navigateTo: jest.fn()
@@ -37,7 +63,7 @@ describe('AlertFormPage.vue', () => {
   })
 
   it('goes to home page when delete button is clicked when it is updating alert', () => {
-    wrapper.setProps({ isUpdating: true })
+    wrapper.setProps({ isUpdating: true, alert })
 
     wrapper.findDataTest('delete-alert').vm.$emit('tap')
 

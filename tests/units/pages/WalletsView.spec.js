@@ -53,7 +53,7 @@ describe('WalletsView.vue', () => {
 
     store = new Vuex.Store({
       modules: {
-        walletsManager: {
+        walletManager: {
           namespaced: true,
           state: { persistedWallets: null },
           actions

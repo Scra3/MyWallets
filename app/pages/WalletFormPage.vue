@@ -127,7 +127,7 @@ export default {
     this.currentWallet = this.wallet
   },
   methods: {
-    ...mapActions('walletsManager', ['insert', 'delete', 'update']),
+    ...mapActions('walletManager', ['insert', 'delete', 'update']),
     async verifyAddress() {
       this.isCheckingAddressValidity = true
       this.isFailedCheckingAddressValidity = false
