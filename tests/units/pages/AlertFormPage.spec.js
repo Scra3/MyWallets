@@ -5,6 +5,7 @@ import { Alert } from '@/models/Alert'
 import { USD, BTC } from '@/constants'
 import App from '@/App'
 import Vuex from 'vuex'
+import flushPromises from 'flush-promises'
 
 jest.mock('nativescript-barcodescanner', () => jest.fn())
 jest.mock('nativescript-camera', () => jest.fn())
@@ -62,10 +63,12 @@ describe('AlertFormPage.vue', () => {
     expect(wrapper.vm.$navigateBack).toHaveBeenCalled()
   })
 
-  it('goes to home page when delete button is clicked when it is updating alert', () => {
+  it('goes to home page when delete button is clicked when it is updating alert', async () => {
     wrapper.setProps({ isUpdating: true, alert })
 
     wrapper.findDataTest('delete-alert').vm.$emit('tap')
+
+    await flushPromises()
 
     expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(App, {
       props: { defaultSelectedViewIndex: 2 }
@@ -86,10 +89,12 @@ describe('AlertFormPage.vue', () => {
     expect(wrapper.findDataTest('input-note').isVisible()).toBe(true)
   })
 
-  it('goes to home page when save button is tapped and target value is valid', () => {
+  it('goes to home page when save button is tapped and target value is valid', async () => {
     wrapper.findDataTest('input-target-value').vm.$emit('value-did-change', 5)
 
     wrapper.findDataTest('save-button').vm.$emit('tap')
+
+    await flushPromises()
 
     expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(App, {
       props: { defaultSelectedViewIndex: 2 }

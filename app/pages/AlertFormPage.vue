@@ -9,7 +9,7 @@
       />
 
       <ActionItem
-        @tap="deleteCoin"
+        @tap="deleteAlert"
         :visibility="isUpdating ? 'visible' : 'collapse'"
         text="Delete"
         android.position="popup"
@@ -111,7 +111,7 @@ export default {
   },
   methods: {
     ...mapActions('alertManager', ['insert', 'update', 'delete']),
-    async deleteCoin() {
+    async deleteAlert() {
       await this.delete(this.alert.id)
       this.navigateToHomePageOnAlertsView()
     },
