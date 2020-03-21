@@ -74,6 +74,8 @@ import App from '@/App'
 import { WalletMixin } from '@/mixins/WalletMixin'
 import InputField from '@/components/InputField'
 import { mapActions } from 'vuex'
+import { LocalNotifications } from 'nativescript-local-notifications'
+import { Color } from 'tns-core-modules/color'
 
 export default {
   name: 'AlertFormPage',
@@ -115,7 +117,36 @@ export default {
       await this.delete(this.alert.id)
       this.navigateToHomePageOnAlertsView()
     },
+    createNotification() {
+      LocalNotifications.schedule([
+        {
+          id: 1,
+          title: `Your target price of ${this.currency.symbol}${this.alert.targetPrice} is reached on ${this.coin.name}`,
+          body: this.alert.note,
+          bigTextStyle: false, // Allow more than 1 row of the 'body' text on Android, but setting this to true denies showing the 'image'
+          color: new Color('green'),
+          thumbnail: this.coin.image,
+          forceShowWhenInForeground: true,
+          at: new Date(new Date().getTime() + 5 * 1000), // 5 seconds from now
+          actions: [
+            {
+              id: 'yes',
+              type: 'button',
+              title: 'launch app',
+              launch: true
+            },
+            {
+              id: 'no',
+              type: 'button',
+              title: 'ok',
+              launch: false
+            }
+          ]
+        }
+      ])
+    },
     async saveAlertIfValidAndBackToHomePage() {
+      this.createNotification()
       this.verifyTargetValue()
 
       if (this.isTargetValueValid) {
