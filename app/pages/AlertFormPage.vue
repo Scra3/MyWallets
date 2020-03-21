@@ -34,7 +34,7 @@
         :is-valid="isTargetValueValid"
         :value="currentAlert.targetPrice"
         @value-did-change="currentAlert.targetPrice = $event"
-        label="Target Price"
+        :label="`Target Price (${currency.symbol})`"
         keyboardType="number"
         hint="Number"
         label-error="Must be equal or greater than 0"

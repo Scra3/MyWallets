@@ -21,7 +21,7 @@
     </FlexboxLayout>
 
     <grid-layout rows="auto, *">
-      <StackLayout row="1">
+      <StackLayout row="1" class="alerts">
         <ListView
           v-for="alert in sortedAlerts"
           @itemTap="navigateToAlertFormPage"
@@ -161,35 +161,39 @@ export default {
     margin: $separation-content;
   }
 
-  .alert {
-    justify-content: space-between;
-    align-items: center;
-    background-color: $surface;
-    border-radius: $border-radius;
+  .alerts {
     padding: $separation-content;
-    width: auto;
-    color: $onSurface;
 
-    .price {
+    .alert {
+      justify-content: space-between;
+      align-items: center;
+      background-color: $surface;
+      border-radius: $border-radius;
+      padding: $separation-content;
+      width: auto;
       color: $onSurface;
-    }
 
-    .coin-name {
-      width: 20%;
-      text-align: left;
-    }
+      .price {
+        color: $onSurface;
+      }
 
-    .note {
-      text-overflow: ellipsis;
-      width: 30%;
-    }
+      .coin-name {
+        width: 20%;
+        text-align: left;
+      }
 
-    .target-price {
-      font-weight: bold;
-      with: 10%;
-      color: $primary;
-      width: 30%;
-      text-align: right;
+      .note {
+        text-overflow: ellipsis;
+        width: 30%;
+      }
+
+      .target-price {
+        font-weight: bold;
+        with: 10%;
+        color: $primary;
+        width: 30%;
+        text-align: right;
+      }
     }
   }
 

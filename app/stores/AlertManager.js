@@ -101,7 +101,7 @@ export const AlertManager = {
       context.state.database
         .execSQL(
           `UPDATE ${TABLE_NAME} SET targetPrice = ${alert.targetPrice}, ` +
-            `note = '${alert.note}', ` +
+            `note = '${alert.note ? alert.note : ''}', ` +
             `coinId = '${alert.coinId}', ` +
             `currentValueDuringCreation = '${alert.currentValueDuringCreation}' ` +
             `WHERE id = ${alert.id}`
