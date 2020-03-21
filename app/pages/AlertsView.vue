@@ -189,7 +189,6 @@ export default {
 
       .target-price {
         font-weight: bold;
-        with: 10%;
         color: $primary;
         width: 30%;
         text-align: right;
