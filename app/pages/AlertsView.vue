@@ -16,7 +16,7 @@
       <label
         v-else
         :text="`${alerts.length} Alerts`"
-        data-test="information-message"
+        data-test="alerts-number"
       />
     </FlexboxLayout>
 
@@ -28,9 +28,13 @@
           automationText="alert-item"
         >
           <v-template>
-            <FlexboxLayout class="alert">
+            <FlexboxLayout class="alert" data-test="alert">
               <Image :src="getCoin(alert.coinId).image" class="coinIcon" />
-              <Label :text="getCoin(alert.coinId).name" class="coin-name" />
+              <Label
+                :text="getCoin(alert.coinId).name"
+                class="coin-name"
+                data-test="alert-coin-name"
+              />
               <Label :text="alert.note" class="note" />
               <PriceLabel
                 :value="alert.targetPrice"
@@ -95,7 +99,7 @@ export default {
   methods: {
     ...mapActions('alertManager', ['selectAll']),
     getCoin(id) {
-      return this.coins.find(coin => coin.id === id)
+      return this.coins.find(coin => coin.id === id) || {}
     },
     async fetchData() {
       this.isLoading = true
@@ -116,7 +120,6 @@ export default {
         this.selectAll(),
         fetchCoinsMarket(this.currency)
       ])
-
       this.alerts = this.persistedAlertsFromDB.map(persistedAlert =>
         Alert.buildAlertFromPersistedAlert(persistedAlert)
       )

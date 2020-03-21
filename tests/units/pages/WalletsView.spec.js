@@ -125,9 +125,7 @@ describe('WalletsView.vue', () => {
       'https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579'
     )
     expect(wrapper.findDataTest('name').attributes().text).toEqual('Ripple')
-    expect(wrapper.findDataTest('balance').attributes().text).toEqual(
-      '11 XRP'
-    )
+    expect(wrapper.findDataTest('balance').attributes().text).toEqual('11 XRP')
     expect(wrapper.findDataTest('current-price').props().value).toEqual(96)
     expect(wrapper.findDataTest('change-percentage').props().value).toEqual(
       7.17426
