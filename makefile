@@ -19,7 +19,7 @@ lint: ## Run eslint and stylelint
 	npm run lint:fix ; npm run stylelint
 
 run: ## Run app on android
-	tns run android --log trace
+	tns run android
 
 build: ## Build app for android platform
 	tns build android --copy-to .
