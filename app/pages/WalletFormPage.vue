@@ -126,7 +126,15 @@ export default {
     }
   },
   beforeMount() {
-    this.currentWallet = this.wallet
+    const w = this.wallet
+    this.currentWallet = new Wallet(
+      w.coin,
+      w.balance,
+      w.address,
+      w.isUsingLocalBalance,
+      w.investment,
+      w.id
+    )
   },
   mounted() {
     this.$_preloadInterstitialAd()

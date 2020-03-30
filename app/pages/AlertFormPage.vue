@@ -108,7 +108,14 @@ export default {
     }
   },
   beforeMount() {
-    this.currentAlert = this.alert
+    const a = this.alert
+    this.currentAlert = new Alert(
+      a.targetPrice,
+      a.note,
+      a.currentValueDuringCreation,
+      a.coinId,
+      a.id
+    )
     // when alert has not the current price of the coin, it prevents update alert
     this.currentAlert.currentValueDuringCreation = this.coin.currentPrice
   },
