@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import WalletsView from '@/pages/WalletsView'
-import { USD } from '@/constants.js'
+import { USD } from '@/constants'
 import { Coin } from '@/models/Coin'
 import { Wallet } from '@/models/Wallet'
 import CoinsPage from '@/pages/CoinsPage'
@@ -11,6 +11,7 @@ import flushPromises from 'flush-promises'
 jest.mock('@/Api')
 jest.mock('nativescript-barcodescanner', () => jest.fn())
 jest.mock('nativescript-camera', () => jest.fn())
+jest.mock('nativescript-local-notifications', () => jest.fn())
 
 import { fetchWalletsCoinMarket, fetchCryptoFear } from '@/Api'
 import { XRP } from '@/constants'

@@ -10,6 +10,7 @@ import CoinsPage from '@/pages/CoinsPage'
 jest.mock('@/Api')
 jest.mock('nativescript-barcodescanner', () => jest.fn())
 jest.mock('nativescript-camera', () => jest.fn())
+jest.mock('nativescript-local-notifications', () => jest.fn())
 
 import { fetchCoinsMarket } from '@/Api'
 import { XRP, BTC } from '@/constants'

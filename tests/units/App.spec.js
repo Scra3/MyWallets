@@ -7,6 +7,7 @@ jest.mock('nativescript-barcodescanner', () => '')
 jest.mock('nativescript-camera', () => {
   return { requestPermissions: jest.fn() }
 })
+jest.mock('nativescript-local-notifications', () => jest.fn())
 
 const localVue = createLocalVue()
 localVue.use(Vuex)

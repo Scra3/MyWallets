@@ -1,6 +1,6 @@
 <template>
   <StackLayout class="WalletsView darkMode">
-    <FlexboxLayout class="overview">
+    <FlexboxLayout v-if="sortedWallets.length > 0" class="overview">
       <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
       <ErrorMessage
         v-else-if="isFailedToLoad"
@@ -44,12 +44,10 @@
           />
         </FlexboxLayout>
       </FlexboxLayout>
-
-      <label v-else text="Please add wallets" data-test="information-message" />
     </FlexboxLayout>
 
     <grid-layout rows="auto, *">
-      <StackLayout row="1" class="wallets">
+      <StackLayout v-if="sortedWallets.length > 0" row="1" class="wallets">
         <PullToRefresh @refresh="refresh" class="spinner">
           <ListView
             v-for="wallet in sortedWallets"
@@ -106,9 +104,22 @@
           </ListView>
         </PullToRefresh>
       </StackLayout>
+      <LoadingMessage
+        v-else-if="isLoading"
+        row="1"
+        sub-title="Please wait, we are fetching Wallets."
+        title="Processing"
+      />
+      <EmptyListMessage
+        v-else
+        row="1"
+        title="Empty wallet list"
+        sub-title="Save a wallet and it will show up here."
+        data-test="information-message"
+      />
       <Fab
         @tap="navigateToCoinsPage"
-        row="1"
+        row="2"
         automationText="add-wallet-button"
         class="fab-button"
       >
@@ -119,25 +130,34 @@
 </template>
 
 <script>
-import { fetchWalletsCoinMarket, fetchCryptoFear } from '@/Api'
+import { fetchCryptoFear, fetchWalletsCoinMarket } from '@/Api'
 import ChangeLabel from '@/components/ChangeLabel'
 import PriceLabel from '@/components/PriceLabel'
 import WalletFormPage from '@/pages/WalletFormPage'
 import ErrorMessage from '@/components/ErrorMessage'
-import { WalletMixin } from '@/mixins/WalletMixin.js'
+import { WalletMixin } from '@/mixins/WalletMixin'
 import { Wallet } from '@/models/Wallet'
 import CoinsPage from '@/pages/CoinsPage'
 import { mapActions, mapState } from 'vuex'
+import EmptyListMessage from '@/components/EmptyListMessage'
+import LoadingMessage from '@/components/LoadingMessage'
+import { NavigationMixin } from '@/mixins/NavigationMixin'
 
 export default {
   name: 'WalletsView',
-  components: { ErrorMessage, ChangeLabel, PriceLabel },
+  components: {
+    LoadingMessage,
+    EmptyListMessage,
+    ErrorMessage,
+    ChangeLabel,
+    PriceLabel
+  },
   filters: {
     formatBalanceWithSymbol(wallet) {
       return `${wallet.balance} ${wallet.coin.symbol.toUpperCase()}`
     }
   },
-  mixins: [WalletMixin],
+  mixins: [WalletMixin, NavigationMixin],
   props: {
     currency: {
       type: Object,
@@ -209,7 +229,7 @@ export default {
     ...mapActions('walletManager', ['selectAll']),
     navigateToWalletFormPage(event) {
       // wallet in listview is undefined that why we use event.
-      this.$navigateTo(WalletFormPage, {
+      this.$_navigateTo(WalletFormPage, {
         props: {
           wallet: this.sortedWallets[event.index],
           currency: this.currency,
@@ -218,7 +238,7 @@ export default {
       })
     },
     navigateToCoinsPage() {
-      this.$navigateTo(CoinsPage, {
+      this.$_navigateTo(CoinsPage, {
         props: {
           currency: this.currency
         }
@@ -230,12 +250,12 @@ export default {
       this.isFailedToLoad = false
 
       try {
-        const results = await Promise.all([
+        const [cryptoFear, wallets] = await Promise.all([
           fetchCryptoFear(),
           this.fetchWallets()
         ])
-        this.cryptoFear = results[0]
-        this.wallets = results[1]
+        this.cryptoFear = cryptoFear
+        this.wallets = wallets
       } catch (e) {
         console.log('when fetching data in WalletsView', e)
         this.isFailedToLoad = true

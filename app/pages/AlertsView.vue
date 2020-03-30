@@ -1,16 +1,11 @@
 <template>
   <StackLayout class="AlertsView darkMode">
-    <FlexboxLayout class="overview">
+    <FlexboxLayout v-if="sortedAlerts.length > 0" class="overview">
       <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
       <ErrorMessage
         v-else-if="isFailedToLoad"
         :is-failed-to-load="isFailedToLoad"
         data-test="error-message"
-      />
-      <label
-        v-else-if="alerts.length === 0"
-        text="Please add alerts"
-        data-test="information-message"
       />
 
       <label
@@ -21,7 +16,7 @@
     </FlexboxLayout>
 
     <grid-layout rows="auto, *">
-      <StackLayout row="1" class="alerts">
+      <StackLayout v-if="sortedAlerts.length > 0" row="1" class="alerts">
         <ListView
           v-for="alert in sortedAlerts"
           @itemTap="navigateToAlertFormPage"
@@ -37,7 +32,7 @@
               />
               <Label :text="alert.note" class="note" />
               <PriceLabel
-                :value="alert.targetPrice"
+                :value="Number(alert.targetPrice)"
                 :currency="currency"
                 class="target-price"
                 data-test="target-price"
@@ -46,9 +41,22 @@
           </v-template>
         </ListView>
       </StackLayout>
+      <LoadingMessage
+        v-else-if="isLoading"
+        row="1"
+        sub-title="Please wait, we are fetching Alerts."
+        title="Processing"
+      />
+      <EmptyListMessage
+        v-else
+        row="1"
+        title="Empty alert list"
+        sub-title="Save an alert and it will show up here."
+        data-test="information-message"
+      />
       <Fab
         @tap="navigateToCoinsPage"
-        row="1"
+        row="2"
         automationText="add-alert-button"
         class="fab-button"
       >
@@ -66,10 +74,14 @@ import ErrorMessage from '@/components/ErrorMessage'
 import AlertFormPage from '@/pages/AlertFormPage'
 import { fetchCoinsMarket } from '@/Api'
 import PriceLabel from '@/components/PriceLabel'
+import EmptyListMessage from '@/components/EmptyListMessage'
+import LoadingMessage from '@/components/LoadingMessage'
+import { NavigationMixin } from '@/mixins/NavigationMixin'
 
 export default {
   name: 'AlertsView',
-  components: { ErrorMessage, PriceLabel },
+  components: { LoadingMessage, ErrorMessage, PriceLabel, EmptyListMessage },
+  mixins: [NavigationMixin],
   props: {
     currency: {
       type: Object,
@@ -91,6 +103,16 @@ export default {
   watch: {
     currency() {
       this.fetchData()
+    },
+    async persistedAlertsFromDB() {
+      try {
+        await this.fetchAlerts()
+      } catch (e) {
+        console.log('when fetching data in AlertsView', e)
+        this.isFailedToLoad = true
+      } finally {
+        this.isLoading = false
+      }
     }
   },
   mounted() {
@@ -106,6 +128,7 @@ export default {
       this.isFailedToLoad = false
 
       try {
+        await this.selectAll()
         await this.fetchAlerts()
       } catch (e) {
         console.log('when fetching data in AlertsView', e)
@@ -116,10 +139,7 @@ export default {
     },
     async fetchAlerts() {
       // eslint-disable-next-line no-unused-vars
-      const [_, coins] = await Promise.all([
-        this.selectAll(),
-        fetchCoinsMarket(this.currency)
-      ])
+      const coins = await fetchCoinsMarket(this.currency)
       this.alerts = this.persistedAlertsFromDB.map(persistedAlert =>
         Alert.buildAlertFromPersistedAlert(persistedAlert)
       )
@@ -129,7 +149,7 @@ export default {
     },
     navigateToAlertFormPage(event) {
       const selectedAlert = this.sortedAlerts[event.index]
-      this.$navigateTo(AlertFormPage, {
+      this.$_navigateTo(AlertFormPage, {
         props: {
           coin: this.getCoin(selectedAlert.coinId),
           currency: this.currency,
@@ -139,7 +159,7 @@ export default {
       })
     },
     navigateToCoinsPage() {
-      this.$navigateTo(CoinsPage, {
+      this.$_navigateTo(CoinsPage, {
         props: {
           currency: this.currency,
           isConnectableTagDisplayed: false,

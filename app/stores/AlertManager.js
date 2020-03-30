@@ -1,5 +1,8 @@
 import { DB_NAME } from '@/constants'
-import { removeUndefinedAttributeValues } from '@/stores/utils'
+import {
+  removeUndefinedAttributeValues,
+  replaceNullValueToBlank
+} from '@/stores/utils'
 
 const Sqlite = require('nativescript-sqlite')
 
@@ -46,6 +49,11 @@ export const AlertManager = {
       )
 
       Object.assign(alert, updatedAlert)
+    },
+    delete(state, id) {
+      state.persistedAlerts = state.persistedAlerts.filter(
+        persistedAlert => persistedAlert.id !== id
+      )
     }
   },
   actions: {
@@ -80,7 +88,7 @@ export const AlertManager = {
           `INSERT INTO ${TABLE_NAME} (targetPrice, note, currentValueDuringCreation, coinId) VALUES (?, ?, ?, ?)`,
           [
             alert.targetPrice,
-            alert.note,
+            replaceNullValueToBlank(alert.note),
             alert.currentValueDuringCreation,
             alert.coinId
           ]
@@ -101,7 +109,7 @@ export const AlertManager = {
       context.state.database
         .execSQL(
           `UPDATE ${TABLE_NAME} SET targetPrice = ${alert.targetPrice}, ` +
-            `note = '${alert.note ? alert.note : ''}', ` +
+            `note = '${replaceNullValueToBlank(alert.note)}', ` +
             `coinId = '${alert.coinId}', ` +
             `currentValueDuringCreation = '${alert.currentValueDuringCreation}' ` +
             `WHERE id = ${alert.id}`

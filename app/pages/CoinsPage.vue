@@ -2,7 +2,7 @@
   <Page class="CoinsPage darkMode">
     <ActionBar title="Select your coin" class="action-bar">
       <NavigationButton
-        @tap="$navigateBack()"
+        @tap="$navigateBack"
         text="Go Back"
         android.systemIcon="ic_menu_back"
         data-test="back-button"
@@ -47,11 +47,12 @@ import AlertFormPage from '@/pages/AlertFormPage'
 import { Wallet } from '@/models/Wallet'
 import { Alert } from '@/models/Alert'
 import { WalletMixin } from '@/mixins/WalletMixin'
+import { NavigationMixin } from '@/mixins/NavigationMixin'
 
 export default {
   name: 'CoinsPage',
   components: { ErrorMessage },
-  mixins: [WalletMixin],
+  mixins: [WalletMixin, NavigationMixin],
   props: {
     currency: {
       type: Object,
@@ -98,7 +99,7 @@ export default {
       }
     },
     navigateToAlertFormPage(coin) {
-      this.$navigateTo(AlertFormPage, {
+      this.$_navigateTo(AlertFormPage, {
         props: {
           coin: coin,
           currency: this.currency,
@@ -107,7 +108,7 @@ export default {
       })
     },
     navigateToWalletFormPage(coin) {
-      this.$navigateTo(WalletFormPage, {
+      this.$_navigateTo(WalletFormPage, {
         props: {
           wallet: new Wallet(coin),
           currency: this.currency

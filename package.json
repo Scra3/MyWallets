@@ -1,7 +1,7 @@
 {
   "name": "mywallets",
   "version": "1.0.0",
-  "description": "Display wallets balance",
+  "description": "Crypto Wallets Investments",
   "author": "Alban Bertolini",
   "scripts": {
     "lint": "eslint --ext .js,.vue app",
@@ -12,7 +12,7 @@
   },
   "license": "MIT",
   "nativescript": {
-    "id": "org.nativescript.application",
+    "id": "org.nativescript.mywallets",
     "templateVersion": "v2",
     "tns-ios": {
       "version": "6.0.1"
@@ -28,9 +28,10 @@
     "lodash.camelcase": "^4.3.0",
     "multicoin-address-validator": "^0.3.13",
     "nativescript": "^6.5.0",
+    "nativescript-admob": "^4.0.2",
     "nativescript-barcodescanner": "^3.4.2",
     "nativescript-camera": "^4.5.0",
-    "nativescript-local-notifications": "^4.2.0",
+    "nativescript-local-notifications": "^4.2.1",
     "nativescript-socketio": "^3.2.1",
     "nativescript-sqlite": "^2.3.3",
     "nativescript-toasty": "^1.3.0",
@@ -52,7 +53,7 @@
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.1.0",
     "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.0",
+    "eslint-config-prettier": "^6.10.1",
     "eslint-loader": "^3.0.3",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-vue": "^5.2.3",

@@ -36,6 +36,12 @@ describe('WalletFormPage.vue', () => {
     expect(wrapper.emitted('value-did-change')[0][0]).toEqual('newValue')
   })
 
+  it('emits an event when input value changed as blank', () => {
+    wrapper.findDataTest('input').vm.$emit('textChange', { value: '' })
+
+    expect(wrapper.emitted('value-did-change')[0][0]).toEqual('')
+  })
+
   it('emits an event when input is unfocused', () => {
     wrapper.findDataTest('input').vm.$emit('blur', { value: 'newValue' })
 

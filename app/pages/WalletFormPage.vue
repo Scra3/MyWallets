@@ -87,6 +87,8 @@ import WalletBalanceInput from '@/components/WalletBalanceInput'
 import WalletAddressInput from '@/components/WalletAddressInput'
 import InputField from '@/components/InputField'
 import { mapActions } from 'vuex'
+import { NavigationMixin } from '@/mixins/NavigationMixin'
+import { AdMixin } from '@/mixins/AdMixin'
 
 export default {
   name: 'WalletFormPage',
@@ -97,7 +99,7 @@ export default {
     PriceLabel,
     InputField
   },
-  mixins: [WalletMixin],
+  mixins: [WalletMixin, NavigationMixin, AdMixin],
   props: {
     wallet: {
       type: Wallet,
@@ -125,6 +127,9 @@ export default {
   },
   beforeMount() {
     this.currentWallet = this.wallet
+  },
+  mounted() {
+    this.$_preloadInterstitialAd()
   },
   methods: {
     ...mapActions('walletManager', ['insert', 'delete', 'update']),
@@ -165,6 +170,7 @@ export default {
       }
     },
     async saveWalletAndBackToHomePage() {
+      await this.$_showInterstitialAd()
       this.verifyInvestment()
 
       if (this.currentWallet.isUsingLocalBalance) {
@@ -184,7 +190,7 @@ export default {
       }
     },
     navigateToHomePage() {
-      this.$navigateTo(App)
+      this.$_navigateTo(App)
     },
     async deleteWallet() {
       await this.delete(this.currentWallet.id)

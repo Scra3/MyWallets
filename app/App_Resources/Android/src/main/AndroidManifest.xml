@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="__PACKAGE__"
-	android:versionCode="10000"
+	android:versionCode="1"
 	android:versionName="1.0">
 
 	<supports-screens
@@ -14,6 +14,9 @@
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.CAMERA"/>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
 	<application
 		android:name="com.tns.NativeScriptApplication"
@@ -21,7 +24,10 @@
 		android:icon="@drawable/icon"
 		android:label="@string/app_name"
 		android:theme="@style/AppTheme">
-
+		<meta-data
+				android:name="com.google.android.gms.ads.APPLICATION_ID"
+				android:value="ca-app-pub-5433582223311514~7717059250" />
+		
 		<activity
 			android:name="com.tns.NativeScriptActivity"
 			android:label="@string/title_activity_kimera"
@@ -37,5 +43,21 @@
 			</intent-filter>
 		</activity>
 		<activity android:name="com.tns.ErrorReportActivity"/>
+
+		<service android:enabled="true" android:name="org.nativescript.mywallets.Continuous_Service" />
+		<receiver
+				android:name="org.nativescript.mywallets.Restart_Receiver"
+				android:enabled="true"
+				android:exported="true"
+				android:label="ContinuousServiceRestarter" />
+		<receiver
+				android:name="org.nativescript.mywallets.Autostart_Receiver"
+				android:enabled="true"
+				android:exported="true"
+				android:label="ContinuousServiceAutostarter" >
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+			</intent-filter>
+		</receiver>
 	</application>
 </manifest>

@@ -19,12 +19,13 @@ $onError: #000;
 $separation-content: 10;
 $border-radius: 10;
 
-$large-font-size: 25;
+$large-font-size: 20;
 $normal-font-size: 15;
 $small-font-size: 10;
 
 .darkMode {
   background-color: $background;
+  color: $onBackground;
 }
 
 .coinIcon {

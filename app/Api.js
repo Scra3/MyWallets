@@ -14,7 +14,6 @@ const fetchWalletsCoinMarket = async (wallets, currency) => {
   const coinsMarket = await httpModule.getJSON(
     `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency.acronym}&ids=${ids}&order=market_cap_desc&per_page=200&page=1&sparkline=false`
   )
-
   return wallets.map(wallet => {
     const coin = coinsMarket.find(w => w.id === wallet.coin.id)
     wallet.coin = new Coin().deserialize(coin)

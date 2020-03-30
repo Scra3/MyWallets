@@ -9,6 +9,7 @@ import flushPromises from 'flush-promises'
 
 jest.mock('nativescript-barcodescanner', () => jest.fn())
 jest.mock('nativescript-camera', () => jest.fn())
+jest.mock('nativescript-local-notifications', () => jest.fn())
 
 const coin = new Coin(
   BTC,

@@ -1,5 +1,5 @@
 <template>
-  <Page class="App">
+  <Page class="App darkMode">
     <ActionBar title="My Wallets" class="action-bar">
       <StackLayout
         orientation="horizontal"
@@ -21,24 +21,32 @@
       />
     </ActionBar>
 
-    <TabView
+    <BottomNavigation
       :selectedIndex="selectedIndex"
       @selectedIndexChange="selectIndex"
-      android:androidTabsPosition="bottom"
-      class="tab-view"
     >
-      <TabViewItem title="Wallets">
+      <TabStrip>
+        <TabStripItem class="tab-strip-item">
+          <Label text="Wallets" />
+        </TabStripItem>
+        <TabStripItem class="tab-strip-item">
+          <Label text="Market" />
+        </TabStripItem>
+        <TabStripItem class="tab-strip-item">
+          <Label text="Alerts" />
+        </TabStripItem>
+      </TabStrip>
+
+      <TabContentItem>
         <WalletsView :currency="selectedCurrency" />
-      </TabViewItem>
-
-      <TabViewItem title="Market">
+      </TabContentItem>
+      <TabContentItem>
         <MarketView :currency="selectedCurrency" />
-      </TabViewItem>
-
-      <TabViewItem title="Alerts">
+      </TabContentItem>
+      <TabContentItem>
         <AlertsView :currency="selectedCurrency" />
-      </TabViewItem>
-    </TabView>
+      </TabContentItem>
+    </BottomNavigation>
   </Page>
 </template>
 
@@ -46,8 +54,10 @@
 import WalletsView from '@/pages/WalletsView'
 import MarketView from '@/pages/MarketView'
 import AlertsView from '@/pages/AlertsView'
-import { USD, EUR } from '@/constants.js'
+import { USD, EUR } from '@/constants'
 import { mapActions, mapState } from 'vuex'
+import { CONTINUOUS_SERVICE_CLASSNAME } from '@/services/continuousService.android'
+import * as application from 'tns-core-modules/application'
 
 export default {
   name: 'App',
@@ -80,6 +90,11 @@ export default {
   },
   mounted() {
     this.loadAppState()
+
+    const context = application.android.context
+    const intent = new android.content.Intent()
+    intent.setClassName(context, CONTINUOUS_SERVICE_CLASSNAME)
+    context.startService(intent)
   },
   methods: {
     ...mapActions('appManager', ['select', 'update', 'insert']),
@@ -108,9 +123,6 @@ export default {
 
 <style lang="scss">
 .App {
-  background-color: $background;
-  color: $onBackground;
-
   .action-bar {
     font-size: $large-font-size;
     background-color: $background;
@@ -130,12 +142,15 @@ export default {
     }
   }
 
-  .tab-view {
+  .tab-strip-item {
+    color: $onBackground;
     font-size: $normal-font-size;
-    selected-tab-text-color: $primary;
-    tab-background-color: $background;
-    tab-text-color: $onBackground;
-    tab-text-font-size: $normal-font-size;
+    background-color: $background;
+    text-transform: uppercase;
+
+    &:active {
+      color: $primary;
+    }
   }
 }
 </style>

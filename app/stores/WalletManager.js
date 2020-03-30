@@ -1,5 +1,9 @@
 import { DB_NAME } from '@/constants'
-import { removeUndefinedAttributeValues } from '@/stores/utils'
+import {
+  removeUndefinedAttributeValues,
+  replaceNullValueToBlank,
+  convertBooleanToNumericBoolean
+} from '@/stores/utils'
 
 const Sqlite = require('nativescript-sqlite')
 
@@ -90,7 +94,7 @@ export const WalletManager = {
             wallet.investment,
             wallet.coin.id,
             wallet.address,
-            wallet.isUsingLocalBalance ? 1 : 0,
+            convertBooleanToNumericBoolean(wallet.isUsingLocalBalance),
             wallet.balance
           ]
         )
@@ -110,8 +114,10 @@ export const WalletManager = {
       context.state.database
         .execSQL(
           `UPDATE ${TABLE_NAME} SET investment = ${wallet.investment}, ` +
-            `address = '${wallet.address}', ` +
-            `isUsingLocalBalance = ${wallet.isUsingLocalBalance ? 1 : 0}, ` +
+            `address = '${replaceNullValueToBlank(wallet.address)}', ` +
+            `isUsingLocalBalance = ${convertBooleanToNumericBoolean(
+              wallet.isUsingLocalBalance
+            )}, ` +
             `balance = ${wallet.balance} ` +
             `WHERE id = ${wallet.id}`
         )

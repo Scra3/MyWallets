@@ -71,11 +71,10 @@ import { Coin } from '@/models/Coin'
 import { Alert } from '@/models/Alert'
 import PriceLabel from '@/components/PriceLabel'
 import App from '@/App'
-import { WalletMixin } from '@/mixins/WalletMixin'
+import { AdMixin } from '@/mixins/AdMixin'
 import InputField from '@/components/InputField'
 import { mapActions } from 'vuex'
-import { LocalNotifications } from 'nativescript-local-notifications'
-import { Color } from 'tns-core-modules/color'
+import { NavigationMixin } from '@/mixins/NavigationMixin'
 
 export default {
   name: 'AlertFormPage',
@@ -83,7 +82,7 @@ export default {
     PriceLabel,
     InputField
   },
-  mixins: [WalletMixin],
+  mixins: [AdMixin, NavigationMixin],
   props: {
     alert: {
       type: Alert,
@@ -110,6 +109,11 @@ export default {
   },
   beforeMount() {
     this.currentAlert = this.alert
+    // when alert has not the current price of the coin, it prevents update alert
+    this.currentAlert.currentValueDuringCreation = this.coin.currentPrice
+  },
+  mounted() {
+    this.$_preloadInterstitialAd()
   },
   methods: {
     ...mapActions('alertManager', ['insert', 'update', 'delete']),
@@ -117,36 +121,9 @@ export default {
       await this.delete(this.alert.id)
       this.navigateToHomePageOnAlertsView()
     },
-    createNotification() {
-      LocalNotifications.schedule([
-        {
-          id: 1,
-          title: `Your target price of ${this.currency.symbol}${this.alert.targetPrice} is reached on ${this.coin.name}`,
-          body: this.alert.note,
-          bigTextStyle: false, // Allow more than 1 row of the 'body' text on Android, but setting this to true denies showing the 'image'
-          color: new Color('green'),
-          thumbnail: this.coin.image,
-          forceShowWhenInForeground: true,
-          at: new Date(new Date().getTime() + 5 * 1000), // 5 seconds from now
-          actions: [
-            {
-              id: 'yes',
-              type: 'button',
-              title: 'launch app',
-              launch: true
-            },
-            {
-              id: 'no',
-              type: 'button',
-              title: 'ok',
-              launch: false
-            }
-          ]
-        }
-      ])
-    },
     async saveAlertIfValidAndBackToHomePage() {
-      this.createNotification()
+      await this.$_showInterstitialAd()
+
       this.verifyTargetValue()
 
       if (this.isTargetValueValid) {
@@ -167,7 +144,7 @@ export default {
         !!targetPrice && targetPrice !== '' && targetPrice >= 0
     },
     navigateToHomePageOnAlertsView() {
-      this.$navigateTo(App, {
+      this.$_navigateTo(App, {
         props: {
           defaultSelectedViewIndex: 2
         }
