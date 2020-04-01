@@ -1,22 +1,21 @@
 <template>
   <StackLayout class="AlertsView darkMode">
-    <FlexboxLayout v-if="sortedAlerts.length > 0" class="overview">
-      <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
+    <FlexboxLayout
+      v-if="sortedAlerts.length > 0 && isFailedToLoad"
+      class="overview"
+    >
       <ErrorMessage
-        v-else-if="isFailedToLoad"
         :is-failed-to-load="isFailedToLoad"
         data-test="error-message"
-      />
-
-      <label
-        v-else
-        :text="`${alerts.length} Alerts`"
-        data-test="alerts-number"
       />
     </FlexboxLayout>
 
     <grid-layout rows="auto, *">
       <StackLayout v-if="sortedAlerts.length > 0" row="1" class="alerts">
+        <FlexboxLayout class="header">
+          <Label text="Name" class="name" />
+          <Label text="Target Price" class="price" />
+        </FlexboxLayout>
         <ListView
           v-for="alert in sortedAlerts"
           @itemTap="navigateToAlertFormPage"
@@ -184,6 +183,11 @@ export default {
     margin: $separation-content;
   }
 
+  .header {
+    font-weight: bold;
+    justify-content: space-between;
+    padding: $separation-content;
+  }
   .alerts {
     padding: $separation-content;
 

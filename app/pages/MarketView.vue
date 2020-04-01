@@ -1,16 +1,23 @@
 <template>
   <StackLayout class="MarketView darkMode">
+    <SearchBar v-model="searchQuery" hint="Search coin" class="search-bar" />
+
     <FlexboxLayout class="header">
       <Label text="#" class="index" />
       <Label text="Name" class="name" />
       <Label text="24h" class="change-percentage" />
       <Label text="Price" class="price" />
     </FlexboxLayout>
-
+    <Label
+      v-if="filteredCoins.length === 0 && isLoading === false"
+      text="No coins found"
+      class="no-coins-message"
+      data-test="no-coins-message"
+    />
     <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
     <ErrorMessage v-else-if="isFailedToLoad" data-test="error-message" />
     <PullToRefresh @refresh="refreshCoinsMarket" class="spinner">
-      <ListView v-for="(coin, index) in coins">
+      <ListView v-for="(coin, index) in filteredCoins">
         <v-template>
           <FlexboxLayout class="coin" data-test="coin">
             <label :text="index + 1" class="index" data-test="index" />
@@ -52,7 +59,17 @@ export default {
     return {
       coins: [],
       isLoading: false,
-      isFailedToLoad: false
+      isFailedToLoad: false,
+      searchQuery: ''
+    }
+  },
+  computed: {
+    filteredCoins() {
+      return this.coins.filter(
+        coin =>
+          coin.name.toUpperCase().includes(this.searchQuery.toUpperCase()) ||
+          coin.symbol.toUpperCase().includes(this.searchQuery.toUpperCase())
+      )
     }
   },
   watch: {
@@ -96,12 +113,19 @@ export default {
 
 <style lang="scss" scoped>
 .MarketView {
+  .search-bar {
+    color: $onSurface;
+    background-color: $surface;
+    margin-bottom: $separation-content;
+    text-field-hint-color: $onSurface;
+  }
+
   .coin,
   .header {
     flex-direction: row;
     height: 60;
     align-items: center;
-    padding: 10;
+    padding: $separation-content;
   }
 
   .name {
@@ -145,6 +169,12 @@ export default {
   .price {
     width: 25%;
     text-align: right;
+  }
+
+  .no-coins-message {
+    font-size: $normal-font-size;
+    color: $onSurface;
+    text-align: center;
   }
 }
 </style>
