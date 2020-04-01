@@ -205,7 +205,6 @@ export default {
       this.navigateToHomePage()
     },
     useLocalBalance(isUsingLocalBalance) {
-      this.currentWallet = this.wallet
       this.currentWallet.isUsingLocalBalance = isUsingLocalBalance
     }
   }
