@@ -1,21 +1,15 @@
 import admob from 'nativescript-admob'
 
+const options = {
+  testing: true,
+  androidInterstitialId: 'ca-app-pub-5433582223311514/8646997540',
+  keywords: ['investment', 'bitcoin', 'crypto', 'trading', 'wallets', 'mining']
+}
 export const AdMixin = {
   methods: {
     async $_preloadInterstitialAd() {
       try {
-        await admob.preloadInterstitial({
-          testing: true,
-          androidInterstitialId: 'ca-app-pub-5433582223311514/8646997540',
-          keywords: [
-            'investment',
-            'bitcoin',
-            'crypto',
-            'trading',
-            'wallets',
-            'mining'
-          ]
-        })
+        await admob.preloadInterstitial(options)
       } catch (e) {
         console.log('admob $_preloadInterstitialAd error: ' + e)
       }
@@ -24,7 +18,7 @@ export const AdMixin = {
       try {
         await admob.showInterstitial()
       } catch (e) {
-        console.log(e)
+        await admob.createInterstitial(options)
       }
     }
   }
