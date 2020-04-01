@@ -110,7 +110,7 @@ export default {
   beforeMount() {
     const a = this.alert
     this.currentAlert = new Alert(
-      a.targetPrice,
+      this.coin.currentPrice,
       a.note,
       a.currentValueDuringCreation,
       a.coinId,
