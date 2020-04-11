@@ -96,7 +96,9 @@ export default {
     ...mapActions('appManager', ['select', 'update', 'insert']),
     startContinuousService() {
       const context = application.android.context
+      /* eslint-disable */
       const intent = new android.content.Intent()
+      /* eslint-enable */
       intent.setClassName(context, CONTINUOUS_SERVICE_CLASSNAME)
       context.startService(intent)
     },
