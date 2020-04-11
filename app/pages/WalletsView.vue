@@ -48,6 +48,12 @@
 
     <grid-layout rows="auto, *">
       <StackLayout v-if="sortedWallets.length > 0" row="1" class="wallets">
+        <FlexboxLayout class="header">
+          <Label text="Name / Balance" />
+          <Label text="Price / 24h" />
+          <Label text="Value / Investment" />
+        </FlexboxLayout>
+
         <PullToRefresh @refresh="refresh" class="spinner">
           <ListView
             v-for="wallet in sortedWallets"
@@ -344,6 +350,11 @@ export default {
 
   .wallets {
     padding: $separation-content;
+
+    .header {
+      justify-content: space-between;
+      padding-bottom: $separation-content;
+    }
 
     .wallet {
       justify-content: space-between;
