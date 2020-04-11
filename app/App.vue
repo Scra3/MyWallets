@@ -81,7 +81,6 @@ export default {
       if (!this.app) {
         return USD
       }
-
       return this.app.currency === USD.acronym ? USD : EUR
     }
   },
@@ -109,8 +108,18 @@ export default {
         console.log('when loading store states in App', e)
       }
     },
-    toggleCurrency() {
+    async toggleCurrency() {
       const selectedCurrency = this.selectedCurrency === USD ? EUR : USD
+      const result = await confirm({
+        title: `Change currency to ${selectedCurrency.acronym.toUpperCase()}`,
+        message:
+          'Be careful, for the moment the currency is global to the app, it will also change the alerts currency.',
+        okButtonText: `Change to ${selectedCurrency.acronym}`,
+        cancelButtonText: 'Cancel'
+      })
+      if (!result) {
+        return
+      }
 
       if (this.app) {
         this.update({ ...this.app, currency: selectedCurrency.acronym })
@@ -126,6 +135,11 @@ export default {
 </script>
 
 <style lang="scss">
+// it used for the alert currency confirmation
+button {
+  color: $primaryVariant;
+}
+
 .App {
   .action-bar {
     font-size: $large-font-size;
