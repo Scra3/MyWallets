@@ -1,11 +1,11 @@
 import * as httpModule from 'tns-core-modules/http'
 import {
+  checkEOSAccountValidity,
   fetchCoinsMarket,
-  fetchWalletsCoinMarket,
-  checkEOSAccountValidity
+  fetchWalletsCoinMarket
 } from '@/Api'
 import { Coin } from '@/models/Coin'
-import { USD, XRP, BTC } from '@/constants'
+import { BTC, USD, XRP } from '@/constants'
 import { Wallet } from '@/models/Wallet'
 
 describe('Api.js', () => {

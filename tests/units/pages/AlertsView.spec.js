@@ -15,7 +15,6 @@ jest.mock('nativescript-sqlite', () => jest.fn())
 
 import { fetchCoinsMarket } from '@/Api'
 import { XRP, BTC } from '@/constants'
-import { navigateToFadeOption } from '../utils'
 
 const xrpCoin = new Coin(
   XRP,
@@ -58,6 +57,7 @@ describe('AlertsView.vue', () => {
   let actions
   let store
   let wrapper
+  let $_navigateTo
 
   beforeEach(() => {
     fetchCoinsMarket.mockImplementation(() =>
@@ -79,6 +79,7 @@ describe('AlertsView.vue', () => {
     })
   })
 
+  $_navigateTo = jest.fn()
   beforeEach(async () => {
     wrapper = shallowMount(AlertsView, {
       localVue,
@@ -86,8 +87,8 @@ describe('AlertsView.vue', () => {
       propsData: {
         currency: USD
       },
-      mocks: {
-        $navigateTo: jest.fn()
+      methods: {
+        $_navigateTo
       }
     })
 
@@ -121,27 +122,25 @@ describe('AlertsView.vue', () => {
     const selectedAlert = wrapper.vm.sortedAlerts[0]
     wrapper.find('ListView-stub').vm.$emit('itemTap', { index: 0 })
 
-    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(AlertFormPage, {
+    expect($_navigateTo).toHaveBeenCalledWith(AlertFormPage, {
       props: {
         coin: btcCoin,
         currency: USD,
         alert: selectedAlert,
         isUpdating: true
-      },
-      ...navigateToFadeOption
+      }
     })
   })
 
   it('navigates to coins page when Fab button is tapped', async () => {
     wrapper.find('Fab-stub').vm.$emit('tap')
 
-    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(CoinsPage, {
+    expect($_navigateTo).toHaveBeenCalledWith(CoinsPage, {
       props: {
         navigateTo: 'AlertFormPage',
         currency: USD,
         isConnectableTagDisplayed: false
-      },
-      ...navigateToFadeOption
+      }
     })
   })
 })

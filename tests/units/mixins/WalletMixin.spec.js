@@ -11,7 +11,7 @@ import {
 } from '@/Api'
 
 import { XRP, BTC, EOS, ETH, NEO } from '@/constants'
-import { WalletMixin } from '@/mixins/WalletMixin.js'
+import { WalletMixin } from '@/mixins/WalletMixin'
 import { shallowMount } from '@vue/test-utils'
 
 describe('WalletMixin', () => {

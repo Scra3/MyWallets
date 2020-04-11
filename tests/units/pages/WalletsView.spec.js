@@ -12,6 +12,8 @@ jest.mock('@/Api')
 jest.mock('nativescript-barcodescanner', () => jest.fn())
 jest.mock('nativescript-camera', () => jest.fn())
 jest.mock('nativescript-local-notifications', () => jest.fn())
+jest.mock('nativescript-sqlite', () => jest.fn())
+global.android = jest.fn()
 
 import { fetchWalletsCoinMarket, fetchCryptoFear } from '@/Api'
 import { XRP } from '@/constants'
@@ -38,6 +40,7 @@ describe('WalletsView.vue', () => {
   let actions
   let store
   let wrapper
+  let $_navigateTo
 
   beforeEach(() => {
     fetchWalletsCoinMarket.mockImplementation(() =>
@@ -63,6 +66,7 @@ describe('WalletsView.vue', () => {
     })
   })
 
+  $_navigateTo = jest.fn()
   beforeEach(async () => {
     wrapper = shallowMount(WalletsView, {
       localVue,
@@ -70,7 +74,7 @@ describe('WalletsView.vue', () => {
       propsData: {
         currency: USD
       },
-      mocks: { $navigateTo: jest.fn() }
+      methods: { fetchDataLoop: jest.fn(), $_navigateTo }
     })
 
     await flushPromises()
@@ -182,7 +186,7 @@ describe('WalletsView.vue', () => {
   it('navigates to coins page when Fab button is tapped', () => {
     wrapper.find('Fab-stub').vm.$emit('tap')
 
-    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(CoinsPage, {
+    expect($_navigateTo).toHaveBeenCalledWith(CoinsPage, {
       props: { currency: USD }
     })
   })
@@ -190,7 +194,7 @@ describe('WalletsView.vue', () => {
   it('navigates to wallet page when wallet is tapped', () => {
     wrapper.find('ListView-stub').vm.$emit('itemTap', { index: 1 })
 
-    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(WalletFormPage, {
+    expect($_navigateTo).toHaveBeenCalledWith(WalletFormPage, {
       props: { wallet: walletA, currency: USD, isUpdating: true }
     })
   })

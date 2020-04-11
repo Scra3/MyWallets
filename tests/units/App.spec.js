@@ -1,13 +1,16 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import App from '@/App'
-import { EUR, USD } from '@/constants.js'
+import { EUR, USD } from '@/constants'
 import Vuex from 'vuex'
 
-jest.mock('nativescript-barcodescanner', () => '')
+jest.mock('nativescript-barcodescanner', () => jest.fn())
 jest.mock('nativescript-camera', () => {
   return { requestPermissions: jest.fn() }
 })
 jest.mock('nativescript-local-notifications', () => jest.fn())
+jest.mock('nativescript-sqlite')
+jest.mock('@/services/continuousService')
+global.android = jest.fn()
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -28,11 +31,16 @@ describe('App.vue', () => {
 
     store = new Vuex.Store({
       modules: {
-        appManager: { namespaced: true, actions, state }
+        appManager: { namespaced: true, actions, state },
+        walletManager: { namespaced: true, actions, state }
       }
     })
 
-    wrapper = shallowMount(App, { store, localVue })
+    wrapper = shallowMount(App, {
+      store,
+      localVue,
+      methods: { startContinuousService: jest.fn() }
+    })
   })
 
   it('displays USD currency by default', () => {
@@ -47,19 +55,5 @@ describe('App.vue', () => {
       ...store.state.appManager.app,
       currency: EUR.acronym
     })
-  })
-
-  it('renders MarketView when his tab is clicked', () => {
-    wrapper.find('TabView-stub').vm.$emit('selectedIndexChange', { value: 1 })
-
-    // tabView selectedIndex props is undefined... that why whe test selectedIndex data
-    expect(wrapper.vm.selectedIndex).toBe(1)
-  })
-
-  it('renders WalletView when his tab is clicked', () => {
-    wrapper.find('TabView-stub').vm.$emit('selectedIndexChange', { value: 0 })
-
-    // tabView selectedIndex props is undefined... that why whe test selectedIndex data
-    expect(wrapper.vm.selectedIndex).toBe(0)
   })
 })

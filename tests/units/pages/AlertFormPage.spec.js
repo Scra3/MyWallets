@@ -10,6 +10,7 @@ import flushPromises from 'flush-promises'
 jest.mock('nativescript-barcodescanner', () => jest.fn())
 jest.mock('nativescript-camera', () => jest.fn())
 jest.mock('nativescript-local-notifications', () => jest.fn())
+jest.mock('nativescript-sqlite', () => jest.fn())
 
 const coin = new Coin(
   BTC,
@@ -31,6 +32,7 @@ describe('AlertFormPage.vue', () => {
   let wrapper
   let store
   let actions
+  let $_navigateTo
 
   beforeEach(async () => {
     actions = {
@@ -47,13 +49,19 @@ describe('AlertFormPage.vue', () => {
       }
     })
 
+    $_navigateTo = jest.fn()
+
     wrapper = shallowMount(AlertFormPage, {
       propsData: { coin, currency: USD, alert: newAlert },
       localVue,
       store,
       mocks: {
-        $navigateBack: jest.fn(),
-        $navigateTo: jest.fn()
+        $navigateBack: jest.fn()
+      },
+      methods: {
+        $_navigateTo,
+        $_showInterstitialAd: jest.fn(),
+        $_preloadInterstitialAd: jest.fn()
       }
     })
   })
@@ -64,14 +72,14 @@ describe('AlertFormPage.vue', () => {
     expect(wrapper.vm.$navigateBack).toHaveBeenCalled()
   })
 
-  it('goes to home page when delete button is clicked when it is updating alert', async () => {
+  it('goes to home page when delete button is clicked when alert is already created', async () => {
     wrapper.setProps({ isUpdating: true, alert })
 
     wrapper.findDataTest('delete-alert').vm.$emit('tap')
 
     await flushPromises()
 
-    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(App, {
+    expect($_navigateTo).toHaveBeenCalledWith(App, {
       props: { defaultSelectedViewIndex: 2 }
     })
   })
@@ -79,7 +87,7 @@ describe('AlertFormPage.vue', () => {
   it('does not go to alerts view when user clicks on save alert and did not provide target value', () => {
     wrapper.findDataTest('save-button').vm.$emit('tap')
 
-    expect(wrapper.vm.$navigateTo).not.toHaveBeenCalled()
+    expect($_navigateTo).not.toHaveBeenCalled()
   })
 
   it('displays input target value', () => {
@@ -97,7 +105,7 @@ describe('AlertFormPage.vue', () => {
 
     await flushPromises()
 
-    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(App, {
+    expect($_navigateTo).toHaveBeenCalledWith(App, {
       props: { defaultSelectedViewIndex: 2 }
     })
   })
@@ -107,6 +115,6 @@ describe('AlertFormPage.vue', () => {
 
     wrapper.findDataTest('save-button').vm.$emit('tap')
 
-    expect(wrapper.vm.$navigateTo).not.toHaveBeenCalled()
+    expect($_navigateTo).not.toHaveBeenCalled()
   })
 })

@@ -1,5 +1,3 @@
-import { navigateToFadeOption } from '../utils'
-
 jest.mock('@/Api')
 jest.mock('nativescript-barcodescanner', () => jest.fn())
 jest.mock('nativescript-camera', () => {
@@ -28,6 +26,7 @@ const bitcoinCoin = new Coin(
 describe('CoinsPage.vue', () => {
   let wrapper
   let clearSearchBarFocus
+  let $_navigateTo
 
   beforeEach(() => {
     fetchCoinsMarket.mockImplementation(() =>
@@ -45,17 +44,18 @@ describe('CoinsPage.vue', () => {
       ])
     )
     clearSearchBarFocus = jest.fn()
+    $_navigateTo = jest.fn()
 
     wrapper = shallowMount(CoinsPage, {
       propsData: {
         currency: USD
       },
       methods: {
-        clearSearchBarFocus
+        clearSearchBarFocus,
+        $_navigateTo
       },
       mocks: {
-        $navigateBack: jest.fn(),
-        $navigateTo: jest.fn()
+        $navigateBack: jest.fn()
       }
     })
 
@@ -77,9 +77,8 @@ describe('CoinsPage.vue', () => {
   it('navigates to wallet page when coin is tapped', () => {
     wrapper.find('ListView-stub').vm.$emit('itemTap', { index: 0 })
 
-    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(WalletFormPage, {
-      props: { wallet: new Wallet(bitcoinCoin), currency: USD },
-      ...navigateToFadeOption
+    expect($_navigateTo).toHaveBeenCalledWith(WalletFormPage, {
+      props: { wallet: new Wallet(bitcoinCoin), currency: USD }
     })
   })
 
