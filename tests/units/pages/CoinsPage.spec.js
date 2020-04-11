@@ -1,3 +1,5 @@
+import { navigateToFadeOption } from '../utils'
+
 jest.mock('@/Api')
 jest.mock('nativescript-barcodescanner', () => jest.fn())
 jest.mock('nativescript-camera', () => {
@@ -7,7 +9,7 @@ jest.mock('nativescript-local-notifications', () => jest.fn())
 
 import { shallowMount } from '@vue/test-utils'
 import CoinsPage from '@/pages/CoinsPage'
-import { USD, BTC, XRP } from '@/constants.js'
+import { USD, BTC, XRP } from '@/constants'
 import { Coin } from '@/models/Coin'
 import { fetchCoinsMarket } from '@/Api'
 import { Wallet } from '@/models/Wallet'
@@ -58,7 +60,6 @@ describe('CoinsPage.vue', () => {
     })
 
     fetchCoinsMarket.mockClear()
-    jest.useFakeTimers()
   })
 
   it('goes to back when back button is tapped in the action bar', () => {
@@ -77,7 +78,8 @@ describe('CoinsPage.vue', () => {
     wrapper.find('ListView-stub').vm.$emit('itemTap', { index: 0 })
 
     expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(WalletFormPage, {
-      props: { wallet: new Wallet(bitcoinCoin), currency: USD }
+      props: { wallet: new Wallet(bitcoinCoin), currency: USD },
+      ...navigateToFadeOption
     })
   })
 
