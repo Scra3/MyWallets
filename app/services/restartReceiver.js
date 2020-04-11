@@ -43,7 +43,7 @@ var __decorate =
     return c > 3 && r && Object.defineProperty(target, key, r), r
   }
 exports.__esModule = true
-var continuous_service_android_1 = require('./continuousService.android')
+var continuous_service_android_1 = require('./continuousService')
 exports.RESTART_RECEIVER_CLASSNAME =
   'org.nativescript.mywallets.Restart_Receiver'
 var Restart_Receiver = /** @class */ (function(_super) {

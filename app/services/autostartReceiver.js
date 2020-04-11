@@ -24,7 +24,7 @@ var __extends =
     }
   })()
 exports.__esModule = true
-var continuous_service_android_1 = require('./continuousService.android')
+var continuous_service_android_1 = require('./continuousService')
 exports.AUTOSTART_RECEIVER_CLASSNAME =
   'org.nativescript.mywallets.Autostart_Receiver'
 var Autostart_Receiver = /** @class */ (function(_super) {

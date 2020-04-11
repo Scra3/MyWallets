@@ -13,8 +13,9 @@
     <grid-layout rows="auto, *">
       <StackLayout v-if="sortedAlerts.length > 0" row="1" class="alerts">
         <FlexboxLayout class="header">
-          <Label text="Name" class="name" />
-          <Label text="Target Price" class="price" />
+          <Label text="Name" />
+          <Label text="Note" />
+          <Label text="Target Price" />
         </FlexboxLayout>
         <ListView
           v-for="alert in sortedAlerts"
@@ -137,7 +138,6 @@ export default {
       }
     },
     async fetchAlerts() {
-      // eslint-disable-next-line no-unused-vars
       const coins = await fetchCoinsMarket(this.currency)
       this.alerts = this.persistedAlertsFromDB.map(persistedAlert =>
         Alert.buildAlertFromPersistedAlert(persistedAlert)
@@ -188,6 +188,7 @@ export default {
     justify-content: space-between;
     padding: $separation-content;
   }
+
   .alerts {
     padding: $separation-content;
 
@@ -211,13 +212,13 @@ export default {
 
       .note {
         text-overflow: ellipsis;
-        width: 30%;
+        width: 40%;
       }
 
       .target-price {
         font-weight: bold;
         color: $primary;
-        width: 30%;
+        width: 20%;
         text-align: right;
       }
     }

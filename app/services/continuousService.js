@@ -45,7 +45,7 @@ var __decorate =
 
 var { notificationAlerts, WAITING_TIME } = require('./notificationAlerts')
 exports.__esModule = true
-var restart_receiver_android_1 = require('./restartReceiver.android')
+var restart_receiver_android_1 = require('./restartReceiver')
 exports.CONTINUOUS_SERVICE_CLASSNAME =
   'org.nativescript.mywallets.Continuous_Service'
 var Continuous_Service = /** @class */ (function(_super) {

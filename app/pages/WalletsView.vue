@@ -219,14 +219,16 @@ export default {
   },
   mounted() {
     this.fetchData()
-
-    this.intervalID = setInterval(this.fetchData, this.intervalDelay)
+    this.fetchDataLoop()
   },
   beforeDestroy() {
     clearInterval(this.intervalID)
   },
   methods: {
     ...mapActions('walletManager', ['selectAll']),
+    fetchDataLoop() {
+      this.intervalID = setInterval(this.fetchData, this.intervalDelay)
+    },
     navigateToWalletFormPage(event) {
       // wallet in listview is undefined that why we use event.
       this.$_navigateTo(WalletFormPage, {

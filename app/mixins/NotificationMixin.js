@@ -1,5 +1,4 @@
 import { LocalNotifications } from 'nativescript-local-notifications'
-import { Color } from 'tns-core-modules/color'
 
 export const NotificationMixin = {
   methods: {
@@ -10,7 +9,6 @@ export const NotificationMixin = {
           title: title,
           body: body,
           bigTextStyle: false, // Allow more than 1 row of the 'body' text on Android, but setting this to true denies showing the 'image'
-          color: new Color('green'),
           thumbnail: thumbnail,
           forceShowWhenInForeground: true,
           at: new Date(new Date().getTime() + 1000),

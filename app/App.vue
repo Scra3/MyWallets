@@ -56,7 +56,7 @@ import MarketView from '@/pages/MarketView'
 import AlertsView from '@/pages/AlertsView'
 import { USD, EUR } from '@/constants'
 import { mapActions, mapState } from 'vuex'
-import { CONTINUOUS_SERVICE_CLASSNAME } from '@/services/continuousService.android'
+import { CONTINUOUS_SERVICE_CLASSNAME } from '@/constants'
 import * as application from 'tns-core-modules/application'
 
 export default {
@@ -90,14 +90,16 @@ export default {
   },
   mounted() {
     this.loadAppState()
-
-    const context = application.android.context
-    const intent = new android.content.Intent()
-    intent.setClassName(context, CONTINUOUS_SERVICE_CLASSNAME)
-    context.startService(intent)
+    this.startContinuousService()
   },
   methods: {
     ...mapActions('appManager', ['select', 'update', 'insert']),
+    startContinuousService() {
+      const context = application.android.context
+      const intent = new android.content.Intent()
+      intent.setClassName(context, CONTINUOUS_SERVICE_CLASSNAME)
+      context.startService(intent)
+    },
     async loadAppState() {
       try {
         await this.select()

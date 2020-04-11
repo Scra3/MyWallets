@@ -40,7 +40,7 @@
         key="investment"
         :label="`Investment (${currency.symbol})`"
         :is-optional="true"
-        :is-valid="isInvestmentValid"
+        :is-valid="isSaveButtonClicked ? isInvestmentValid : null"
         :value="currentWallet.investment"
         @value-did-change="currentWallet.investment = $event"
         keyboardType="number"
@@ -51,14 +51,14 @@
       <WalletBalanceInput
         v-if="currentWallet.isUsingLocalBalance"
         :balance="currentWallet.balance"
-        :is-valid="isBalanceValid"
+        :is-valid="isSaveButtonClicked ? isBalanceValid : null"
         @balance-did-change="currentWallet.balance = $event"
       />
 
       <WalletAddressInput
         v-else
         :address="currentWallet.address"
-        :is-valid="isAddressValid"
+        :is-valid="isSaveButtonClicked ? isAddressValid : null"
         :is-checking-address="isCheckingAddressValidity"
         :has-connection-error="isFailedCheckingAddressValidity"
         @address-did-change="currentWallet.address = $event"
@@ -120,7 +120,8 @@ export default {
       currentWallet: null,
       isAddressValid: null,
       isCheckingAddressValidity: false,
-      isFailedCheckingAddressValidity: false
+      isFailedCheckingAddressValidity: false,
+      isSaveButtonClicked: false
     }
   },
   computed: {
@@ -178,6 +179,7 @@ export default {
       }
     },
     async saveWalletAndBackToHomePage() {
+      this.isSaveButtonClicked = true
       await this.$_showInterstitialAd()
 
       if (this.currentWallet.isUsingLocalBalance) {

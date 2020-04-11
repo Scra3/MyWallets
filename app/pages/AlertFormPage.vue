@@ -110,14 +110,12 @@ export default {
   beforeMount() {
     const a = this.alert
     this.currentAlert = new Alert(
-      this.coin.currentPrice,
+      a.targetPrice || this.coin.currentPrice,
       a.note,
-      a.currentValueDuringCreation,
+      this.coin.currentPrice,
       a.coinId,
       a.id
     )
-    // when alert has not the current price of the coin, it prevents update alert
-    this.currentAlert.currentValueDuringCreation = this.coin.currentPrice
   },
   mounted() {
     this.$_preloadInterstitialAd()
