@@ -108,16 +108,18 @@ export default {
         console.log('when loading store states in App', e)
       }
     },
-    async toggleCurrency() {
-      const selectedCurrency = this.selectedCurrency === USD ? EUR : USD
-      const result = await confirm({
+    displayConfirmCurrency(selectedCurrency) {
+      return confirm({
         title: `Change currency to ${selectedCurrency.acronym.toUpperCase()}`,
         message:
           'Be careful, for the moment the currency is global to the app, it will also change the alerts currency.',
         okButtonText: `Change to ${selectedCurrency.acronym}`,
         cancelButtonText: 'Cancel'
       })
-      if (!result) {
+    },
+    async toggleCurrency() {
+      const selectedCurrency = this.selectedCurrency === USD ? EUR : USD
+      if (!(await this.displayConfirmCurrency(selectedCurrency))) {
         return
       }
 

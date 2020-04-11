@@ -2,6 +2,7 @@ import { shallowMount, createLocalVue } from '@vue/test-utils'
 import App from '@/App'
 import { EUR, USD } from '@/constants'
 import Vuex from 'vuex'
+import flushPromises from 'flush-promises'
 
 jest.mock('nativescript-barcodescanner', () => jest.fn())
 jest.mock('nativescript-camera', () => {
@@ -39,7 +40,9 @@ describe('App.vue', () => {
     wrapper = shallowMount(App, {
       store,
       localVue,
-      methods: { startContinuousService: jest.fn() }
+      methods: {
+        startContinuousService: jest.fn()
+      }
     })
   })
 
@@ -49,11 +52,24 @@ describe('App.vue', () => {
     ).toEqual(USD.acronym)
   })
 
-  it('toggles EUR currency when USD currency is tapped', () => {
+  it('toggles EUR currency when USD currency is tapped', async () => {
+    wrapper.vm.displayConfirmCurrency = jest.fn(() => Promise.resolve(true))
+
     wrapper.findDataTest('action-item-currency').vm.$emit('tap')
+    await flushPromises()
+
     expect(actions.update).toHaveBeenCalledWith(expect.any(Object), {
       ...store.state.appManager.app,
       currency: EUR.acronym
     })
+  })
+
+  it('does not toggles EUR currency when USD currency is tapped and it cancel', async () => {
+    wrapper.vm.displayConfirmCurrency = jest.fn(() => Promise.resolve(false))
+
+    wrapper.findDataTest('action-item-currency').vm.$emit('tap')
+    await flushPromises()
+
+    expect(actions.update).not.toHaveBeenCalled()
   })
 })
