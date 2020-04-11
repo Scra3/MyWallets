@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import AlertsView from '@/pages/AlertsView'
-import { USD } from '@/constants.js'
+import { USD } from '@/constants'
 import { Coin } from '@/models/Coin'
 import Vuex from 'vuex'
 import flushPromises from 'flush-promises'
@@ -11,9 +11,11 @@ jest.mock('@/Api')
 jest.mock('nativescript-barcodescanner', () => jest.fn())
 jest.mock('nativescript-camera', () => jest.fn())
 jest.mock('nativescript-local-notifications', () => jest.fn())
+jest.mock('nativescript-sqlite', () => jest.fn())
 
 import { fetchCoinsMarket } from '@/Api'
 import { XRP, BTC } from '@/constants'
+import { navigateToFadeOption } from '../utils'
 
 const xrpCoin = new Coin(
   XRP,
@@ -84,16 +86,12 @@ describe('AlertsView.vue', () => {
       propsData: {
         currency: USD
       },
-      mocks: { $navigateTo: jest.fn() }
+      mocks: {
+        $navigateTo: jest.fn()
+      }
     })
 
     await flushPromises()
-  })
-
-  it('displays the number of alerts', () => {
-    expect(wrapper.findDataTest('alerts-number').attributes().text).toEqual(
-      '2 Alerts'
-    )
   })
 
   it('displays all alert items', () => {
@@ -119,8 +117,8 @@ describe('AlertsView.vue', () => {
     expect(wrapper.findDataTest('information-message').isVisible()).toBe(true)
   })
 
-  it('navigates to alert form page when alert is tapped', async () => {
-    let selectedAlert = wrapper.vm.sortedAlerts[0]
+  it('navigates to alert form page when an alert is tapped', async () => {
+    const selectedAlert = wrapper.vm.sortedAlerts[0]
     wrapper.find('ListView-stub').vm.$emit('itemTap', { index: 0 })
 
     expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(AlertFormPage, {
@@ -129,7 +127,8 @@ describe('AlertsView.vue', () => {
         currency: USD,
         alert: selectedAlert,
         isUpdating: true
-      }
+      },
+      ...navigateToFadeOption
     })
   })
 
@@ -141,7 +140,8 @@ describe('AlertsView.vue', () => {
         navigateTo: 'AlertFormPage',
         currency: USD,
         isConnectableTagDisplayed: false
-      }
+      },
+      ...navigateToFadeOption
     })
   })
 })
