@@ -22,6 +22,10 @@ const NSElements = [
   'BarcodeScanner',
   'Fab',
   'SearchBar',
+  'BottomNavigation',
+  'TabStrip',
+  'TabStripItem',
+  'TabContentItem',
   'Switch'
 ]
 
