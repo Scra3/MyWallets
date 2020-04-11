@@ -112,7 +112,7 @@ export default {
       return confirm({
         title: `Change currency to ${selectedCurrency.acronym.toUpperCase()}`,
         message:
-          'Be careful, for the moment the currency is global to the app, it will also change the alerts currency.',
+          'Be careful, for the moment the currency is global to the app, it will also change the alert currencies.',
         okButtonText: `Change to ${selectedCurrency.acronym}`,
         cancelButtonText: 'Cancel'
       })
