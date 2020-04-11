@@ -16,6 +16,7 @@ module.exports = {
   collectCoverageFrom: ['app/**/*.{js,vue}', '!app/main.js', '!app/store.js'],
   coverageReporters: ['text', 'html'],
   setupFiles: [
+    '<rootDir>/jest/typescript-helpers.js',
     '<rootDir>/jest/nativescript-vue-stubs.js',
     '<rootDir>/jest/extends-vue-test-utils.js'
   ]
