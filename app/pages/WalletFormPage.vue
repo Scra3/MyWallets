@@ -119,10 +119,18 @@ export default {
     return {
       currentWallet: null,
       isAddressValid: null,
-      isBalanceValid: null,
-      isInvestmentValid: null,
       isCheckingAddressValidity: false,
       isFailedCheckingAddressValidity: false
+    }
+  },
+  computed: {
+    isBalanceValid() {
+      const balance = this.currentWallet.balance
+      return !!balance && balance !== '' && balance >= 0
+    },
+    isInvestmentValid() {
+      const investment = this.currentWallet.investment
+      return !investment || investment >= 0
     }
   },
   beforeMount() {
@@ -162,14 +170,6 @@ export default {
         this.isCheckingAddressValidity = false
       }
     },
-    verifyBalance() {
-      const balance = this.currentWallet.balance
-      this.isBalanceValid = !!balance && balance !== '' && balance >= 0
-    },
-    verifyInvestment() {
-      const investment = this.currentWallet.investment
-      this.isInvestmentValid = !investment || investment >= 0
-    },
     async insertOrUpdate() {
       if (this.isUpdating) {
         await this.update(this.currentWallet)
@@ -179,16 +179,13 @@ export default {
     },
     async saveWalletAndBackToHomePage() {
       await this.$_showInterstitialAd()
-      this.verifyInvestment()
 
       if (this.currentWallet.isUsingLocalBalance) {
-        this.verifyBalance()
-
         if (this.isBalanceValid && this.isInvestmentValid) {
           await this.insertOrUpdate()
           this.navigateToHomePage()
         }
-      } else if (!this.currentWallet.isUsingLocalBalance) {
+      } else {
         await this.verifyAddress()
 
         if (this.isAddressValid && this.isInvestmentValid) {

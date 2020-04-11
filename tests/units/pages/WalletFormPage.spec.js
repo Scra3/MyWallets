@@ -6,9 +6,12 @@ import flushPromises from 'flush-promises'
 import { USD, BTC } from '@/constants'
 import App from '@/App'
 import Vuex from 'vuex'
+import { navigateToFadeOption } from '../utils'
 
 jest.mock('nativescript-barcodescanner', () => jest.fn())
 jest.mock('nativescript-camera', () => jest.fn())
+jest.mock('nativescript-sqlite', () => jest.fn())
+jest.mock('nativescript-local-notifications', () => jest.fn())
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -50,6 +53,11 @@ describe('WalletFormPage.vue', () => {
       mocks: {
         $navigateBack: jest.fn(),
         $navigateTo: jest.fn()
+      },
+      methods: {
+        $_preloadInterstitialAd: jest.fn(),
+        $_showInterstitialAd: jest.fn(() => Promise.resolve(true)),
+        $_checkAddressValidity: jest.fn(() => Promise.resolve(true))
       }
     })
   })
@@ -67,7 +75,10 @@ describe('WalletFormPage.vue', () => {
 
     await flushPromises()
 
-    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(App)
+    expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(
+      App,
+      navigateToFadeOption
+    )
   })
 
   it('does not go to home page when user clicks on save wallet and did not provide any information', () => {
@@ -87,17 +98,15 @@ describe('WalletFormPage.vue', () => {
       expect(wrapper.find('WalletAddressInput-stub').isVisible()).toBe(true)
     })
 
-    it('does not display input wallet balance', () => {
+    it('does not display input the wallet balance', () => {
       expect(wrapper.find('WalletBalanceInput-stub').exists()).toBe(false)
     })
 
-    it('displays wallet price', () => {
+    it('displays the wallet price', () => {
       expect(wrapper.findDataTest('wallet-price').exists()).toBe(false)
     })
 
-    it('goes to home page when save button is tapped and address is valid', async () => {
-      wrapper.vm.$_checkAddressValidity = jest.fn(() => Promise.resolve(true))
-
+    it('goes to home page when the save button is tapped and the address is valid', async () => {
       wrapper
         .find('WalletAddressInput-stub')
         .vm.$emit('address-did-change', 'goodAddress')
@@ -106,12 +115,13 @@ describe('WalletFormPage.vue', () => {
 
       await flushPromises()
 
-      expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(App)
+      expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(
+        App,
+        navigateToFadeOption
+      )
     })
 
     it('does not go to home page when save button is tapped and address is not valid', async () => {
-      wrapper.vm.$_checkAddressValidity = jest.fn(() => Promise.resolve(false))
-
       wrapper
         .find('WalletAddressInput-stub')
         .vm.$emit('address-did-change', 'badAddress')
@@ -139,15 +149,20 @@ describe('WalletFormPage.vue', () => {
         .vm.$emit('is-balance-mode-did-tap', true)
     })
 
-    it('inserts wallet in db when save button is tapped and inputs are valid', () => {
+    it('inserts wallet in db when save button is tapped and inputs are valid', async () => {
+      wrapper.vm.$_showInterstitialAd = jest.fn(() => Promise.resolve(true))
+
       wrapper.findDataTest('save-button').vm.$emit('tap')
+      await flushPromises()
 
       expect(actions.insert).toHaveBeenCalled()
     })
 
-    it('updates wallet in db when save button is tapped and inputs are valid', () => {
+    it('updates wallet in db when save button is tapped and inputs are valid', async () => {
       wrapper.setProps({ isUpdating: true })
+
       wrapper.findDataTest('save-button').vm.$emit('tap')
+      await flushPromises()
 
       expect(actions.update).toHaveBeenCalled()
     })
@@ -160,12 +175,16 @@ describe('WalletFormPage.vue', () => {
       expect(wrapper.find('WalletAddressInput-stub').exists()).toBe(false)
     })
 
-    it('goes to home page when save button is tapped and balance is valid', async () => {
+    it('goes to home page when the save button is tapped and the balance is valid', async () => {
       wrapper.find('WalletBalanceInput-stub').vm.$emit('balance-did-change', 5)
+
       wrapper.findDataTest('save-button').vm.$emit('tap')
       await flushPromises()
 
-      expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(App)
+      expect(wrapper.vm.$navigateTo).toHaveBeenCalledWith(
+        App,
+        navigateToFadeOption
+      )
     })
 
     it('does not go to home page when save button is tapped and balance is not valid', () => {
