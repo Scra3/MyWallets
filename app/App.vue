@@ -136,12 +136,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
-// it used for the alert currency confirmation
-button {
-  color: $primaryVariant;
-}
-
+<style lang="scss" scoped>
 .App {
   .action-bar {
     font-size: $large-font-size;
