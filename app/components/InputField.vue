@@ -9,7 +9,7 @@
         v-if="inputType === 'TextField'"
         v-model="currentValue"
         @textChange="$emit('value-did-change', $event.value)"
-        @blur="$emit('input-did-unfocus', $event.value)"
+        @blur="handleFocus"
         :class="{
           error: isValid === false,
           success: isValid === true
@@ -25,7 +25,7 @@
         v-else-if="inputType === 'TextView'"
         v-model="currentValue"
         @textChange="$emit('value-did-change', $event.value)"
-        @blur="$emit('input-did-unfocus', $event.value)"
+        @blur="handleFocus"
         :class="{
           error: isValid === false,
           success: isValid === true
@@ -116,6 +116,11 @@ export default {
   },
   beforeMount() {
     this.currentValue = this.value
+  },
+  methods: {
+    handleFocus(event) {
+      this.$emit('input-did-unfocus', event.value)
+    }
   }
 }
 </script>
@@ -134,6 +139,9 @@ export default {
     width: 100%;
     color: $onSurface;
     placeholder-color: $onSurfaceMediumEmphasis;
+    border-bottom-width: 1;
+    border-color: $background;
+    padding-bottom: 0;
 
     &.error {
       border-color: $error;
