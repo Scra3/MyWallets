@@ -9,6 +9,8 @@ import { fetchCoinsMarket } from '@/Api'
 
 describe('MarketView.vue', () => {
   let wrapper
+  let clearSearchBarFocus
+
   beforeEach(async () => {
     fetchCoinsMarket.mockImplementation(() =>
       Promise.resolve([
@@ -31,9 +33,14 @@ describe('MarketView.vue', () => {
       ])
     )
 
+    clearSearchBarFocus = jest.fn()
+
     wrapper = shallowMount(MarketView, {
       propsData: {
         currency: USD
+      },
+      methods: {
+        clearSearchBarFocus
       }
     })
 
@@ -43,6 +50,10 @@ describe('MarketView.vue', () => {
 
   it('displays index starting to 1', () => {
     expect(wrapper.findDataTest('index').attributes().text).toEqual('1')
+  })
+
+  it('clears search focus', () => {
+    expect(clearSearchBarFocus).toHaveBeenCalled()
   })
 
   it('displays all coins', () => {

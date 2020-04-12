@@ -1,6 +1,11 @@
 <template>
   <StackLayout class="MarketView darkMode">
-    <SearchBar v-model="searchQuery" hint="Search coin" class="search-bar" />
+    <SearchBar
+      ref="search-bar"
+      v-model="searchQuery"
+      hint="Search coin"
+      class="search-bar"
+    />
 
     <FlexboxLayout class="header">
       <Label text="#" class="index" />
@@ -79,8 +84,18 @@ export default {
   },
   mounted() {
     this.fetchCoinsMarket()
+    this.clearSearchBarFocus()
   },
   methods: {
+    clearSearchBarFocus() {
+      // it waits the search bar to be loaded to clear focus
+      const searchBar = this.$refs['search-bar'].nativeView.android
+      if (searchBar) {
+        searchBar.clearFocus()
+      } else {
+        setTimeout(this.clearSearchBarFocus, 100)
+      }
+    },
     async refreshCoinsMarket(event) {
       const pullRefresh = event.object
       this.isFailedToLoad = false

@@ -354,6 +354,7 @@ export default {
     .header {
       justify-content: space-between;
       padding-bottom: $separation-content;
+      font-weight: bold;
     }
 
     .wallet {
