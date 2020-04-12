@@ -21,27 +21,36 @@
         <label :text="`Crypto Fear: ${cryptoFear}`" class="crypto-fear" />
 
         <FlexboxLayout class="sub-infos">
-          <PriceLabel
-            v-if="totalInvestment !== 0"
-            :value="totalInvestment"
-            :currency="currency"
-            class="price"
-            data-test="wallets-price"
-          />
+          <FlexboxLayout v-if="totalInvestment !== 0" class="sub-info">
+            <Label class="label" text="Total Investments" />
+            <PriceLabel
+              :value="totalInvestment"
+              :currency="currency"
+              class="price"
+              data-test="wallets-price"
+            />
+          </FlexboxLayout>
 
-          <ChangeLabel
-            v-if="totalInvestment !== 0"
-            :value="ratio"
-            unit="%"
-            data-test="wallets-ratio"
-            class="price"
-          />
-          <ChangeLabel
-            :value="totalPriceChange24H"
-            :unit="`${currency.symbol} (24h)`"
-            data-test="wallets-price-change"
-            class="price"
-          />
+          <FlexboxLayout v-if="totalInvestment !== 0" class="sub-info">
+            <Label class="label" text="Total Gain" />
+            <ChangeLabel
+              v-if="totalInvestment !== 0"
+              :value="ratio"
+              unit="%"
+              data-test="wallets-ratio"
+              class="price"
+            />
+          </FlexboxLayout>
+
+          <FlexboxLayout class="sub-info">
+            <Label class="label" text="24h Gain" />
+            <ChangeLabel
+              :value="totalPriceChange24H"
+              :unit="`${currency.symbol} (24h)`"
+              data-test="wallets-price-change"
+              class="price"
+            />
+          </FlexboxLayout>
         </FlexboxLayout>
       </FlexboxLayout>
     </FlexboxLayout>
@@ -336,13 +345,22 @@ export default {
       }
 
       .sub-infos {
+        margin-top: $separation-content;
         width: 100%;
         justify-content: space-around;
         align-items: center;
-        margin-top: $separation-content;
 
-        .price {
-          font-size: $normal-font-size;
+        .sub-info {
+          flex-direction: column;
+          align-items: center;
+
+          .price {
+            font-size: $normal-font-size;
+          }
+
+          .label {
+            font-size: $small-font-size;
+          }
         }
       }
     }
@@ -352,9 +370,10 @@ export default {
     padding: $separation-content;
 
     .header {
-      justify-content: space-between;
+      justify-content: space-around;
       padding-bottom: $separation-content;
       font-weight: bold;
+      font-size: $small-font-size;
     }
 
     .wallet {

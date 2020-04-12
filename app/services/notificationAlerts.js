@@ -18,7 +18,8 @@ const getCurrency = app => {
 
 const createNotification = async (alert, coin, selectedCurrency) => {
   await NotificationMixin.methods.$_createNotification(
-    alert.note,
+    // sometimes note is null it is a monkey patch
+    alert.note || '',
     coin.image,
     `${selectedCurrency.symbol}${alert.targetPrice} is reached on ${coin.name}`
   )
