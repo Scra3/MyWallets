@@ -54,9 +54,8 @@
 import WalletsView from '@/pages/WalletsView'
 import MarketView from '@/pages/MarketView'
 import AlertsView from '@/pages/AlertsView'
-import { USD, EUR } from '@/constants'
 import { mapActions, mapState } from 'vuex'
-import { CONTINUOUS_SERVICE_CLASSNAME } from '@/constants'
+import { CONTINUOUS_SERVICE_CLASSNAME, USD, EUR } from '@/constants'
 import * as application from 'tns-core-modules/application'
 
 export default {

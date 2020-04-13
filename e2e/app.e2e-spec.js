@@ -6,8 +6,17 @@ const {
   setInvestmentInput,
   clickOnBackButton,
   setBalanceOrAddressInput,
-  clickOnCoinItem
+  clickOnCoinItem,
+  clickOnAddAlertFromAlertPage,
+  setTargetPriceInput,
+  clickOnSaveAlert,
+  setNotePriceInput,
+  clickOnDeleteButtonFormFormPage,
+  clickOnCloseAd
 } = require('./utils.js')
+
+const EMPTY_WALLET_LIST_MESSAGE = 'Empty wallet list'
+const EMPTY_ALERT_LIST_MESSAGE = 'Empty alert list'
 
 describe('MVP scenarios', () => {
   let driver
@@ -26,27 +35,82 @@ describe('MVP scenarios', () => {
     await driver.logTestArtifacts('failure')
   })
 
-  it('changes USD to EUR', async () => {
-    const usdLabel = await driver.findElementByText('USD', 'contains')
-    await usdLabel.click()
+  it('shows alert view when the user clicks on the alert tab', async () => {
+    const alertTab = await driver.findElementByAutomationText('Alerts')
+    await alertTab.click()
 
-    const label = await driver.findElementByText('EUR', 'contains')
+    const label = await driver.findElementByText(
+      EMPTY_ALERT_LIST_MESSAGE,
+      'contains'
+    )
     expect(label.isDisplayed()).toBeTruthy()
   })
 
-  it('displays a message to explain at the user to add a new wallet', async () => {
+  it('adds a new bitcoin alert', async () => {
+    await clickOnAddAlertFromAlertPage(driver)
+
+    await clickOnCoinItem(driver, 'Bitcoin')
+
+    await setTargetPriceInput(driver, 7.4)
+
+    await clickOnSaveAlert(driver)
+
+    await clickOnCloseAd(driver)
+
+    const label = await driver.findElementByText('7.4', 'contains')
+    expect(label.isDisplayed()).toBeTruthy()
+  })
+
+  it('updates the bitcoin alert', async () => {
+    await clickOnCoinItem(driver, 'Bitcoin')
+
+    await setTargetPriceInput(driver, 8.4)
+    await setNotePriceInput(driver, 'stop loss')
+
+    await clickOnSaveAlert(driver)
+
+    await clickOnCloseAd(driver)
+
+    let label = await driver.findElementByText('8.4', 'contains')
+    expect(label.isDisplayed()).toBeTruthy()
+    label = await driver.findElementByText('stop loss', 'contains')
+    expect(label.isDisplayed()).toBeTruthy()
+  })
+
+  it('removes the bitcoin alert', async () => {
+    await clickOnCoinItem(driver, 'Bitcoin')
+
+    await clickOnDeleteButtonFormFormPage(driver)
+
     const label = await driver.findElementByText(
-      'Please add wallets',
+      EMPTY_ALERT_LIST_MESSAGE,
       'contains'
     )
+    expect(label.isDisplayed()).toBeTruthy()
+  })
+
+  it('changes USD to EUR', async () => {
+    await driver.sleep(2000)
+
+    const usdLabel = await driver.findElementByText('USD', 'contains')
+    await usdLabel.click()
+
+    const applyButton = (
+      await driver.findElementsByClassName('android.widget.Button')
+    )[1]
+    await applyButton.click()
+
+    await driver.sleep(2000)
+
+    const label = await driver.findElementByText('EUR', 'contains')
     expect(label.isDisplayed()).toBeTruthy()
   })
 
   it('shows market view when the user clicks on the market tab', async () => {
     await clickToMarketFromHomePage(driver)
 
-    const nameLabel = await driver.findElementByText('24h', 'contains')
-    expect(nameLabel.isDisplayed()).toBeTruthy()
+    const labelName = await driver.findElementByText('24h', 'contains')
+    expect(labelName.isDisplayed()).toBeTruthy()
   })
 
   it('shows wallets view when the user clicks on the wallet tab', async () => {
@@ -58,7 +122,7 @@ describe('MVP scenarios', () => {
     await driver.sleep(1000)
 
     const label = await driver.findElementByText(
-      'Please add wallets',
+      EMPTY_WALLET_LIST_MESSAGE,
       'contains'
     )
     expect(label.isDisplayed()).toBeTruthy()
@@ -86,7 +150,7 @@ describe('MVP scenarios', () => {
     await clickOnBackButton(driver)
 
     const label = await driver.findElementByText(
-      'Please add wallets',
+      EMPTY_WALLET_LIST_MESSAGE,
       'contains'
     )
     expect(label.isDisplayed()).toBeTruthy()
@@ -100,6 +164,8 @@ describe('MVP scenarios', () => {
 
     await clickOnSaveWallet(driver)
 
+    await clickOnCloseAd(driver)
+
     const label = await driver.findElementByText('7.4 BTC', 'contains')
     expect(label.isDisplayed()).toBeTruthy()
   })
@@ -110,6 +176,9 @@ describe('MVP scenarios', () => {
     await setBalanceOrAddressInput(driver, 3.4)
 
     await clickOnSaveWallet(driver)
+    await driver.sleep(1000)
+
+    await clickOnCloseAd(driver)
 
     const label = await driver.findElementByText('3.4 BTC', 'contains')
     expect(label.isDisplayed()).toBeTruthy()
@@ -117,6 +186,11 @@ describe('MVP scenarios', () => {
 
   it('add EOS wallet by connecting it', async () => {
     await clickOnAddWalletFromHomePage(driver)
+
+    const searchInput = await driver.findElementByClassName(
+      'android.widget.EditText'
+    )
+    await searchInput.type('EO')
 
     await clickOnCoinItem(driver, 'EOS')
 
@@ -132,6 +206,8 @@ describe('MVP scenarios', () => {
 
     await clickOnSaveWallet(driver)
 
+    await clickOnCloseAd(driver)
+
     // without sleeping, sometimes EOS text is not found
     await driver.sleep(1000)
 
@@ -146,7 +222,26 @@ describe('MVP scenarios', () => {
 
     await clickOnSaveWallet(driver)
 
+    await clickOnCloseAd(driver)
+
     // without sleeping, sometimes EOS text is not found
+    await driver.sleep(1000)
+
+    const label = await driver.findElementByText('986', 'contains')
+    expect(label.isDisplayed()).toBeTruthy()
+  })
+
+  it('navigates to analyses pages', async () => {
+    const analysisButton = await driver.findElementByAutomationText(
+      'analysis-button'
+    )
+    await analysisButton.click()
+
+    const walletsTab = await driver.findElementByAutomationText('Percentage')
+    await walletsTab.click()
+
+    await clickOnBackButton(driver)
+
     await driver.sleep(1000)
 
     const label = await driver.findElementByText('986', 'contains')
@@ -156,11 +251,7 @@ describe('MVP scenarios', () => {
   it('removes EOS wallet when user clicked on delete', async () => {
     await clickOnCoinItem(driver, 'EOS')
 
-    const moreOptions = await driver.findElementByAutomationText('More options')
-    await moreOptions.click()
-
-    const deleteButton = await driver.findElementByText('Delete', 'contains')
-    await deleteButton.click()
+    await clickOnDeleteButtonFormFormPage(driver)
 
     const wallets = await driver.findElementsByAutomationText(
       'wallet-item',
@@ -173,12 +264,18 @@ describe('MVP scenarios', () => {
 
   it('does not navigate to home page when user adds a negative balance and negative investment', async () => {
     await clickOnAddWalletFromHomePage(driver)
+
+    const searchInput = await driver.findElementByClassName(
+      'android.widget.EditText'
+    )
+    await searchInput.type('XR')
     await clickOnCoinItem(driver, 'XRP')
 
     await setBalanceOrAddressInput(driver, -7.4)
     await setInvestmentInput(driver, -100)
 
     await clickOnSaveWallet(driver)
+    await clickOnCloseAd(driver)
 
     const label = await driver.findElementByText('Save Wallet', 'contains')
     expect(label.isDisplayed()).toBeTruthy()

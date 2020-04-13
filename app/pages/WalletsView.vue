@@ -15,6 +15,7 @@
           @tap="navigateToAnalysesPage"
           class="analysis-button"
           data-test="analysis-button"
+          automationText="analysis-button"
         >
           <label text="Analyses" class="label" />
           <Image src="res://pie_chart" loadMode="sync" />

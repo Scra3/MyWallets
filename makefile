@@ -3,17 +3,23 @@ CONTAINER_NAME:=myWalletsContainer
 IMAGE_SDK_NAME:=androidsdk
 CONTAINER_SDK_NAME:=androidSdkContainer
 
-.PHONY: help, lint, run, endToEnd, tests, debug, docker_build, docker_test, build, deploy, docker_build_android, docker_build_android_apk
+.PHONY: help, lint, run, end_to_end, end_to_end_old_api, end_to_end_ipad, tests, debug, docker_build, docker_test, build, deploy, docker_build_android, docker_build_android_apk
 .DEFAULT_GOAL := help
 
 tests: ## Run unit tests and e2e tests
-	make test && make endToEnd
+	make test && make end_to_end
 
 test: ## Run unit tests
 	npm run test:unit
 
-endToEnd: ## Run end to end tests
+end_to_end: ## Run end to end tests
 	npm run e2e -- --runType=androidPixel
+
+end_to_end_old_api: ## Run end to end tests on old api
+	npm run e2e -- --runType=nexusOne
+
+end_to_end_ipad: ## Run end to end tests on Ipad format and new API
+	npm run e2e -- --runType=ipad
 
 lint: ## Run eslint and stylelint
 	npm run lint:fix ; npm run stylelint

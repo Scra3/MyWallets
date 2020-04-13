@@ -10,5 +10,29 @@
         "fullReset": false,
         "app": "./app-debug.apk",
         "relaxedSecurity": "true"
+    },
+    "nexusOne": {
+        "platformName": "Android",
+        "platformVersion": "24",
+        "deviceName": "Nexus_One_API_24_Nougat_7",
+        "avd": "Nexus_One_API_24_Nougat_7",
+        "lt": 60000,
+        "newCommandTimeout": 720,
+        "noReset": false,
+        "fullReset": false,
+        "app": "./app-debug.apk",
+        "relaxedSecurity": "true"
+    },
+    "ipad": {
+        "platformName": "Android",
+        "platformVersion": "29",
+        "deviceName": "8_Foldable_API_29",
+        "avd": "8_Foldable_API_29",
+        "lt": 60000,
+        "newCommandTimeout": 720,
+        "noReset": false,
+        "fullReset": false,
+        "app": "./app-debug.apk",
+        "relaxedSecurity": "true"
     }
 }
