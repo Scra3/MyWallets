@@ -12,7 +12,7 @@
         class="main-infos"
       >
         <FlexboxLayout
-          @tap="navigateToPieChartPage"
+          @tap="navigateToAnalysesPage"
           class="analysis-button"
           data-test="analysis-button"
         >
@@ -164,7 +164,7 @@ import { mapActions, mapState } from 'vuex'
 import EmptyListMessage from '@/components/EmptyListMessage'
 import LoadingMessage from '@/components/LoadingMessage'
 import { NavigationMixin } from '@/mixins/NavigationMixin'
-import PieChartPage from '@/pages/PieChartPage'
+import AnalysesPage from '@/pages/AnalysesPage'
 
 export default {
   name: 'WalletsView',
@@ -238,7 +238,6 @@ export default {
   },
   mounted() {
     this.fetchData()
-    this.fetchDataLoop()
   },
   beforeDestroy() {
     clearInterval(this.intervalID)
@@ -246,7 +245,7 @@ export default {
   methods: {
     ...mapActions('walletManager', ['selectAll']),
     fetchDataLoop() {
-      this.intervalID = setInterval(this.fetchData, this.intervalDelay)
+      return setInterval(this.fetchData, this.intervalDelay)
     },
     navigateToWalletFormPage(event) {
       // wallet in listview is undefined that why we use event.
@@ -265,14 +264,16 @@ export default {
         }
       })
     },
-    navigateToPieChartPage() {
-      this.$_navigateTo(PieChartPage, {
+    navigateToAnalysesPage() {
+      this.$_navigateTo(AnalysesPage, {
         props: {
           wallets: this.wallets
         }
       })
     },
     async fetchData() {
+      console.log('fetching data')
+
       this.isLoading = true
       this.isFailedToLoad = false
 
@@ -288,6 +289,11 @@ export default {
         this.isFailedToLoad = true
       } finally {
         this.isLoading = false
+      }
+
+      // fetch data every X seconds
+      if (!this.intervalID) {
+        this.intervalID = this.fetchDataLoop()
       }
     },
     async refresh(event) {

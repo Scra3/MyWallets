@@ -1,12 +1,14 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import WalletsView from '@/pages/WalletsView'
-import { USD } from '@/constants'
 import { Coin } from '@/models/Coin'
 import { Wallet } from '@/models/Wallet'
 import CoinsPage from '@/pages/CoinsPage'
 import WalletFormPage from '@/pages/WalletFormPage'
 import Vuex from 'vuex'
 import flushPromises from 'flush-promises'
+import { fetchWalletsCoinMarket, fetchCryptoFear } from '@/Api'
+import { XRP, USD } from '@/constants'
+import AnalysesPage from '@/pages/AnalysesPage'
 
 jest.mock('@/Api')
 jest.mock('nativescript-barcodescanner', () => jest.fn())
@@ -14,10 +16,6 @@ jest.mock('nativescript-camera', () => jest.fn())
 jest.mock('nativescript-local-notifications', () => jest.fn())
 jest.mock('nativescript-sqlite', () => jest.fn())
 global.android = jest.fn()
-
-import { fetchWalletsCoinMarket, fetchCryptoFear } from '@/Api'
-import { XRP } from '@/constants'
-import PieChartPage from '../../../app/pages/PieChartPage'
 
 const coin = new Coin(
   XRP,
@@ -88,7 +86,7 @@ describe('WalletsView.vue', () => {
   it('navigates to analyses page when analyses button is tapped', () => {
     wrapper.findDataTest('analysis-button').vm.$emit('tap')
 
-    expect($_navigateTo).toHaveBeenCalledWith(PieChartPage, {
+    expect($_navigateTo).toHaveBeenCalledWith(AnalysesPage, {
       props: { wallets: wrapper.vm.wallets }
     })
   })
