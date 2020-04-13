@@ -10,14 +10,14 @@
     </ActionBar>
 
     <Tabs selected-index="1">
-      <TabStrip>
+      <TabStripTabStrip>
         <TabStripItem>
           <Label text="Percentage" />
         </TabStripItem>
         <TabStripItem>
           <Label text="Gains" />
         </TabStripItem>
-      </TabStrip>
+      </TabStripTabStrip>
 
       <TabContentItem>
         <GridLayout>

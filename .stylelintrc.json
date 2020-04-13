@@ -13,6 +13,7 @@
           "horizontal-alignment",
           "text-field-hint-color",
           "horizontal-align",
+          "highlight-color",
           "verticalAlignment"
         ]
       }
@@ -22,7 +23,10 @@
       {
         "ignoreTypes": [
           "ActionItem",
-          "ListView"
+          "ListView",
+          "TabStripitem",
+          "Tabs",
+          "TabStrip"
         ]
       }
     ],
@@ -30,7 +34,10 @@
       {
         "ignoreTypes": [
           "ActionItem",
-          "ListView"
+          "ListView",
+          "TabStripitem",
+          "Tabs",
+          "TabStrip"
         ]
       }
     ]
