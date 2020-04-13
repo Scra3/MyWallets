@@ -11,6 +11,11 @@ import WAValidator from 'multicoin-address-validator'
 
 export const WalletMixin = {
   methods: {
+    $_totalInvestment(wallets) {
+      const sum = (currentValue, wallet) =>
+        currentValue + parseFloat(wallet.investment || 0)
+      return Number(parseFloat(wallets.reduce(sum, 0.0)).toFixed(2))
+    },
     $_totalValue(wallets) {
       const sum = (currentValue, wallet) =>
         currentValue + parseFloat(wallet.value())
