@@ -1,0 +1,80 @@
+<template>
+  <FlexboxLayout class="PercentageChartView darkMode">
+    <label text="Gains Grouped By Coin" class="title" />
+    <StackLayout class="chart">
+      <RadCartesianChart>
+        <CategoricalAxis v-tkCartesianHorizontalAxis />
+        <LinearAxis
+          v-tkCartesianVerticalAxis
+          :labelFormat="xAxeFormatWithoutDecimal"
+        />
+        <BarSeries
+          v-tkCartesianSeries
+          :items="formattedWallets"
+          categoryProperty="coin"
+          valueProperty="gain"
+          legendTitle="Wallet Gain"
+          paletteMode="Item"
+        />
+      </RadCartesianChart>
+    </StackLayout>
+  </FlexboxLayout>
+</template>
+
+<script>
+import { WalletMixin } from '@/mixins/WalletMixin'
+
+export default {
+  name: 'PercentageChartView',
+  mixins: [WalletMixin],
+  props: {
+    wallets: {
+      type: Array,
+      required: true
+    }
+  },
+  data() {
+    return {
+      xAxeFormatWithoutDecimal: '%.0f'
+    }
+  },
+  computed: {
+    totalInvestment() {
+      return this.$_totalInvestment(this.wallets)
+    },
+    totalValue() {
+      return this.$_totalValue(this.wallets)
+    },
+    formattedWallets() {
+      return this.wallets.map(wallet => {
+        const gain = parseInt(wallet.value() - wallet.investment)
+
+        return {
+          gain,
+          coin: `${wallet.coin.symbol.toUpperCase()} (${gain})`
+        }
+      })
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.PercentageChartView {
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+
+  .title {
+    font-size: $normal-font-size;
+    font-weight: bold;
+    flex-grow: 1;
+    color: $onBackground;
+    margin-top: $separation-content;
+  }
+
+  .chart {
+    height: 90%;
+  }
+}
+</style>

@@ -6,7 +6,7 @@ import { NotificationMixin } from '@/mixins/NotificationMixin'
 import { USD, EUR } from '@/constants'
 import store from '@/store'
 
-export const WAITING_TIME = 10000
+export const WAITING_TIME = 20000
 
 const getCurrency = app => {
   if (!app) {
