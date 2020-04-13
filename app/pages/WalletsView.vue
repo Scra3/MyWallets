@@ -1,10 +1,6 @@
 <template>
   <StackLayout class="WalletsView darkMode">
-    <FlexboxLayout
-      v-if="sortedWallets.length > 0"
-      @tap="navigateToPieChartPage"
-      class="overview"
-    >
+    <FlexboxLayout v-if="sortedWallets.length > 0" class="overview">
       <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
       <ErrorMessage
         v-else-if="isFailedToLoad"
@@ -15,13 +11,20 @@
         v-else-if="wallets && wallets.length > 0"
         class="main-infos"
       >
+        <FlexboxLayout
+          @tap="navigateToPieChartPage"
+          class="analysis-button"
+          data-test="analysis-button"
+        >
+          <label text="Analyses" class="label" />
+          <Image src="res://pie_chart" loadMode="sync" />
+        </FlexboxLayout>
         <PriceLabel
           :value="totalValue"
           :currency="currency"
           class="wallets-value"
           data-test="wallets-value"
         />
-
         <label :text="`Crypto Fear: ${cryptoFear}`" class="crypto-fear" />
 
         <FlexboxLayout class="sub-infos">
@@ -218,9 +221,7 @@ export default {
       )
     },
     totalInvestment() {
-      const sum = (currentValue, wallet) =>
-        currentValue + parseFloat(wallet.investment || 0)
-      return Number(parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2))
+      return this.$_totalInvestment(this.wallets)
     },
     ratio() {
       return Number(
@@ -329,7 +330,7 @@ export default {
     align-items: center;
     padding: $separation-content;
     border-radius: $border-radius;
-    height: 120;
+    height: 130;
     font-size: $large-font-size;
     background-color: $surface;
     margin: $separation-content;
@@ -338,6 +339,18 @@ export default {
       align-items: center;
       flex-direction: column;
       width: 100%;
+
+      .analysis-button {
+        width: 100%;
+        height: 20;
+        align-items: center;
+        justify-content: flex-end;
+
+        .label {
+          margin-right: 5;
+          font-size: $small-font-size;
+        }
+      }
 
       .wallets-value {
         font-weight: bold;

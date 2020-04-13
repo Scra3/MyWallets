@@ -17,6 +17,7 @@ global.android = jest.fn()
 
 import { fetchWalletsCoinMarket, fetchCryptoFear } from '@/Api'
 import { XRP } from '@/constants'
+import PieChartPage from '../../../app/pages/PieChartPage'
 
 const coin = new Coin(
   XRP,
@@ -82,6 +83,14 @@ describe('WalletsView.vue', () => {
 
   it('displays wallets value in header', () => {
     expect(wrapper.findDataTest('wallets-value').props().value).toEqual(2016)
+  })
+
+  it('navigates to analyses page when analyses button is tapped', () => {
+    wrapper.findDataTest('analysis-button').vm.$emit('tap')
+
+    expect($_navigateTo).toHaveBeenCalledWith(PieChartPage, {
+      props: { wallets: wrapper.vm.wallets }
+    })
   })
 
   it('displays wallets price change in 24h in header', () => {
