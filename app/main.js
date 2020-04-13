@@ -2,6 +2,7 @@ import Vue from 'nativescript-vue'
 import App from './App'
 import store from './store'
 import VueDevtools from 'nativescript-vue-devtools'
+import RadChart from 'nativescript-ui-chart/vue'
 
 /* global TNS_ENV */
 if (TNS_ENV !== 'production') {
@@ -23,6 +24,8 @@ Vue.registerElement(
   'Fab',
   () => require('@nstudio/nativescript-floatingactionbutton').Fab
 )
+
+Vue.use(RadChart)
 
 new Vue({
   store,
