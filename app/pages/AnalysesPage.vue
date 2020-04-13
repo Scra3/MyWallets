@@ -10,22 +10,22 @@
     </ActionBar>
 
     <Tabs selected-index="1">
-      <TabStripTabStrip>
-        <TabStripItem>
-          <Label text="Percentage" />
-        </TabStripItem>
+      <TabStrip>
         <TabStripItem>
           <Label text="Gains" />
         </TabStripItem>
-      </TabStripTabStrip>
+        <TabStripItem>
+          <Label text="Percentage" />
+        </TabStripItem>
+      </TabStrip>
 
       <TabContentItem>
         <GridLayout>
-          <PercentageChartView :wallets="wallets" />
+          <GainsChartView :wallets="wallets" />
         </GridLayout>
       </TabContentItem>
       <TabContentItem>
-        <GainsChartView :wallets="wallets" />
+        <PercentageChartView :wallets="wallets" />
       </TabContentItem>
     </Tabs>
   </Page>

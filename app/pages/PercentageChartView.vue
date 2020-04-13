@@ -1,6 +1,6 @@
 <template>
   <FlexboxLayout class="PercentageChartView darkMode">
-    <label text="Percentage Grouped By Coin" class="title" />
+    <label text="Wallet Value/Investment % Grouped By Coin" class="title" />
     <StackLayout class="chart">
       <RadCartesianChart>
         <CategoricalAxis v-tkCartesianVerticalAxis />
