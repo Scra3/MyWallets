@@ -1,6 +1,10 @@
 <template>
   <StackLayout class="WalletsView darkMode">
-    <FlexboxLayout v-if="sortedWallets.length > 0" class="overview">
+    <FlexboxLayout
+      v-if="sortedWallets.length > 0"
+      @tap="navigateToPieChartPage"
+      class="overview"
+    >
       <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
       <ErrorMessage
         v-else-if="isFailedToLoad"
@@ -157,6 +161,7 @@ import { mapActions, mapState } from 'vuex'
 import EmptyListMessage from '@/components/EmptyListMessage'
 import LoadingMessage from '@/components/LoadingMessage'
 import { NavigationMixin } from '@/mixins/NavigationMixin'
+import PieChartPage from '@/pages/PieChartPage'
 
 export default {
   name: 'WalletsView',
@@ -203,9 +208,7 @@ export default {
       return [...this.wallets].sort(sortWallets)
     },
     totalValue() {
-      const sum = (currentValue, wallet) =>
-        currentValue + parseFloat(wallet.value())
-      return Number(parseFloat(this.wallets.reduce(sum, 0.0)).toFixed(2))
+      return this.$_totalValue(this.wallets)
     },
     totalPriceChange24H() {
       const priceChange = (currentValue, wallet) =>
@@ -261,7 +264,13 @@ export default {
         }
       })
     },
-
+    navigateToPieChartPage() {
+      this.$_navigateTo(PieChartPage, {
+        props: {
+          wallets: this.wallets
+        }
+      })
+    },
     async fetchData() {
       this.isLoading = true
       this.isFailedToLoad = false

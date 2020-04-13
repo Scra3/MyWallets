@@ -8,7 +8,7 @@
         class="action-title"
       >
         <Label text="My" />
-        <Image src="res://logo" class="action-logo" />
+        <Label text="W" class="label-w-letter" />
         <Label text="allets" />
       </StackLayout>
 
@@ -146,8 +146,9 @@ export default {
     .action-title {
       font-size: 18;
 
-      .action-logo {
-        width: 20;
+      .label-w-letter {
+        font-weight: bold;
+        color: $secondary;
       }
     }
 

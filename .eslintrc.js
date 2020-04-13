@@ -23,6 +23,15 @@ module.exports = {
         'horizontalAlignment',
         'verticalAlignment',
         'keyboardType',
+        'selectionMode',
+        'expandRadius',
+        'valueProperty',
+        'outerRadiusFactor',
+        'v-tkPieSeries',
+        'allowAnimation',
+        'offsetOrigin',
+        'legendLabel',
+        'enableSelection',
         'automationText'
       ]
     }],

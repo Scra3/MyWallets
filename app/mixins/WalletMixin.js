@@ -11,6 +11,11 @@ import WAValidator from 'multicoin-address-validator'
 
 export const WalletMixin = {
   methods: {
+    $_totalValue(wallets) {
+      const sum = (currentValue, wallet) =>
+        currentValue + parseFloat(wallet.value())
+      return Number(parseFloat(wallets.reduce(sum, 0.0)).toFixed(2))
+    },
     async $_checkAddressValidity(addressOrAccountName, coinID) {
       if (coinID === EOS) {
         return await checkEOSAccountValidity(addressOrAccountName)
