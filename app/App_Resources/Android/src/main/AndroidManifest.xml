@@ -50,14 +50,5 @@
 				android:enabled="true"
 				android:exported="true"
 				android:label="ContinuousServiceRestarter" />
-		<receiver
-				android:name="org.nativescript.mywallets.Autostart_Receiver"
-				android:enabled="true"
-				android:exported="true"
-				android:label="ContinuousServiceAutostarter" >
-			<intent-filter>
-				<action android:name="android.intent.action.BOOT_COMPLETED" />
-			</intent-filter>
-		</receiver>
 	</application>
 </manifest>
