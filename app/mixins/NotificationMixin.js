@@ -12,6 +12,7 @@ export const NotificationMixin = {
           thumbnail: thumbnail,
           forceShowWhenInForeground: true,
           at: new Date(new Date().getTime() + 1000),
+          notificationLed: true,
           actions: [
             {
               id: 'yes',
