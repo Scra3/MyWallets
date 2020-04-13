@@ -29,9 +29,13 @@ module.exports = {
         'outerRadiusFactor',
         'v-tkPieSeries',
         'allowAnimation',
+        'loadMode',
         'offsetOrigin',
+        'maxBarSize',
         'legendLabel',
         'enableSelection',
+        'legendTitle',
+        'categoryProperty',
         'automationText'
       ]
     }],

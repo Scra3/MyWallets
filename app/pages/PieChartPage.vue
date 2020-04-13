@@ -1,6 +1,6 @@
 <template>
   <Page class="PieChartPage darkMode">
-    <ActionBar title="Analysis view" class="action-bar">
+    <ActionBar title="Analyses" class="action-bar">
       <NavigationButton
         @tap="$navigateBack"
         text="Go Back"
@@ -9,27 +9,29 @@
       />
     </ActionBar>
 
-    <FlexboxLayout class="legend">
-      <RadPieChart allowAnimation="true" row="0">
-        <PieSeries
-          v-tkPieSeries
-          :items="formattedWallets"
-          selectionMode="DataPoint"
-          expandRadius="0.4"
-          outerRadiusFactor="0.7"
-          valueProperty="Amount"
-          legendLabel="Brand"
-        />
-
-        <RadLegendView
-          v-tkPieLegend
-          position="Right"
-          title="Wallets"
-          offsetOrigin="Right"
-          width="110"
-          enableSelection="true"
-        />
-      </RadPieChart>
+    <FlexboxLayout class="chart-container">
+      <label text="Percentage Analysis Grouped By Coin" class="title" />
+      <StackLayout class="chart">
+        <RadCartesianChart>
+          <CategoricalAxis v-tkCartesianVerticalAxis />
+          <LinearAxis v-tkCartesianHorizontalAxis />
+          <BarSeries
+            v-tkCartesianSeries
+            :items="formattedWallets"
+            categoryProperty="Brand"
+            valueProperty="percentageValue"
+            legendTitle="Wallet Value Percentage"
+          />
+          <BarSeries
+            v-tkCartesianSeries
+            :items="formattedWallets"
+            categoryProperty="Brand"
+            valueProperty="percentageInvestment"
+            legendTitle="Wallet Investment Percentage"
+          />
+          <RadLegendView v-tkPieLegend position="Top" />
+        </RadCartesianChart>
+      </StackLayout>
     </FlexboxLayout>
   </Page>
 </template>
@@ -47,17 +49,26 @@ export default {
     }
   },
   computed: {
+    totalInvestment() {
+      return this.$_totalInvestment(this.wallets)
+    },
     totalValue() {
       return this.$_totalValue(this.wallets)
     },
     formattedWallets() {
       return this.wallets.map(wallet => {
-        let percentage = parseFloat(
+        const percentageValue = parseInt(
           (wallet.value() / this.totalValue) * 100
-        ).toFixed(0)
+        )
+
+        const percentageInvestment = parseInt(
+          (wallet.investment / this.totalInvestment) * 100
+        )
+
         return {
-          Amount: wallet.value(),
-          Brand: `${percentage}% ${wallet.coin.name}`
+          percentageValue,
+          percentageInvestment,
+          Brand: wallet.coin.name
         }
       })
     }
@@ -72,8 +83,21 @@ export default {
     color: $onBackground;
   }
 
-  .legend {
-    height: 50%;
+  .chart-container {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+
+    .title {
+      font-size: $normal-font-size;
+      font-weight: bold;
+      flex-grow: 1;
+      color: $onBackground;
+    }
+
+    .chart {
+      height: 90%;
+    }
   }
 }
 </style>
