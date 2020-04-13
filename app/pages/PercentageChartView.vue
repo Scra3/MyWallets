@@ -54,13 +54,11 @@ export default {
     },
     formattedWallets() {
       return this.wallets.map(wallet => {
-        const percentageValue = parseInt(
-          (wallet.value() / this.totalValue) * 100
-        )
+        const percentageValue =
+          parseInt((wallet.value() / this.totalValue) * 100) || 0
 
-        const percentageInvestment = parseInt(
-          (wallet.investment / this.totalInvestment) * 100
-        )
+        const percentageInvestment =
+          parseInt((wallet.investment / this.totalInvestment) * 100) || 0
 
         return {
           percentageValue,

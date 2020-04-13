@@ -1,6 +1,6 @@
 <template>
   <FlexboxLayout class="PercentageChartView darkMode">
-    <label text="Gains Grouped By Coin" class="title" />
+    <label text="Profits Grouped By Coin" class="title" />
     <StackLayout class="chart">
       <RadCartesianChart>
         <CategoricalAxis v-tkCartesianHorizontalAxis />
@@ -12,7 +12,7 @@
           v-tkCartesianSeries
           :items="formattedWallets"
           categoryProperty="coin"
-          valueProperty="gain"
+          valueProperty="profit"
           legendTitle="Wallet Gain"
           paletteMode="Item"
         />
@@ -47,11 +47,11 @@ export default {
     },
     formattedWallets() {
       return this.wallets.map(wallet => {
-        const gain = parseInt(wallet.value() - wallet.investment)
+        const profit = parseInt(wallet.value() - wallet.investment)
 
         return {
-          gain,
-          coin: `${wallet.coin.symbol.toUpperCase()} (${gain})`
+          profit,
+          coin: `${wallet.coin.symbol.toUpperCase()} (${profit})`
         }
       })
     }

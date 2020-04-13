@@ -12,7 +12,7 @@
     <Tabs selected-index="1">
       <TabStrip>
         <TabStripItem>
-          <Label text="Gains" />
+          <Label text="Profits" />
         </TabStripItem>
         <TabStripItem>
           <Label text="Percentage" />
