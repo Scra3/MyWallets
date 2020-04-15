@@ -1,6 +1,6 @@
 <template>
   <FlexboxLayout class="PercentageChartView darkMode">
-    <label text="Wallet Value/Investment % Grouped By Coin" class="title" />
+    <label text="Wallet Value % / Investment %" class="title" />
     <StackLayout class="chart">
       <RadCartesianChart>
         <CategoricalAxis v-tkCartesianVerticalAxis />
@@ -78,7 +78,7 @@ export default {
   align-items: center;
 
   .title {
-    font-size: $normal-font-size;
+    font-size: $large-font-size;
     font-weight: bold;
     flex-grow: 1;
     color: $onBackground;

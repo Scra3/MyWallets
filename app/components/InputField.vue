@@ -30,8 +30,8 @@
           error: isValid === false,
           success: isValid === true
         }"
-        class="text-field"
         :hint="hint"
+        class="text-field"
         data-test="input"
         automationText="text-field"
       />

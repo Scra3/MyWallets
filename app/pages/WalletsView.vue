@@ -269,7 +269,8 @@ export default {
     navigateToAnalysesPage() {
       this.$_navigateTo(AnalysesPage, {
         props: {
-          wallets: this.wallets
+          wallets: this.wallets,
+          currency: this.currency
         }
       })
     },

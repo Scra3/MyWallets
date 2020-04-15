@@ -1,6 +1,6 @@
 <template>
   <FlexboxLayout class="PercentageChartView darkMode">
-    <label text="Profits Grouped By Coin" class="title" />
+    <label text="Coin Profits" class="title" />
     <StackLayout class="chart">
       <RadCartesianChart>
         <CategoricalAxis v-tkCartesianHorizontalAxis />
@@ -31,6 +31,10 @@ export default {
     wallets: {
       type: Array,
       required: true
+    },
+    currency: {
+      type: Object,
+      required: true
     }
   },
   data() {
@@ -51,7 +55,9 @@ export default {
 
         return {
           profit,
-          coin: `${wallet.coin.symbol.toUpperCase()} (${profit})`
+          coin: `${wallet.coin.symbol.toUpperCase()} (${profit}${
+            this.currency.symbol
+          })`
         }
       })
     }
@@ -66,7 +72,7 @@ export default {
   align-items: center;
 
   .title {
-    font-size: $normal-font-size;
+    font-size: $large-font-size;
     font-weight: bold;
     flex-grow: 1;
     color: $onBackground;

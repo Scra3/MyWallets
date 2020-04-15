@@ -21,7 +21,7 @@
 
       <TabContentItem>
         <GridLayout>
-          <GainsChartView :wallets="wallets" />
+          <GainsChartView :wallets="wallets" :currency="currency" />
         </GridLayout>
       </TabContentItem>
       <TabContentItem>
@@ -41,6 +41,10 @@ export default {
   props: {
     wallets: {
       type: Array,
+      required: true
+    },
+    currency: {
+      type: Object,
       required: true
     }
   },
@@ -72,7 +76,7 @@ export default {
   }
 
   Tabs TabStrip {
-    highlight-color: $onBackground;
+    highlight-color: $primary;
   }
 }
 </style>

@@ -87,7 +87,7 @@ describe('WalletsView.vue', () => {
     wrapper.findDataTest('analysis-button').vm.$emit('tap')
 
     expect($_navigateTo).toHaveBeenCalledWith(AnalysesPage, {
-      props: { wallets: wrapper.vm.wallets }
+      props: { wallets: wrapper.vm.wallets, currency: wrapper.vm.currency }
     })
   })
 
@@ -96,7 +96,7 @@ describe('WalletsView.vue', () => {
       10 * 6 + 11 * 6
     )
     expect(wrapper.findDataTest('wallets-price-change').props().unit).toEqual(
-      '$ (24h)'
+      '$'
     )
   })
 
