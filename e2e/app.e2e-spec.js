@@ -171,6 +171,8 @@ describe('MVP scenarios', () => {
   })
 
   it('updates a bitcoin wallet', async () => {
+    await driver.sleep(1000)
+
     await clickOnCoinItem(driver, 'Bitcoin')
 
     await setBalanceOrAddressInput(driver, 3.4)
@@ -185,6 +187,8 @@ describe('MVP scenarios', () => {
   })
 
   it('add EOS wallet by connecting it', async () => {
+    await driver.sleep(1000)
+
     await clickOnAddWalletFromHomePage(driver)
 
     const searchInput = await driver.findElementByClassName(
