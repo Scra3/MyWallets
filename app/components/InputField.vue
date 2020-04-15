@@ -31,6 +31,7 @@
           success: isValid === true
         }"
         class="text-field"
+        :hint="hint"
         data-test="input"
         automationText="text-field"
       />

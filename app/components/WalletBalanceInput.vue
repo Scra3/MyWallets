@@ -4,7 +4,7 @@
     :value="balance"
     :is-valid="isValid"
     @value-did-change="$emit('balance-did-change', $event)"
-    label="Total Balance"
+    label="Balance"
     label-error="Must be greater than 0 and not be blank"
     hint="Number"
     keyboardType="number"

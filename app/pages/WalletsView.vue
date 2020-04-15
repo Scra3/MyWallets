@@ -11,15 +11,16 @@
         v-else-if="wallets && wallets.length > 0"
         class="main-infos"
       >
-        <FlexboxLayout
+        <Button
           @tap="navigateToAnalysesPage"
           class="analysis-button"
           data-test="analysis-button"
           automationText="analysis-button"
         >
-          <label text="Analyses" class="label" />
-          <Image src="res://pie_chart" loadMode="sync" />
-        </FlexboxLayout>
+          <FormattedString>
+            <Span text="Analyses" class="label" />
+          </FormattedString>
+        </Button>
         <PriceLabel
           :value="totalValue"
           :currency="currency"
@@ -30,7 +31,7 @@
 
         <FlexboxLayout class="sub-infos">
           <FlexboxLayout v-if="totalInvestment !== 0" class="sub-info">
-            <Label class="label" text="Total Investments" />
+            <Label class="label" text="Total Investment" />
             <PriceLabel
               :value="totalInvestment"
               :currency="currency"
@@ -40,7 +41,7 @@
           </FlexboxLayout>
 
           <FlexboxLayout v-if="totalInvestment !== 0" class="sub-info">
-            <Label class="label" text="Total Profit" />
+            <Label class="label" text="Total % Profit" />
             <ChangeLabel
               v-if="totalInvestment !== 0"
               :value="ratio"
@@ -54,7 +55,7 @@
             <Label class="label" text="24h Profit" />
             <ChangeLabel
               :value="totalPriceChange24H"
-              :unit="`${currency.symbol} (24h)`"
+              :unit="currency.symbol"
               data-test="wallets-price-change"
               class="price"
             />
@@ -348,13 +349,19 @@ export default {
       width: 100%;
 
       .analysis-button {
-        width: 100%;
+        align-self: flex-end;
+        width: 100;
+        padding: 0;
+        margin: 0;
         height: 20;
-        align-items: center;
-        justify-content: flex-end;
+        color: $onSurface;
+        background-image: url('res://pie_chart');
+        background-repeat: no-repeat;
+        background-position: right center;
+        background-size: contain;
+        background-color: $surface;
 
         .label {
-          margin-right: 5;
           font-size: $small-font-size;
         }
       }
@@ -402,7 +409,7 @@ export default {
       justify-content: space-around;
       padding-bottom: $separation-content;
       font-weight: bold;
-      font-size: $small-font-size;
+      font-size: $normal-font-size;
     }
 
     .wallet {
