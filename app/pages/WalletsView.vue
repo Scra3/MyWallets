@@ -40,7 +40,7 @@
           </FlexboxLayout>
 
           <FlexboxLayout v-if="totalInvestment !== 0" class="sub-info">
-            <Label class="label" text="Total Gain" />
+            <Label class="label" text="Total Profit" />
             <ChangeLabel
               v-if="totalInvestment !== 0"
               :value="ratio"
@@ -51,7 +51,7 @@
           </FlexboxLayout>
 
           <FlexboxLayout class="sub-info">
-            <Label class="label" text="24h Gain" />
+            <Label class="label" text="24h Profit" />
             <ChangeLabel
               :value="totalPriceChange24H"
               :unit="`${currency.symbol} (24h)`"

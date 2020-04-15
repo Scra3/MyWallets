@@ -1,5 +1,5 @@
 <template>
-  <Page class="AnalysesPag darkMode">
+  <Page class="AnalysesPage darkMode">
     <ActionBar title="Analyses" class="action-bar">
       <NavigationButton
         @tap="$navigateBack"
@@ -36,7 +36,7 @@ import PercentageChartView from '@/pages/PercentageChartView'
 import GainsChartView from '@/pages/GainsChartView'
 
 export default {
-  name: 'AnalysesPag',
+  name: 'AnalysesPage',
   components: { PercentageChartView, GainsChartView },
   props: {
     wallets: {
@@ -53,7 +53,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.AnalysesPag {
+.AnalysesPage {
   .action-bar {
     font-size: $large-font-size;
     background-color: $background;

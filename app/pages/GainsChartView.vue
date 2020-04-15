@@ -13,7 +13,7 @@
           :items="formattedWallets"
           categoryProperty="coin"
           valueProperty="profit"
-          legendTitle="Wallet Gain"
+          legendTitle="Wallet Profit"
           paletteMode="Item"
         />
       </RadCartesianChart>
