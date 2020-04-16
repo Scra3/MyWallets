@@ -31,6 +31,7 @@ module.exports = {
         'v-tkPieSeries',
         'allowAnimation',
         'loadMode',
+        'showLabels',
         'offsetOrigin',
         'maxBarSize',
         'labelFormat',

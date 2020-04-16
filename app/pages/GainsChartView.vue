@@ -15,6 +15,7 @@
           valueProperty="profit"
           legendTitle="Wallet Profit"
           paletteMode="Item"
+          showLabels="true"
         />
       </RadCartesianChart>
     </StackLayout>
@@ -55,9 +56,7 @@ export default {
 
         return {
           profit,
-          coin: `${wallet.coin.symbol.toUpperCase()} (${profit}${
-            this.currency.symbol
-          })`
+          coin: wallet.coin.symbol.toUpperCase()
         }
       })
     }
@@ -66,6 +65,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+BarSeries {
+  fill-color: #c8a1ff;
+  stroke-color: white;
+  stroke-width: 4;
+}
+
 .PercentageChartView {
   width: 100%;
   flex-direction: column;

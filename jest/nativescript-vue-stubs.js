@@ -26,6 +26,10 @@ const NSElements = [
   'TabStrip',
   'TabStripItem',
   'TabContentItem',
+  'RadCartesianChart',
+  'CategoricalAxis',
+  'SplineAreaSeries',
+  'LinearAxis',
   'Switch'
 ]
 

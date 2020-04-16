@@ -1,6 +1,13 @@
 import * as httpModule from 'tns-core-modules/http'
 import { Coin } from '@/models/Coin'
 
+const fetchMarketChart = async (wallet, currency, days = 5) => {
+  const marketChart = await httpModule.getJSON(
+    `https://api.coingecko.com/api/v3/coins/${wallet.coin.id}/market_chart?vs_currency=${currency.acronym}&days=${days}`
+  )
+  return marketChart.prices
+}
+
 const fetchCoinsMarket = async currency => {
   const coinsMarket = await httpModule.getJSON(
     `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency.acronym}&order=market_cap_desc&per_page=200&page=1&sparkline=false`
@@ -94,5 +101,6 @@ export {
   fetchBTCWalletBalance,
   fetchWalletsCoinMarket,
   fetchCoinsMarket,
-  fetchCryptoFear
+  fetchCryptoFear,
+  fetchMarketChart
 }

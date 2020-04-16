@@ -14,6 +14,7 @@
           categoryProperty="coin"
           valueProperty="percentageValue"
           legendTitle="Wallet Value %"
+          showLabels="true"
         />
         <BarSeries
           v-tkCartesianSeries
@@ -21,6 +22,7 @@
           categoryProperty="coin"
           valueProperty="percentageInvestment"
           legendTitle="Wallet Investment %"
+          showLabels="true"
         />
         <RadLegendView v-tkPieLegend position="Top" />
       </RadCartesianChart>
@@ -63,7 +65,7 @@ export default {
         return {
           percentageValue,
           percentageInvestment,
-          coin: `${wallet.coin.symbol.toUpperCase()} (${percentageInvestment}%, ${percentageValue}%)`
+          coin: wallet.coin.symbol.toUpperCase()
         }
       })
     }
