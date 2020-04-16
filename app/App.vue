@@ -57,6 +57,7 @@ import AlertsView from '@/pages/AlertsView'
 import { mapActions, mapState } from 'vuex'
 import { CONTINUOUS_SERVICE_CLASSNAME, USD, EUR } from '@/constants'
 import * as application from 'tns-core-modules/application'
+import orientation from 'nativescript-orientation'
 
 export default {
   name: 'App',
@@ -129,6 +130,8 @@ export default {
       }
     },
     selectIndex(args) {
+      // it use to clear landskape orientation
+      orientation.setOrientation('portrait')
       this.selectedIndex = args.value
     }
   }

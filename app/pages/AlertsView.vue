@@ -4,10 +4,7 @@
       v-if="sortedAlerts.length > 0 && isFailedToLoad"
       class="overview"
     >
-      <ErrorMessage
-        :is-failed-to-load="isFailedToLoad"
-        data-test="error-message"
-      />
+      <ErrorMessage data-test="error-message" />
     </FlexboxLayout>
 
     <grid-layout rows="auto, *">

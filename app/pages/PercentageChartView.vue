@@ -1,7 +1,6 @@
 <template>
   <FlexboxLayout class="PercentageChartView darkMode">
-    <label text="Wallet Value % / Investment %" class="title" />
-    <StackLayout class="chart">
+    <StackLayout>
       <RadCartesianChart>
         <CategoricalAxis v-tkCartesianVerticalAxis />
         <LinearAxis
@@ -78,17 +77,5 @@ export default {
   width: 100%;
   flex-direction: column;
   align-items: center;
-
-  .title {
-    font-size: $large-font-size;
-    font-weight: bold;
-    flex-grow: 1;
-    color: $onBackground;
-    margin-top: $separation-content;
-  }
-
-  .chart {
-    height: 90%;
-  }
 }
 </style>

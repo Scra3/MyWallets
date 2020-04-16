@@ -241,7 +241,9 @@ describe('MVP scenarios', () => {
     )
     await analysisButton.click()
 
-    const walletsTab = await driver.findElementByAutomationText('Percentage')
+    const walletsTab = await driver.findElementByAutomationText(
+      'Investment/Value'
+    )
     await walletsTab.click()
 
     await clickOnBackButton(driver)
@@ -280,6 +282,8 @@ describe('MVP scenarios', () => {
 
     await clickOnSaveWallet(driver)
     await clickOnCloseAd(driver)
+
+    await driver.sleep(1000)
 
     const label = await driver.findElementByText('Save Wallet', 'contains')
     expect(label.isDisplayed()).toBeTruthy()

@@ -12,26 +12,26 @@
     <Tabs @selectedIndexChange="handleSelectedIndex" selected-index="1">
       <TabStrip>
         <TabStripItem>
-          <Label text="Profits" />
+          <Label text="Coin Profits" />
         </TabStripItem>
         <TabStripItem>
           <Label text="Investment/Value" />
         </TabStripItem>
         <TabStripItem>
-          <Label text="Wallets Value" />
+          <Label text="Max Wallet Profits" />
         </TabStripItem>
       </TabStrip>
 
       <TabContentItem>
         <GridLayout>
-          <GainsChartView :wallets="wallets" :currency="currency" />
+          <CoinProfitsChartView :wallets="wallets" :currency="currency" />
         </GridLayout>
       </TabContentItem>
       <TabContentItem>
         <PercentageChartView :wallets="wallets" />
       </TabContentItem>
       <TabContentItem>
-        <WalletTotalValueChart :wallets="wallets" :currency="currency" />
+        <WalletProfitsChartView :wallets="wallets" :currency="currency" />
       </TabContentItem>
     </Tabs>
   </Page>
@@ -39,13 +39,17 @@
 
 <script>
 import PercentageChartView from '@/pages/PercentageChartView'
-import GainsChartView from '@/pages/GainsChartView'
-import WalletTotalValueChart from '@/pages/WalletTotalValueChart'
+import CoinProfitsChartView from '@/pages/CoinProfitsChartView'
+import WalletProfitsChartView from '@/pages/WalletProfitsChartView'
 import orientation from 'nativescript-orientation'
 
 export default {
   name: 'AnalysesPage',
-  components: { PercentageChartView, GainsChartView, WalletTotalValueChart },
+  components: {
+    PercentageChartView,
+    CoinProfitsChartView,
+    WalletProfitsChartView
+  },
   props: {
     wallets: {
       type: Array,

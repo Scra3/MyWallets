@@ -8,8 +8,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles';
-
 .ErrorMessage {
   text-align: center;
   width: 100%;

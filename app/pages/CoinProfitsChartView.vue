@@ -1,7 +1,6 @@
 <template>
-  <FlexboxLayout class="PercentageChartView darkMode">
-    <label text="Coin Profits" class="title" />
-    <StackLayout class="chart">
+  <FlexboxLayout class="CoinProfitsChartView darkMode">
+    <StackLayout>
       <RadCartesianChart>
         <CategoricalAxis v-tkCartesianHorizontalAxis />
         <LinearAxis
@@ -13,7 +12,6 @@
           :items="formattedWallets"
           categoryProperty="coin"
           valueProperty="profit"
-          legendTitle="Wallet Profit"
           paletteMode="Item"
           showLabels="true"
         />
@@ -26,7 +24,7 @@
 import { WalletMixin } from '@/mixins/WalletMixin'
 
 export default {
-  name: 'PercentageChartView',
+  name: 'CoinProfitsChartView',
   mixins: [WalletMixin],
   props: {
     wallets: {
@@ -65,27 +63,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-BarSeries {
-  fill-color: #c8a1ff;
-  stroke-color: white;
-  stroke-width: 4;
-}
-
-.PercentageChartView {
+.CoinProfitsChartView {
   width: 100%;
   flex-direction: column;
   align-items: center;
-
-  .title {
-    font-size: $large-font-size;
-    font-weight: bold;
-    flex-grow: 1;
-    color: $onBackground;
-    margin-top: $separation-content;
-  }
-
-  .chart {
-    height: 90%;
-  }
 }
 </style>

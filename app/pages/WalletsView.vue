@@ -2,11 +2,7 @@
   <StackLayout class="WalletsView darkMode">
     <FlexboxLayout v-if="sortedWallets.length > 0" class="overview">
       <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
-      <ErrorMessage
-        v-else-if="isFailedToLoad"
-        :is-failed-to-load="isFailedToLoad"
-        data-test="error-message"
-      />
+      <ErrorMessage v-else-if="isFailedToLoad" data-test="error-message" />
       <FlexboxLayout
         v-else-if="wallets && wallets.length > 0"
         class="main-infos"
@@ -82,6 +78,7 @@
               <FlexboxLayout class="wallet">
                 <Image
                   :src="wallet.coin.image"
+                  loadMode="sync"
                   class="icon coinIcon"
                   data-test="image"
                 />
