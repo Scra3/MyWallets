@@ -22,7 +22,7 @@
     <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
     <ErrorMessage v-else-if="isFailedToLoad" data-test="error-message" />
     <PullToRefresh @refresh="refreshCoinsMarket" class="spinner">
-      <ListView v-for="(coin, index) in filteredCoins">
+      <ListView for="(coin, index) in filteredCoins">
         <v-template>
           <FlexboxLayout class="coin" data-test="coin">
             <label :text="index + 1" class="index" data-test="index" />

@@ -70,7 +70,7 @@
 
         <PullToRefresh @refresh="refresh" class="spinner">
           <ListView
-            v-for="wallet in sortedWallets"
+            for="wallet in sortedWallets"
             @itemTap="navigateToWalletFormPage"
             automationText="wallet-item"
           >
