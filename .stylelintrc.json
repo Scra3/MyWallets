@@ -26,6 +26,8 @@
           "ListView",
           "TabStripitem",
           "Tabs",
+          "ChartSeriesLabel",
+          "SplineAreaSeries",
           "TabStrip"
         ]
       }
@@ -36,6 +38,8 @@
           "ActionItem",
           "ListView",
           "TabStripitem",
+          "ChartSeriesLabel",
+          "SplineAreaSeries",
           "Tabs",
           "TabStrip"
         ]

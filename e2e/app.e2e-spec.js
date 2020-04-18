@@ -242,7 +242,7 @@ describe('MVP scenarios', () => {
     await analysisButton.click()
 
     const walletsTab = await driver.findElementByAutomationText(
-      'Investment/Value'
+      'Wallet Profits'
     )
     await walletsTab.click()
 

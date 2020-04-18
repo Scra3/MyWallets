@@ -4,19 +4,24 @@
       v-if="isLoading"
       sub-title="Please wait, we are fetching the chart."
       title="Processing"
+      class="loading-message"
     />
     <ErrorMessage v-else-if="isFailedToLoad" data-test="error-message" />
     <StackLayout v-show="!isLoading && !isFailedToLoad">
       <RadCartesianChart>
-        <CategoricalAxis v-tkCartesianHorizontalAxis />
+        <CategoricalAxis
+          v-tkCartesianHorizontalAxis
+          labelRotationAngle="200"
+          labelFitMode="Rotate"
+        />
         <LinearAxis v-tkCartesianVerticalAxis />
 
         <SplineAreaSeries
           v-tkCartesianSeries
           :items="charts"
+          selectionMode="DataPoint"
           categoryProperty="date"
           valueProperty="profit"
-          showLabels="true"
         />
       </RadCartesianChart>
     </StackLayout>
@@ -139,5 +144,15 @@ export default {
   width: 100%;
   flex-direction: column;
   align-items: center;
+
+  .loading-message {
+    height: 100%;
+    justify-content: center;
+  }
+
+  SplineAreaSeries {
+    fill-color: rgba(187, 134, 252, 0.15);
+    stroke-color: $primary;
+  }
 }
 </style>

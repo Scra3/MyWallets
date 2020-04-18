@@ -27,7 +27,7 @@
 
         <FlexboxLayout class="sub-infos">
           <FlexboxLayout v-if="totalInvestment !== 0" class="sub-info">
-            <Label class="label" text="Total Investment" />
+            <Label class="label" text="Global Investment" />
             <PriceLabel
               :value="totalInvestment"
               :currency="currency"
@@ -37,7 +37,7 @@
           </FlexboxLayout>
 
           <FlexboxLayout v-if="totalInvestment !== 0" class="sub-info">
-            <Label class="label" text="Total % Profit" />
+            <Label class="label" text="Global Profit %" />
             <ChangeLabel
               v-if="totalInvestment !== 0"
               :value="ratio"
@@ -263,7 +263,7 @@ export default {
         }
       })
     },
-    navigateToAnalysesPage() {
+    async navigateToAnalysesPage() {
       this.$_navigateTo(AnalysesPage, {
         props: {
           wallets: this.wallets,
@@ -348,9 +348,10 @@ export default {
 
       .analysis-button {
         align-self: flex-end;
-        width: 100;
+        width: 80;
         padding: 0;
         margin: 0;
+        padding-right: 20;
         height: 20;
         color: $onSurface;
         background-image: url('res://pie_chart');

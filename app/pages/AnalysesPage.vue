@@ -12,26 +12,24 @@
     <Tabs @selectedIndexChange="handleSelectedIndex" selected-index="1">
       <TabStrip>
         <TabStripItem>
-          <Label text="Coin Profits" />
+          <Label text="Sum Wallet Profits" />
+        </TabStripItem>
+        <TabStripItem>
+          <Label text="Wallet Profits" />
         </TabStripItem>
         <TabStripItem>
           <Label text="Investment/Value" />
         </TabStripItem>
-        <TabStripItem>
-          <Label text="Max Wallet Profits" />
-        </TabStripItem>
       </TabStrip>
 
       <TabContentItem>
-        <GridLayout>
-          <CoinProfitsChartView :wallets="wallets" :currency="currency" />
-        </GridLayout>
+        <WalletProfitsChartView :wallets="wallets" :currency="currency" />
+      </TabContentItem>
+      <TabContentItem>
+        <CoinProfitsChartView :wallets="wallets" :currency="currency" />
       </TabContentItem>
       <TabContentItem>
         <PercentageChartView :wallets="wallets" />
-      </TabContentItem>
-      <TabContentItem>
-        <WalletProfitsChartView :wallets="wallets" :currency="currency" />
       </TabContentItem>
     </Tabs>
   </Page>
@@ -67,9 +65,9 @@ export default {
   },
   methods: {
     handleSelectedIndex(args) {
-      const wallet_total_value_chart_index = 2
+      const wallet_total_value_chart_index = 0
       if (args.value === wallet_total_value_chart_index) {
-        orientation.setOrientation('landscape')
+        orientation.enableRotation()
       } else {
         orientation.setOrientation('portrait')
       }

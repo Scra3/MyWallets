@@ -132,6 +132,7 @@ export default {
     selectIndex(args) {
       // it use to clear landskape orientation
       orientation.setOrientation('portrait')
+      orientation.disableRotation()
       this.selectedIndex = args.value
     }
   }

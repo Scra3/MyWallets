@@ -14,7 +14,17 @@
           valueProperty="profit"
           paletteMode="Item"
           showLabels="true"
+          seriesName="palette"
         />
+
+        <Palette v-tkCartesianPalette seriesName="palette">
+          <PaletteEntry
+            v-tkCartesianPaletteEntry
+            fillColor="#bb86fc"
+            strokeColor="#bb86fc"
+            strokeWidth="2"
+          />
+        </Palette>
       </RadCartesianChart>
     </StackLayout>
   </FlexboxLayout>
@@ -49,12 +59,12 @@ export default {
       return this.$_totalValue(this.wallets)
     },
     formattedWallets() {
-      return this.wallets.map(wallet => {
+      return this.wallets.map((wallet, index) => {
         const profit = parseInt(wallet.value() - wallet.investment)
 
         return {
           profit,
-          coin: wallet.coin.symbol.toUpperCase()
+          coin: `${index + 1}. ${wallet.coin.symbol.toUpperCase()}`
         }
       })
     }
@@ -67,5 +77,13 @@ export default {
   width: 100%;
   flex-direction: column;
   align-items: center;
+
+  ChartSeriesLabel {
+    font-weight: bold;
+    font-size: $small-font-size;
+    color: $onBackground;
+    border-color: transparent;
+    background-color: transparent;
+  }
 }
 </style>

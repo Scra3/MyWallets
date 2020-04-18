@@ -1,6 +1,16 @@
 <template>
   <FlexboxLayout class="PercentageChartView darkMode">
-    <StackLayout>
+    <FlexboxLayout class="legend">
+      <FlexboxLayout>
+        <Label text="Percent Value" />
+        <StackLayout class="value" />
+      </FlexboxLayout>
+      <FlexboxLayout>
+        <Label text="Percent Investment" />
+        <StackLayout class="investment" />
+      </FlexboxLayout>
+    </FlexboxLayout>
+    <StackLayout class="chart">
       <RadCartesianChart>
         <CategoricalAxis v-tkCartesianVerticalAxis />
         <LinearAxis
@@ -12,18 +22,34 @@
           :items="formattedWallets"
           categoryProperty="coin"
           valueProperty="percentageValue"
-          legendTitle="Wallet Value %"
           showLabels="true"
+          seriesName="palette"
+          maxBarSize="100"
         />
         <BarSeries
           v-tkCartesianSeries
           :items="formattedWallets"
           categoryProperty="coin"
           valueProperty="percentageInvestment"
-          legendTitle="Wallet Investment %"
           showLabels="true"
+          seriesName="palette"
+          maxBarSize="100"
         />
-        <RadLegendView v-tkPieLegend position="Top" />
+
+        <Palette v-tkCartesianPalette seriesName="palette">
+          <PaletteEntry
+            v-tkCartesianPaletteEntry
+            fillColor="#bb86fc"
+            strokeColor="transparent"
+            strokeWidth="4"
+          />
+          <PaletteEntry
+            v-tkCartesianPaletteEntry
+            fillColor="#3700b3"
+            strokeColor="transparent"
+            stroke-width="4"
+          />
+        </Palette>
       </RadCartesianChart>
     </StackLayout>
   </FlexboxLayout>
@@ -54,7 +80,7 @@ export default {
       return this.$_totalValue(this.wallets)
     },
     formattedWallets() {
-      return this.wallets.map(wallet => {
+      return this.wallets.map((wallet, index) => {
         const percentageValue =
           parseInt((wallet.value() / this.totalValue) * 100) || 0
 
@@ -64,7 +90,7 @@ export default {
         return {
           percentageValue,
           percentageInvestment,
-          coin: wallet.coin.symbol.toUpperCase()
+          coin: `${index + 1}. ${wallet.coin.symbol.toUpperCase()}`
         }
       })
     }
@@ -77,5 +103,39 @@ export default {
   width: 100%;
   flex-direction: column;
   align-items: center;
+
+  .legend {
+    height: 40;
+    width: 100%;
+    justify-content: space-around;
+    padding: $separation-content;
+
+    .value,
+    .investment {
+      width: 20;
+      border-radius: 50;
+      margin-left: 10;
+    }
+
+    .investment {
+      background-color: $primaryVariant;
+    }
+
+    .value {
+      background-color: $primary;
+    }
+  }
+
+  .chart {
+    height: 90%;
+
+    ChartSeriesLabel {
+      font-weight: bold;
+      font-size: $small-font-size;
+      color: white;
+      border-color: transparent;
+      background-color: transparent;
+    }
+  }
 }
 </style>
