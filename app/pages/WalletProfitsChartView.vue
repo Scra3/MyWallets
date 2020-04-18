@@ -14,7 +14,7 @@
           labelRotationAngle="200"
           labelFitMode="Rotate"
         />
-        <LinearAxis v-tkCartesianVerticalAxis />
+        <LinearAxis v-tkCartesianVerticalAxis labelFormat="%.0f" />
 
         <SplineAreaSeries
           v-tkCartesianSeries

@@ -13,7 +13,7 @@
       <SearchBar v-model="searchQuery" hint="Search coin" class="search-bar" />
       <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
       <ErrorMessage v-else-if="isFailedToLoad" />
-      <ListView for="coin in filteredCoins" @itemTap="handlerTapItem">
+      <ListView @itemTap="handlerTapItem" for="coin in filteredCoins">
         <v-template>
           <FlexboxLayout class="coin">
             <Image :src="coin.image" class="coinIcon" />

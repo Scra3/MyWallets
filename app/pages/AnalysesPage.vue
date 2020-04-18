@@ -65,11 +65,11 @@ export default {
   },
   methods: {
     handleSelectedIndex(args) {
-      const wallet_total_value_chart_index = 0
-      if (args.value === wallet_total_value_chart_index) {
-        orientation.enableRotation()
-      } else {
+      const investment_value_chart = 2
+      if (args.value === investment_value_chart) {
         orientation.setOrientation('portrait')
+      } else {
+        orientation.enableRotation()
       }
     },
     navigateBack() {

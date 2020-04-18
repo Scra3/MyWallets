@@ -2,7 +2,11 @@
   <FlexboxLayout class="CoinProfitsChartView darkMode">
     <StackLayout>
       <RadCartesianChart>
-        <CategoricalAxis v-tkCartesianHorizontalAxis />
+        <CategoricalAxis
+          v-tkCartesianHorizontalAxis
+          labelRotationAngle="200"
+          labelFitMode="Rotate"
+        />
         <LinearAxis
           v-tkCartesianVerticalAxis
           :labelFormat="xAxeFormatWithoutDecimal"

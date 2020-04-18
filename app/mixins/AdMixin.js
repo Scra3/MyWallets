@@ -1,7 +1,7 @@
 import admob from 'nativescript-admob'
 
 const options = {
-  testing: true,
+  testing: false,
   androidInterstitialId: 'ca-app-pub-5433582223311514/8646997540',
   keywords: ['investment', 'bitcoin', 'crypto', 'trading', 'wallets', 'mining']
 }

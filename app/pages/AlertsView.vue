@@ -15,8 +15,8 @@
           <Label text="Target Price" />
         </FlexboxLayout>
         <ListView
-          for="alert in sortedAlerts"
           @itemTap="navigateToAlertFormPage"
+          for="alert in sortedAlerts"
           automationText="alert-item"
         >
           <v-template>
