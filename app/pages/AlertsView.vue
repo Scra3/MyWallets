@@ -16,7 +16,7 @@
         </FlexboxLayout>
         <ListView
           @itemTap="navigateToAlertFormPage"
-          for="alert in sortedAlerts"
+          v-for="alert in sortedAlerts"
           automationText="alert-item"
         >
           <v-template>

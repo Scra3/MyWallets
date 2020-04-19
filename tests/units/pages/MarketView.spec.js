@@ -1,6 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 import MarketView from '@/pages/MarketView'
-import { USD, EUR, BTC, XRP } from '@/constants.js'
+import { USD, EUR, BTC, XRP } from '@/constants'
 import { Coin } from '@/models/Coin'
 import flushPromises from 'flush-promises'
 

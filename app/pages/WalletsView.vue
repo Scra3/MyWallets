@@ -71,7 +71,7 @@
         <PullToRefresh @refresh="refresh" class="spinner">
           <ListView
             @itemTap="navigateToWalletFormPage"
-            for="wallet in sortedWallets"
+            v-for="wallet in sortedWallets"
             automationText="wallet-item"
           >
             <v-template>
@@ -91,6 +91,7 @@
                   <Label
                     :text="wallet | formatBalanceWithSymbol"
                     data-test="balance"
+                    class="balance-label"
                   />
                 </FlexboxLayout>
 
@@ -428,6 +429,10 @@ export default {
         justify-content: center;
         align-items: center;
         width: 30%;
+
+        .balance-label {
+          font-size: $small-font-size;
+        }
 
         .name {
           font-size: $normal-font-size;
