@@ -1,5 +1,4 @@
-MyWallets allows investors to easily track the profit/loss of their cryptocurrencies using long and short term analyses and setting up personalized alerts to react quickly to this highly volatile market. You can manually enter the number of cryptocurrencies you have
-or connect to the blockchain if you have a public key.
+MyWallets allows investors to easily track the profit/loss of their cryptocurrencies using long and short term analyses. You can manually enter the number of cryptocurrencies you have or connect to the blockchain if you have a public key.
 
 List of features offered by MyWallets:
 
@@ -7,10 +6,7 @@ List of features offered by MyWallets:
 Overview of the profits, investments and losses of each wallet.
 
 . DETAILED WALLET ANALYSES WITH CHARTS
-Long term analysis of the value of its wallets, profit/loss of each wallet and a comparison of the percentage of the amount invested / percentage of the wallet value.
-
-. ADDING ALERTS
-Quick alert addition with a personalized note.
+Long term analysis of the value of its wallets, profit/loss of each wallet and a comparison of the percentage of the amount invested/percentage of the wallet value.
 
 . TRACKING THE CURRENT MARKET
 A complete list of cryptocurrencies.

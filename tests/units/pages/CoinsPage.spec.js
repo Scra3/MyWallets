@@ -3,7 +3,6 @@ jest.mock('nativescript-barcodescanner', () => jest.fn())
 jest.mock('nativescript-camera', () => {
   return { requestPermissions: jest.fn(() => Promise.resolve()) }
 })
-jest.mock('nativescript-local-notifications', () => jest.fn())
 
 import { shallowMount } from '@vue/test-utils'
 import CoinsPage from '@/pages/CoinsPage'

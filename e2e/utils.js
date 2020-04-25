@@ -5,13 +5,6 @@ async function clickOnAddWalletFromHomePage(driver) {
   await addWalletButton.click()
 }
 
-async function clickOnAddAlertFromAlertPage(driver) {
-  const addWalletButton = await driver.findElementByAutomationText(
-    'add-alert-button'
-  )
-  await addWalletButton.click()
-}
-
 async function clickToMarketFromHomePage(driver) {
   const marketTab = await driver.findElementByAutomationText('Market')
   await marketTab.click()
@@ -80,11 +73,6 @@ async function clickOnSaveWallet(driver) {
   await saveButton.click()
 }
 
-async function clickOnSaveAlert(driver) {
-  const saveButton = await driver.findElementByAutomationText('save-button')
-  await saveButton.click()
-}
-
 async function clickOnCloseAd(driver) {
   const closeAdButton = await driver.findElementByClassName(
     'android.widget.ImageButton'
@@ -100,8 +88,6 @@ exports.clickOnBackButton = clickOnBackButton
 exports.setBalanceOrAddressInput = setBalanceOrAddressInput
 exports.clickOnCoinItem = clickOnCoinItem
 exports.clickOnCloseAd = clickOnCloseAd
-exports.clickOnAddAlertFromAlertPage = clickOnAddAlertFromAlertPage
 exports.setTargetPriceInput = setTargetPriceInput
-exports.clickOnSaveAlert = clickOnSaveAlert
 exports.setNotePriceInput = setNotePriceInput
 exports.clickOnDeleteButtonFormFormPage = clickOnDeleteButtonFormFormPage

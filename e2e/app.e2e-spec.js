@@ -7,9 +7,7 @@ const {
   clickOnBackButton,
   setBalanceOrAddressInput,
   clickOnCoinItem,
-  clickOnAddAlertFromAlertPage,
   setTargetPriceInput,
-  clickOnSaveAlert,
   setNotePriceInput,
   clickOnDeleteButtonFormFormPage,
   clickOnCloseAd
@@ -33,60 +31,6 @@ describe('MVP scenarios', () => {
 
   afterEach(async function() {
     await driver.logTestArtifacts('failure')
-  })
-
-  it('shows alert view when the user clicks on the alert tab', async () => {
-    const alertTab = await driver.findElementByAutomationText('Alerts')
-    await alertTab.click()
-
-    const label = await driver.findElementByText(
-      EMPTY_ALERT_LIST_MESSAGE,
-      'contains'
-    )
-    expect(label.isDisplayed()).toBeTruthy()
-  })
-
-  it('adds a new bitcoin alert', async () => {
-    await clickOnAddAlertFromAlertPage(driver)
-
-    await clickOnCoinItem(driver, 'Bitcoin')
-
-    await setTargetPriceInput(driver, 7.4)
-
-    await clickOnSaveAlert(driver)
-
-    await clickOnCloseAd(driver)
-
-    const label = await driver.findElementByText('7.4', 'contains')
-    expect(label.isDisplayed()).toBeTruthy()
-  })
-
-  it('updates the bitcoin alert', async () => {
-    await clickOnCoinItem(driver, 'Bitcoin')
-
-    await setTargetPriceInput(driver, 8.4)
-    await setNotePriceInput(driver, 'stop loss')
-
-    await clickOnSaveAlert(driver)
-
-    await clickOnCloseAd(driver)
-
-    let label = await driver.findElementByText('8.4', 'contains')
-    expect(label.isDisplayed()).toBeTruthy()
-    label = await driver.findElementByText('stop loss', 'contains')
-    expect(label.isDisplayed()).toBeTruthy()
-  })
-
-  it('removes the bitcoin alert', async () => {
-    await clickOnCoinItem(driver, 'Bitcoin')
-
-    await clickOnDeleteButtonFormFormPage(driver)
-
-    const label = await driver.findElementByText(
-      EMPTY_ALERT_LIST_MESSAGE,
-      'contains'
-    )
-    expect(label.isDisplayed()).toBeTruthy()
   })
 
   it('changes USD to EUR', async () => {

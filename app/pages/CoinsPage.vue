@@ -43,9 +43,7 @@
 import { fetchCoinsMarket } from '@/Api'
 import ErrorMessage from '@/components/ErrorMessage'
 import WalletFormPage from '@/pages/WalletFormPage'
-import AlertFormPage from '@/pages/AlertFormPage'
 import { Wallet } from '@/models/Wallet'
-import { Alert } from '@/models/Alert'
 import { WalletMixin } from '@/mixins/WalletMixin'
 import { NavigationMixin } from '@/mixins/NavigationMixin'
 
@@ -94,18 +92,7 @@ export default {
       const coin = this.filteredCoins[event.index]
       if (this.navigateTo === 'WalletFormPage') {
         this.navigateToWalletFormPage(coin)
-      } else if (this.navigateTo === 'AlertFormPage') {
-        this.navigateToAlertFormPage(coin)
       }
-    },
-    navigateToAlertFormPage(coin) {
-      this.$_navigateTo(AlertFormPage, {
-        props: {
-          coin: coin,
-          currency: this.currency,
-          alert: new Alert(null, null, coin.currentPrice, coin.id)
-        }
-      })
     },
     navigateToWalletFormPage(coin) {
       this.$_navigateTo(WalletFormPage, {

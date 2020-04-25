@@ -13,7 +13,6 @@ import AnalysesPage from '@/pages/AnalysesPage'
 jest.mock('@/Api')
 jest.mock('nativescript-barcodescanner', () => jest.fn())
 jest.mock('nativescript-camera', () => jest.fn())
-jest.mock('nativescript-local-notifications', () => jest.fn())
 jest.mock('nativescript-sqlite', () => jest.fn())
 global.android = jest.fn()
 

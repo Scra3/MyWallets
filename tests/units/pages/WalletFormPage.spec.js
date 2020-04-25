@@ -10,7 +10,6 @@ import Vuex from 'vuex'
 jest.mock('nativescript-barcodescanner', () => jest.fn())
 jest.mock('nativescript-camera', () => jest.fn())
 jest.mock('nativescript-sqlite', () => jest.fn())
-jest.mock('nativescript-local-notifications', () => jest.fn())
 
 const localVue = createLocalVue()
 localVue.use(Vuex)

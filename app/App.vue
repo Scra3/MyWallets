@@ -32,9 +32,6 @@
         <TabStripItem class="tab-strip-item">
           <Label text="Market" />
         </TabStripItem>
-        <TabStripItem class="tab-strip-item">
-          <Label text="Alerts" />
-        </TabStripItem>
       </TabStrip>
 
       <TabContentItem>
@@ -43,9 +40,6 @@
       <TabContentItem>
         <MarketView :currency="selectedCurrency" />
       </TabContentItem>
-      <TabContentItem>
-        <AlertsView :currency="selectedCurrency" />
-      </TabContentItem>
     </BottomNavigation>
   </Page>
 </template>
@@ -53,15 +47,13 @@
 <script>
 import WalletsView from '@/pages/WalletsView'
 import MarketView from '@/pages/MarketView'
-import AlertsView from '@/pages/AlertsView'
 import { mapActions, mapState } from 'vuex'
-import { CONTINUOUS_SERVICE_CLASSNAME, USD, EUR } from '@/constants'
-import * as application from 'tns-core-modules/application'
 import orientation from 'nativescript-orientation'
+import { USD, EUR } from '@/constants'
 
 export default {
   name: 'App',
-  components: { WalletsView, MarketView, AlertsView },
+  components: { WalletsView, MarketView },
   props: {
     defaultSelectedViewIndex: {
       type: Number,
@@ -89,18 +81,9 @@ export default {
   },
   mounted() {
     this.loadAppState()
-    this.startContinuousService()
   },
   methods: {
     ...mapActions('appManager', ['select', 'update', 'insert']),
-    startContinuousService() {
-      const context = application.android.context
-      /* eslint-disable */
-      const intent = new android.content.Intent()
-      /* eslint-enable */
-      intent.setClassName(context, CONTINUOUS_SERVICE_CLASSNAME)
-      context.startService(intent)
-    },
     async loadAppState() {
       try {
         await this.select()
@@ -112,7 +95,7 @@ export default {
       return confirm({
         title: `Change currency to ${selectedCurrency.acronym.toUpperCase()}`,
         message:
-          'Be careful, for the moment the currency is global to the app, it will also change the alert currencies.',
+          'Be careful, for the moment the currency is global to the app, it will change all the wallet currencies.',
         okButtonText: `Change to ${selectedCurrency.acronym}`,
         cancelButtonText: 'Cancel'
       })

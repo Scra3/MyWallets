@@ -32,7 +32,6 @@
     "nativescript-admob": "^4.0.2",
     "nativescript-barcodescanner": "^3.4.2",
     "nativescript-camera": "^4.5.0",
-    "nativescript-local-notifications": "^4.2.1",
     "nativescript-orientation": "^2.2.4",
     "nativescript-socketio": "^3.2.1",
     "nativescript-sqlite": "^2.6.0",

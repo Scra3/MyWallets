@@ -23,7 +23,6 @@ module.exports = env => {
   const appComponents = [
     'tns-core-modules/ui/frame',
     'tns-core-modules/ui/frame/activity',
-    resolve(__dirname, 'app/services/continuousService.android')
   ]
 
   const platform = env && ((env.android && 'android') || (env.ios && 'ios'))

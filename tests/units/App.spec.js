@@ -8,9 +8,7 @@ jest.mock('nativescript-barcodescanner', () => jest.fn())
 jest.mock('nativescript-camera', () => {
   return { requestPermissions: jest.fn() }
 })
-jest.mock('nativescript-local-notifications', () => jest.fn())
 jest.mock('nativescript-sqlite')
-jest.mock('@/services/continuousService')
 global.android = jest.fn()
 
 const localVue = createLocalVue()
@@ -39,10 +37,7 @@ describe('App.vue', () => {
 
     wrapper = shallowMount(App, {
       store,
-      localVue,
-      methods: {
-        startContinuousService: jest.fn()
-      }
+      localVue
     })
   })
 
