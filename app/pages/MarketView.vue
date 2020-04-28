@@ -29,7 +29,7 @@
             <Image :src="coin.image" class="image coinIcon" data-test="image" />
             <label :text="coin.name" class="name" data-test="name" />
             <ChangeLabel
-              :value="coin.priceChangePercentage24H"
+              :value="priceChange24h(coin)"
               unit="%"
               class="change-percentage"
             />
@@ -87,6 +87,10 @@ export default {
     this.clearSearchBarFocus()
   },
   methods: {
+    priceChange24h(coin) {
+      // sometimes when the user scroll very fast priceChangePercentage24H is null
+      return coin.priceChangePercentage24H || 0
+    },
     clearSearchBarFocus() {
       // it waits the search bar to be loaded to clear focus
       const searchBar = this.$refs['search-bar'].nativeView.android
