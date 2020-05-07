@@ -16,3 +16,5 @@ coverage
 
 # Apk
 /*.apk
+/*.aab
+/*.jks
