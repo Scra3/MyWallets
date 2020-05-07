@@ -30,7 +30,8 @@ const NSElements = [
   'CategoricalAxis',
   'SplineAreaSeries',
   'LinearAxis',
-  'Switch'
+  'Switch',
+  'Tabs'
 ]
 
 NSElements.forEach(ele => {

@@ -68,7 +68,11 @@
           <Label text="Value / Investment" />
         </FlexboxLayout>
 
-        <PullToRefresh @refresh="refresh" class="spinner">
+        <PullToRefresh
+          @refresh="refresh"
+          class="spinner"
+          data-test="pull-to-refresh"
+        >
           <ListView
             @itemTap="navigateToWalletFormPage"
             v-for="wallet in sortedWallets"
@@ -165,6 +169,7 @@ import EmptyListMessage from '@/components/EmptyListMessage'
 import LoadingMessage from '@/components/LoadingMessage'
 import { NavigationMixin } from '@/mixins/NavigationMixin'
 import AnalysesPage from '@/pages/AnalysesPage'
+import * as firebase from 'nativescript-plugin-firebase'
 
 export default {
   name: 'WalletsView',
@@ -237,6 +242,9 @@ export default {
     }
   },
   mounted() {
+    firebase.analytics.setScreenName({
+      screenName: 'home_page'
+    })
     this.fetchData()
   },
   beforeDestroy() {
@@ -273,8 +281,6 @@ export default {
       })
     },
     async fetchData() {
-      console.log('fetching data')
-
       this.isLoading = true
       this.isFailedToLoad = false
 
@@ -298,6 +304,7 @@ export default {
       }
     },
     async refresh(event) {
+      this.sendRefreshLogEvent()
       const pullRefresh = event.object
       await this.fetchData()
       pullRefresh.refreshing = false
@@ -325,6 +332,11 @@ export default {
         ...wallets.filter(wallet => wallet.isUsingLocalBalance)
       ]
       return fetchWalletsCoinMarket(wallets, this.currency)
+    },
+    sendRefreshLogEvent() {
+      firebase.analytics.logEvent({
+        key: 'refresh_wallets_manually'
+      })
     }
   }
 }

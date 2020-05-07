@@ -40,6 +40,7 @@ import PercentageChartView from '@/pages/PercentageChartView'
 import CoinProfitsChartView from '@/pages/CoinProfitsChartView'
 import WalletProfitsChartView from '@/pages/WalletProfitsChartView'
 import orientation from 'nativescript-orientation'
+import * as firebase from 'nativescript-plugin-firebase'
 
 export default {
   name: 'AnalysesPage',
@@ -62,6 +63,11 @@ export default {
     return {
       selectedIndex: null
     }
+  },
+  mounted() {
+    firebase.analytics.setScreenName({
+      screenName: 'analyses_page'
+    })
   },
   methods: {
     handleSelectedIndex(args) {

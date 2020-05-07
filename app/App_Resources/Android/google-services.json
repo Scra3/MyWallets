@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "614405528781",
+    "firebase_url": "https://mywallets-57a2d.firebaseio.com",
+    "project_id": "mywallets-57a2d",
+    "storage_bucket": "mywallets-57a2d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:614405528781:android:d514d864c76265f246dd84",
+        "android_client_info": {
+          "package_name": "org.nativescript.mywallets"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "614405528781-opk9pq2f08dsur9d9e360qbomveel913.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1vjM6ggtQ1bHnNQ8_VUdVRewQqfHKkTc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "614405528781-opk9pq2f08dsur9d9e360qbomveel913.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

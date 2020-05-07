@@ -9,6 +9,7 @@ import flushPromises from 'flush-promises'
 import { fetchWalletsCoinMarket, fetchCryptoFear } from '@/Api'
 import { XRP, USD } from '@/constants'
 import AnalysesPage from '@/pages/AnalysesPage'
+import * as firebase from 'nativescript-plugin-firebase'
 
 jest.mock('@/Api')
 
@@ -198,6 +199,22 @@ describe('WalletsView.vue', () => {
 
     expect($_navigateTo).toHaveBeenCalledWith(WalletFormPage, {
       props: { wallet: walletA, currency: USD, isUpdating: true }
+    })
+  })
+
+  it('sends firebase analytics screen name', () => {
+    expect(firebase.analytics.setScreenName).toHaveBeenCalledWith({
+      screenName: 'home_page'
+    })
+  })
+
+  it('sends firebase analytics log event when refresh manually', () => {
+    wrapper
+      .findDataTest('pull-to-refresh')
+      .vm.$emit('refresh', { object: { refreshing: true } })
+
+    expect(firebase.analytics.logEvent).toHaveBeenCalledWith({
+      key: 'refresh_wallets_manually'
     })
   })
 })

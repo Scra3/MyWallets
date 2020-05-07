@@ -14,9 +14,13 @@ android {
     minSdkVersion 17
     generatedDensities = []
     applicationId = "org.nativescript.mywallets"
+    multiDexEnabled true
   }
   aaptOptions {
     additionalParameters "--no-version-vectors"
+  }
+  dexOptions {
+    javaMaxHeapSize "4g"
   }
 }
 

@@ -3,6 +3,7 @@ import App from './App'
 import store from './store'
 import VueDevtools from 'nativescript-vue-devtools'
 import RadChart from 'nativescript-ui-chart/vue'
+import firebase from 'nativescript-plugin-firebase'
 
 /* global TNS_ENV */
 if (TNS_ENV !== 'production') {
@@ -26,6 +27,15 @@ Vue.registerElement(
 )
 
 Vue.use(RadChart)
+
+firebase.init({}).then(
+  function() {
+    console.log('firebase.init done')
+  },
+  function(error) {
+    console.log('firebase.init error: ' + error)
+  }
+)
 
 new Vue({
   store,

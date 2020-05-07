@@ -6,6 +6,7 @@ import flushPromises from 'flush-promises'
 import { USD, BTC } from '@/constants'
 import App from '@/App'
 import Vuex from 'vuex'
+import * as firebase from 'nativescript-plugin-firebase'
 
 jest.mock('@/Api')
 
@@ -83,6 +84,12 @@ describe('WalletFormPage.vue', () => {
     expect($_navigateTo).not.toHaveBeenCalled()
   })
 
+  it('sends firebase analytics screen name', () => {
+    expect(firebase.analytics.setScreenName).toHaveBeenCalledWith({
+      screenName: 'wallet_form_page'
+    })
+  })
+
   describe('when it is in connected mode', () => {
     beforeEach(() => {
       wrapper
@@ -112,6 +119,30 @@ describe('WalletFormPage.vue', () => {
       await flushPromises()
 
       expect($_navigateTo).toHaveBeenCalledWith(App)
+    })
+
+    it('sends firebase analytics log event when user saves wallet', async () => {
+      wrapper
+        .find('WalletAddressInput-stub')
+        .vm.$emit('address-did-change', 'goodAddress')
+
+      wrapper.findDataTest('save-button').vm.$emit('tap')
+
+      await flushPromises()
+
+      expect(firebase.analytics.logEvent).toHaveBeenCalledWith({
+        key: 'save_wallet',
+        parameters: [
+          {
+            key: 'wallet_coin_id',
+            value: wallet.coin.id
+          },
+          {
+            key: 'track_address',
+            value: (!wallet.isUsingLocalBalance).toString()
+          }
+        ]
+      })
     })
 
     it('does not go to home page when save button is tapped and address is not valid', async () => {

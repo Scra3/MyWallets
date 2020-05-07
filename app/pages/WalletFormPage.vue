@@ -89,6 +89,7 @@ import InputField from '@/components/InputField'
 import { mapActions } from 'vuex'
 import { NavigationMixin } from '@/mixins/NavigationMixin'
 import { AdMixin } from '@/mixins/AdMixin'
+import * as firebase from 'nativescript-plugin-firebase'
 
 export default {
   name: 'WalletFormPage',
@@ -146,6 +147,9 @@ export default {
     )
   },
   mounted() {
+    firebase.analytics.setScreenName({
+      screenName: 'wallet_form_page'
+    })
     this.$_preloadInterstitialAd()
   },
   methods: {
@@ -179,6 +183,8 @@ export default {
       }
     },
     async saveWalletAndBackToHomePage() {
+      this.sendSaveWalletLogEvent()
+
       this.isSaveButtonClicked = true
       await this.$_showInterstitialAd()
 
@@ -195,6 +201,21 @@ export default {
           this.navigateToHomePage()
         }
       }
+    },
+    sendSaveWalletLogEvent() {
+      firebase.analytics.logEvent({
+        key: 'save_wallet',
+        parameters: [
+          {
+            key: 'wallet_coin_id',
+            value: this.currentWallet.coin.id
+          },
+          {
+            key: 'track_address',
+            value: (!this.currentWallet.isUsingLocalBalance).toString()
+          }
+        ]
+      })
     },
     navigateToHomePage() {
       this.$_navigateTo(App)

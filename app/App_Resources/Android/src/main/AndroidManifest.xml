@@ -24,7 +24,7 @@
 		<meta-data
 				android:name="com.google.android.gms.ads.APPLICATION_ID"
 				android:value="ca-app-pub-5433582223311514~7717059250" />
-		
+
 		<activity
 			android:name="com.tns.NativeScriptActivity"
 			android:label="@string/title_activity_kimera"
@@ -32,6 +32,7 @@
 			android:configChanges="keyboard|keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|locale|uiMode"
 			android:theme="@style/LaunchScreenTheme">
 
+			<meta-data android:name="firebase_analytics_collection_enabled" android:value="true" />
 			<meta-data android:name="SET_THEME_ON_LAUNCH" android:resource="@style/AppTheme" />
 
 			<intent-filter>
