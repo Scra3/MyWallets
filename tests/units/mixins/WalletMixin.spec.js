@@ -1,6 +1,5 @@
 import { Wallet } from '@/models/Wallet'
 import { Coin } from '@/models/Coin'
-jest.mock('@/Api')
 import {
   fetchXRPWalletBalance,
   fetchEOSWalletBalance,
@@ -13,6 +12,8 @@ import {
 import { XRP, BTC, EOS, ETH, NEO } from '@/constants'
 import { WalletMixin } from '@/mixins/WalletMixin'
 import { shallowMount } from '@vue/test-utils'
+
+jest.mock('@/Api')
 
 describe('WalletMixin', () => {
   const DummyComponent = { template: '<div></div>' }

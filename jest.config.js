@@ -18,6 +18,7 @@ module.exports = {
   setupFiles: [
     '<rootDir>/jest/typescript-helpers.js',
     '<rootDir>/jest/nativescript-vue-stubs.js',
-    '<rootDir>/jest/extends-vue-test-utils.js'
+    '<rootDir>/jest/extends-vue-test-utils.js',
+    '<rootDir>/jest/library-mocks.js'
   ]
 }

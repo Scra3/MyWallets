@@ -4,13 +4,6 @@ import { EUR, USD } from '@/constants'
 import Vuex from 'vuex'
 import flushPromises from 'flush-promises'
 
-jest.mock('nativescript-barcodescanner', () => jest.fn())
-jest.mock('nativescript-camera', () => {
-  return { requestPermissions: jest.fn() }
-})
-jest.mock('nativescript-sqlite')
-global.android = jest.fn()
-
 const localVue = createLocalVue()
 localVue.use(Vuex)
 

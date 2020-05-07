@@ -6,6 +6,8 @@ import { USD, BTC } from '@/constants'
 import { fetchMarketChart } from '@/Api'
 import { pricesLastYear } from '../factory'
 
+jest.mock('@/Api')
+
 const coin = new Coin(
   BTC,
   'Bitcoin',
@@ -18,8 +20,6 @@ const wallets = [
   new Wallet(coin, 10, 'fakeAddress', false, 5),
   new Wallet(coin, 10, 'fakeAddress', false, 4)
 ]
-
-jest.mock('@/Api')
 
 const localVue = createLocalVue()
 
@@ -77,12 +77,12 @@ describe('WalletProfitsChartView.vue', () => {
 
   it('formats chart points', () => {
     const chart1 = [
-      [new Date(), 2],
-      [new Date(), 3]
+      [new Date(2020, 3, 3), 2],
+      [new Date(2020, 3, 3), 3]
     ]
     const chart2 = [
-      [new Date(), 2],
-      [new Date(), 3]
+      [new Date(2020, 3, 3), 2],
+      [new Date(2020, 3, 3), 3]
     ]
     const charts = [chart1, chart2]
 

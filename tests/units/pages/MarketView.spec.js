@@ -3,9 +3,9 @@ import MarketView from '@/pages/MarketView'
 import { USD, EUR, BTC, XRP } from '@/constants'
 import { Coin } from '@/models/Coin'
 import flushPromises from 'flush-promises'
+import { fetchCoinsMarket } from '@/Api'
 
 jest.mock('@/Api')
-import { fetchCoinsMarket } from '@/Api'
 
 describe('MarketView.vue', () => {
   let wrapper

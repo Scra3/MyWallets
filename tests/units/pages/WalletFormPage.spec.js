@@ -7,9 +7,7 @@ import { USD, BTC } from '@/constants'
 import App from '@/App'
 import Vuex from 'vuex'
 
-jest.mock('nativescript-barcodescanner', () => jest.fn())
-jest.mock('nativescript-camera', () => jest.fn())
-jest.mock('nativescript-sqlite', () => jest.fn())
+jest.mock('@/Api')
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
