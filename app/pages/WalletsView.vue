@@ -170,6 +170,7 @@ import LoadingMessage from '@/components/LoadingMessage'
 import { NavigationMixin } from '@/mixins/NavigationMixin'
 import AnalysesPage from '@/pages/AnalysesPage'
 import * as firebase from 'nativescript-plugin-firebase'
+import { AdMixin } from '@/mixins/AdMixin'
 
 export default {
   name: 'WalletsView',
@@ -185,7 +186,7 @@ export default {
       return `${wallet.balance} ${wallet.coin.symbol.toUpperCase()}`
     }
   },
-  mixins: [WalletMixin, NavigationMixin],
+  mixins: [WalletMixin, NavigationMixin, AdMixin],
   props: {
     currency: {
       type: Object,
@@ -245,6 +246,7 @@ export default {
     firebase.analytics.setScreenName({
       screenName: 'home_page'
     })
+    this.$_preloadInterstitialAd()
     this.fetchData()
   },
   beforeDestroy() {
@@ -304,6 +306,7 @@ export default {
       }
     },
     async refresh(event) {
+      await this.$_showInterstitialAd()
       this.sendRefreshLogEvent()
       const pullRefresh = event.object
       await this.fetchData()

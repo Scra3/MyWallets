@@ -36,6 +36,7 @@ describe('WalletsView.vue', () => {
   let store
   let wrapper
   let $_navigateTo
+  let $_showInterstitialAd
 
   beforeEach(() => {
     fetchWalletsCoinMarket.mockImplementation(() =>
@@ -62,6 +63,8 @@ describe('WalletsView.vue', () => {
   })
 
   $_navigateTo = jest.fn()
+  $_showInterstitialAd = jest.fn(() => Promise.resolve(true))
+
   beforeEach(async () => {
     wrapper = shallowMount(WalletsView, {
       localVue,
@@ -69,7 +72,12 @@ describe('WalletsView.vue', () => {
       propsData: {
         currency: USD
       },
-      methods: { fetchDataLoop: jest.fn(), $_navigateTo }
+      methods: {
+        fetchDataLoop: jest.fn(),
+        $_navigateTo,
+        $_preloadInterstitialAd: jest.fn(),
+        $_showInterstitialAd
+      }
     })
 
     await flushPromises()
@@ -216,5 +224,13 @@ describe('WalletsView.vue', () => {
     expect(firebase.analytics.logEvent).toHaveBeenCalledWith({
       key: 'refresh_wallets_manually'
     })
+  })
+
+  it('displays ad when user refreshes manually', () => {
+    wrapper
+      .findDataTest('pull-to-refresh')
+      .vm.$emit('refresh', { object: { refreshing: true } })
+
+    expect($_showInterstitialAd).toHaveBeenCalled()
   })
 })
