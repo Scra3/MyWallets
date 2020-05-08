@@ -218,5 +218,14 @@ describe('WalletFormPage.vue', () => {
 
       expect($_navigateTo).not.toHaveBeenCalled()
     })
+
+    it('display ad when save button is clicked', async () => {
+      wrapper.vm.$_showInterstitialAd = jest.fn(() => Promise.resolve(true))
+
+      wrapper.findDataTest('save-button').vm.$emit('tap')
+      await flushPromises()
+
+      expect(wrapper.vm.$_showInterstitialAd).toHaveBeenCalled()
+    })
   })
 })

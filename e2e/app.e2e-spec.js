@@ -7,14 +7,11 @@ const {
   clickOnBackButton,
   setBalanceOrAddressInput,
   clickOnCoinItem,
-  setTargetPriceInput,
-  setNotePriceInput,
   clickOnDeleteButtonFormFormPage,
   clickOnCloseAd
 } = require('./utils.js')
 
 const EMPTY_WALLET_LIST_MESSAGE = 'Empty wallet list'
-const EMPTY_ALERT_LIST_MESSAGE = 'Empty alert list'
 
 describe('MVP scenarios', () => {
   let driver
@@ -108,8 +105,6 @@ describe('MVP scenarios', () => {
 
     await clickOnSaveWallet(driver)
 
-    await clickOnCloseAd(driver)
-
     const label = await driver.findElementByText('7.4 BTC', 'contains')
     expect(label.isDisplayed()).toBeTruthy()
   })
@@ -122,9 +117,6 @@ describe('MVP scenarios', () => {
     await setBalanceOrAddressInput(driver, 3.4)
 
     await clickOnSaveWallet(driver)
-    await driver.sleep(1000)
-
-    await clickOnCloseAd(driver)
 
     const label = await driver.findElementByText('3.4 BTC', 'contains')
     expect(label.isDisplayed()).toBeTruthy()
@@ -154,8 +146,6 @@ describe('MVP scenarios', () => {
 
     await clickOnSaveWallet(driver)
 
-    await clickOnCloseAd(driver)
-
     // without sleeping, sometimes EOS text is not found
     await driver.sleep(1000)
 
@@ -169,8 +159,6 @@ describe('MVP scenarios', () => {
     await setInvestmentInput(driver, 986)
 
     await clickOnSaveWallet(driver)
-
-    await clickOnCloseAd(driver)
 
     // without sleeping, sometimes EOS text is not found
     await driver.sleep(1000)
@@ -225,7 +213,6 @@ describe('MVP scenarios', () => {
     await setInvestmentInput(driver, -100)
 
     await clickOnSaveWallet(driver)
-    await clickOnCloseAd(driver)
 
     await driver.sleep(1000)
 

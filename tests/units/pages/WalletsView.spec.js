@@ -225,12 +225,4 @@ describe('WalletsView.vue', () => {
       key: 'refresh_wallets_manually'
     })
   })
-
-  it('displays ad when user refreshes manually', () => {
-    wrapper
-      .findDataTest('pull-to-refresh')
-      .vm.$emit('refresh', { object: { refreshing: true } })
-
-    expect($_showInterstitialAd).toHaveBeenCalled()
-  })
 })
