@@ -1,28 +1,34 @@
 # MyWallets
 
-### Install dependencies
+## Install dependencies
 You should install android studio to use devices emulator.
 
 ``` bash
 make install
 ```
 
-### Run app
+## Run app
 
 ``` bash
 make run
 ```
 
-### Run tests
+## Run tests
 
 ``` bash
 make tests
 ```
 
-### To show all available commands
+## To show all available commands
 
 ``` bash
 make
+``` 
+
+## Build release
+
+``` bash
+tns build android --release --key-store-path alban-bertolini.jks --key-store-password 'my_password' --key-store-alias MyWallets --key-store-alias-password 'my_password' --copy-to .
 ``` 
 
 ### Tips
