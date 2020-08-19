@@ -1,8 +1,15 @@
 <template>
   <StackLayout class="WalletsView darkMode">
-    <FlexboxLayout v-if="sortedWallets.length > 0" class="overview">
-      <ActivityIndicator v-if="isLoading" :busy="isLoading" class="spinner" />
-      <ErrorMessage v-else-if="isFailedToLoad" data-test="error-message" />
+    <FlexboxLayout class="overview">
+      <ActivityIndicator
+        v-if="isLoading && sortedWallets.length === 0"
+        :busy="isLoading"
+        class="spinner"
+      />
+      <ErrorMessage
+        v-else-if="isFailedToLoad && sortedWallets.length === 0"
+        data-test="error-message"
+      />
       <FlexboxLayout
         v-else-if="wallets && wallets.length > 0"
         class="main-infos"
@@ -119,11 +126,18 @@
                     class="value"
                     data-test="value"
                   />
-                  <PriceLabel
-                    v-if="wallet.investment"
-                    :value="wallet.investment"
-                    :currency="currency"
-                  />
+                  <flexboxLayout v-if="wallet.investment" class="investment">
+                    <PriceLabel
+                      :value="wallet.investment"
+                      :currency="currency"
+                    />
+                    <Label text=" (" />
+                    <PriceLabel
+                      :value="wallet.getPurchasePrice()"
+                      :currency="currency"
+                    />
+                    <Label text=")" />
+                  </flexboxLayout>
                 </FlexboxLayout>
               </FlexboxLayout>
             </v-template>
@@ -131,13 +145,13 @@
         </PullToRefresh>
       </StackLayout>
       <LoadingMessage
-        v-else-if="isLoading"
+        v-else-if="isLoading && sortedWallets.length === 0"
         row="1"
-        sub-title="Please wait, we are fetching Wallets."
+        sub-title="Please wait, we are fetching the wallets."
         title="Processing"
       />
       <EmptyListMessage
-        v-else
+        v-else-if="sortedWallets.length === 0"
         row="1"
         title="Empty wallet list"
         sub-title="Save a wallet and it will show up here."
@@ -442,7 +456,8 @@ export default {
         align-items: center;
         width: 30%;
 
-        .balance-label {
+        .balance-label,
+        .investment {
           font-size: $small-font-size;
         }
 

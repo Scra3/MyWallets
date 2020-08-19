@@ -24,6 +24,14 @@ export class Wallet {
     return Number(parseFloat(this.coin.currentPrice * this.balance).toFixed(2))
   }
 
+  getPurchasePrice() {
+    if (!this.investment) {
+      return null
+    }
+
+    return Number(parseFloat(this.investment / this.balance).toFixed(2))
+  }
+
   static buildWalletFromPersistedWallet(persistedWallet) {
     return new Wallet(
       new Coin(persistedWallet.coinId),

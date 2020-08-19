@@ -56,7 +56,7 @@ export default {
       charts: [],
       isLoading: true,
       isFailedToLoad: false,
-      number_of_days_before_today: 365
+      number_of_days_before_today: 730
     }
   },
   mounted() {
@@ -110,7 +110,7 @@ export default {
     },
     async fetchData() {
       /*
-      This algorithm computes the maximum wallet profits each month between today and 12 months before
+      This algorithm computes the maximum wallet profits each month between today and number_of_days_before_today
        */
       this.isLoading = true
       this.isFailedToLoad = false

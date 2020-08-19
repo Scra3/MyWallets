@@ -159,7 +159,9 @@ describe('WalletsView.vue', () => {
     ).toEqual(960)
   })
 
-  it('displays spinner and reset states when fetching data', () => {
+  it('displays spinner and reset states when fetching data only when there is no fetched wallets', () => {
+    wrapper.setData({ wallets: [] })
+
     wrapper.vm.fetchData()
 
     expect(wrapper.find('ActivityIndicator-stub').isVisible()).toBe(true)
@@ -178,6 +180,7 @@ describe('WalletsView.vue', () => {
   })
 
   it('displays error message when fetching data has a problem', async () => {
+    wrapper.setData({ wallets: [] })
     fetchWalletsCoinMarket.mockImplementation(() => Promise.reject('fail'))
 
     await wrapper.vm.fetchData()
