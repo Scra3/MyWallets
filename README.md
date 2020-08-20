@@ -28,7 +28,7 @@ make
 ## Build release
 
 ``` bash
-tns build android --release --key-store-path alban-bertolini.jks --key-store-password 'my_password' --key-store-alias MyWallets --key-store-alias-password 'my_password' --copy-to .
+tns build android --release --key-store-path alban-bertolini.jks --key-store-password 'my_password' --key-store-alias MyWallets --key-store-alias-password 'my_password' --copy-to . --aab
 ``` 
 
 ### Tips
