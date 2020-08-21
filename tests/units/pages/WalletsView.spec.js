@@ -159,14 +159,6 @@ describe('WalletsView.vue', () => {
     ).toEqual(960)
   })
 
-  it('displays spinner and reset states when fetching data only when there is no fetched wallets', () => {
-    wrapper.setData({ wallets: [] })
-
-    wrapper.vm.fetchData()
-
-    expect(wrapper.find('ActivityIndicator-stub').isVisible()).toBe(true)
-  })
-
   it('does not display spinner when fetching wallets is finished', async () => {
     await wrapper.vm.fetchWallets()
 

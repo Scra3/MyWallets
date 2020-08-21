@@ -1,19 +1,10 @@
 <template>
   <StackLayout class="WalletsView darkMode">
-    <FlexboxLayout class="overview">
-      <ActivityIndicator
-        v-if="isLoading && sortedWallets.length === 0"
-        :busy="isLoading"
-        class="spinner"
-      />
-      <ErrorMessage
-        v-else-if="isFailedToLoad && sortedWallets.length === 0"
-        data-test="error-message"
-      />
-      <FlexboxLayout
-        v-else-if="wallets && wallets.length > 0"
-        class="main-infos"
-      >
+    <FlexboxLayout
+      v-if="!isLoading && sortedWallets.length > 0"
+      class="overview"
+    >
+      <FlexboxLayout class="main-infos">
         <Button
           @tap="navigateToAnalysesPage"
           class="analysis-button"
@@ -149,6 +140,11 @@
         row="1"
         sub-title="Please wait, we are fetching the wallets."
         title="Processing"
+      />
+      <ErrorMessage
+              v-else-if="isFailedToLoad && sortedWallets.length === 0"
+              row="1"
+              data-test="error-message"
       />
       <EmptyListMessage
         v-else-if="sortedWallets.length === 0"
