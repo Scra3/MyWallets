@@ -1,9 +1,6 @@
 <template>
   <StackLayout class="WalletsView darkMode">
-    <FlexboxLayout
-      v-if="!isLoading && sortedWallets.length > 0"
-      class="overview"
-    >
+    <FlexboxLayout v-if="sortedWallets.length > 0" class="overview">
       <FlexboxLayout class="main-infos">
         <Button
           @tap="navigateToAnalysesPage"
@@ -142,9 +139,9 @@
         title="Processing"
       />
       <ErrorMessage
-              v-else-if="isFailedToLoad && sortedWallets.length === 0"
-              row="1"
-              data-test="error-message"
+        v-else-if="isFailedToLoad && sortedWallets.length === 0"
+        row="1"
+        data-test="error-message"
       />
       <EmptyListMessage
         v-else-if="sortedWallets.length === 0"
