@@ -1,5 +1,9 @@
 # MyWallets
 
+# Android Store
+
+https://play.google.com/store/apps/details?id=org.nativescript.mywallets
+
 ## Install dependencies
 You should install android studio to use devices emulator.
 
