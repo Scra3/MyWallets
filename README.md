@@ -1,6 +1,6 @@
 # MyWallets
 
-# Android Store
+## Android Store
 
 https://play.google.com/store/apps/details?id=org.nativescript.mywallets
 
