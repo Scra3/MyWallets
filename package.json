@@ -72,7 +72,7 @@
     "nativescript-vue-template-compiler": "^2.6.0",
     "nativescript-worker-loader": "~0.9.0",
     "node-sass": "4.12.0",
-    "stylelint": "^10.1.0",
+    "stylelint": "^15.10.1",
     "stylelint-config-standard": "^18.3.0",
     "stylelint-processor-html": "^1.0.0",
     "stylelint-webpack-plugin": "^0.10.5",
